@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="兼容问题需要满足的条件：  在彩色电视的图像信号中，要有代表图像亮度的亮度信号和代表图像色彩的色度信号。 应与黑白电视有相同的视频带宽和射频带宽、图像载频和伴音载频、行频和场频。  信号选取  用一个编码矩阵电路根据亮度公式$(Y&#x3D;0.3R+0.59G+0.11B)$编出一个亮度信号和$R-Y$、$B-Y$ 两个色差信号。  优点：   &amp;ensp; &amp;emsp;&amp;nbsp;&amp;bull;&amp;ensp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="彩色电视信号的传输">
+<meta property="og:url" content="http://yoursite.com/2020/03/16/%E5%BD%A9%E8%89%B2%E7%94%B5%E8%A7%86%E4%BF%A1%E5%8F%B7%E7%9A%84%E4%BC%A0%E8%BE%93/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="兼容问题需要满足的条件：  在彩色电视的图像信号中，要有代表图像亮度的亮度信号和代表图像色彩的色度信号。 应与黑白电视有相同的视频带宽和射频带宽、图像载频和伴音载频、行频和场频。  信号选取  用一个编码矩阵电路根据亮度公式$(Y&#x3D;0.3R+0.59G+0.11B)$编出一个亮度信号和$R-Y$、$B-Y$ 两个色差信号。  优点：   &amp;ensp; &amp;emsp;&amp;nbsp;&amp;bull;&amp;ensp">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-16T03:38:22.000Z">
+<meta property="article:modified_time" content="2020-04-03T08:35:27.597Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="电视技术">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/16/%E5%BD%A9%E8%89%B2%E7%94%B5%E8%A7%86%E4%BF%A1%E5%8F%B7%E7%9A%84%E4%BC%A0%E8%BE%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>彩色电视信号的传输 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/16/%E5%BD%A9%E8%89%B2%E7%94%B5%E8%A7%86%E4%BF%A1%E5%8F%B7%E7%9A%84%E4%BC%A0%E8%BE%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          彩色电视信号的传输
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-16 11:38:22" itemprop="dateCreated datePublished" datetime="2020-03-16T11:38:22+08:00">2020-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-03 16:35:27" itemprop="dateModified" datetime="2020-04-03T16:35:27+08:00">2020-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E8%A7%86%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">电视技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="兼容问题"><a href="#兼容问题" class="headerlink" title="兼容问题"></a>兼容问题</h4><p><strong>需要满足的条件：</strong></p>
+<ul>
+<li>在彩色电视的图像信号中，要有<span style="color:red">代表图像亮度</span>的<span style="color:green">亮度信号</span>和<span style="color:red">代表图像色彩</span>的<span style="color:green">色度信号</span>。</li>
+<li>应与黑白电视有<span style="color:red">相同</span>的视频带宽和射频带宽、图像载频和伴音载频、行频和场频。</li>
+</ul>
+<p><strong>信号选取</strong></p>
+<ul>
+<li><p>用一个编码矩阵电路根据亮度公式$(Y=0.3R+0.59G+0.11B)$编出一个<span style="color:red">亮度信号</span>和$R-Y$、$B-Y$ 两个<span style="color:red">色差信号</span>。</p>
+</li>
+<li><p><strong>优点：</strong></p>
+</li>
+</ul>
+<p>&ensp; &emsp;&nbsp;<span style="color:blue">&bull;&ensp;</span>可减少色度信号对亮度信号的干扰（传送黑白图像时色差信号为0）。</p>
+<p>&ensp; &emsp;&nbsp;<span style="color:blue">&bull;&ensp;</span>能够实现<span style="color:red">亮度恒定原理</span>。</p>
+<p>&ensp; &emsp;&nbsp;<span style="color:blue">&bull;&ensp;</span>可节省色度信号的发射能量。</p>
+<p><strong>频带压缩</strong> </p>
+<p>&ensp; &emsp;&nbsp;人眼对色彩细节的分辨力差，传送时只要传送一副<span style="color:red">粗线条大面积</span>的<span style="color:green">色彩图像</span>配上<span style="color:green">亮度细节</span>就可以了，称为大面积着色原理。</p>
+<p><strong>频谱交错</strong>   </p>
+<table>
+  <tr>
+    <td style="background-color:#F0F0F0;color:gray;font-family:Microsoft YaHei" ">
+        <ul>
+            <li>亮度信号和两个色差信号都在一个通道内传送(0~6MHz)</li>
+            <li>先选择一个频率，称<span style="color:red">彩色副载波</span>，用两个<span style="color:green">色差信号</span>对彩色副载波进行调制，调制后的信号称<span style="color:blue">色度信号</span>。</li>
+            <li>将得到的色度信号与亮度信号、同步信号叠加为彩色全电视信号，再去调制<span style="color:red">图像载波</span>，称为<span style="color:green">二次调制</span>。</li>
+             <li>将色度信号的频谱插在亮度信号的频谱空隙中间，再用$6MHz$带宽的通道同时传送<span style="color:red">亮度信号</span>和<span style="color:red">色度</span>信号，这种方法即频谱交错。</li>
+        </ul>
+    </td>
+  </tr>
+</table>
+
+<h4 id="NTSC-制"><a href="#NTSC-制" class="headerlink" title="$NTSC$制"></a>$NTSC$制</h4><p><strong>正交平衡调幅</strong>：平衡调幅又称<span style="color:red">抑制载波调幅</span>。</p>
+<p><strong>作用</strong>： </p>
+<ul>
+<li>抑制色度信号对亮度信号的干扰。</li>
+<li>节省发射功率。</li>
+</ul>
+<p><strong>特点：</strong> </p>
+<table>
+  <tr>
+    <td style="background-color:#F0F0F0;color:gray;font-family:Microsoft YaHei" ">
+        <ul>
+            <li>平衡调幅波不含载波分量。</li>
+            <li>其极性由调制信号和载波的极性共同决定。</li>
+            <li>平衡调幅波的振幅只与调制信号的振幅成正比。当传送图像的色差信号为零时，平衡调幅波的值也为零，可<span style="color:red">节省发射功率</span>，减少色度对亮度信号的干扰。</li>
+            <li>不能用包络检波法解调，要用同步检波法。</li>
+            <li>色度信号的<span style="color:red">振幅</span>和<span style="color:red">相角</span>之中包含彩色图像的全部色度信息。</li>
+            <li>振幅F<sub>m</sub>取决于<span style="color:red">色差信号的幅值</span>，决定了所传送色彩的<span style="color:red">饱和度</span>。</li>
+            <li>相角<span>&phi;</span>取决于<span style="color:red">色差信号的相对比值</span>，决定了色彩的<span style="color:red">色调</span>。</li>
+        </ul>
+    </td>
+  </tr>
+</table>
+
+<p><strong>彩条信号及色度信号</strong></p>
+<ul>
+<li>标准彩条信号是一种彩色电视中常用的<span style="color:green">测试信号</span>，用来对彩色电视系统进行测试与调整。</li>
+<li>标准彩条信号由<span style="color:green">三基色</span>及其<span style="color:green">补色</span>加上<span style="color:green">黑</span>与<span style="color:green">白</span>共八种颜色<span style="color:red">等宽</span>竖条组成。</li>
+</ul>
+<p><strong>色度信号与幅度压缩</strong></p>
+<ul>
+<li>标准彩条信号电平范围大大超过了黑白电视的范围，所以要将两个色差信号分布乘上一个系数进行压缩后再传送。</li>
+<li>压缩后色差信号$R-Y$用$V$表示，$B-Y$用$U$表示。</li>
+</ul>
+<p><strong>副载波的半行频间置</strong></p>
+<ul>
+<li><p>亮度信号和色度信号在同一个频带内传送容易产生<span style="color:red">相互串扰</span>，精确选择副载波频率可以<span style="color:green">减少相互串扰现象</span>。</p>
+</li>
+<li><p>亮度信号在$（n-\frac12）f_H$附近有较大空隙，因此副载波频率选择为半行频的倍数，称<span style="color:red">半行频间置</span>。</p>
+</li>
+<li><p>此外，还需考虑：</p>
+<p>  &ensp; &emsp;&nbsp;<span style="color:blue">&bull;&ensp;</span>选择在视频频带的高端，因为亮度信号高频能量少，相对空隙多。</p>
+<p>  &ensp; &emsp;&nbsp;<span style="color:blue">&bull;&ensp;</span>上边带不应超过视频信号的$6MHz$。</p>
+</li>
+</ul>
+<p><strong>色同步信号</strong>&ensp; </p>
+<p>&emsp;&nbsp;由于要用同步检波，为保证恢复的副载波与发送端被抑制掉的副载波同频、同相，要由发射台发送色同步信号作为基准。</p>
+<h4 id="PAL-制"><a href="#PAL-制" class="headerlink" title="$PAL$制"></a>$PAL$制</h4><p>$I、Q$<strong>信号</strong></p>
+<ul>
+<li>每帧$525$行的制式，亮度、色度信号的<span style="color:red">频带重叠过宽</span>，干扰严重，因此要进一步压缩色度信号的频带。</li>
+<li>人眼分辨<span style="color:red">红</span>、<span style="color:green">黄</span>之间颜色变化的能力最强，而分辨<span style="color:red">蓝</span>、<span style="color:green">紫</span>之间颜色变化的能力最弱。</li>
+</ul>
+<p><strong>相位失真的互补</strong></p>
+<ul>
+<li>$PAL$制中将色度信号的$F_v$分量逐行倒相，可以使相邻两行的相位失真互补，减少色调畸变。</li>
+<li>由于人眼对<span style="color:red">饱和度的改变不敏感</span>，因此察觉不到退饱和度效应。</li>
+</ul>
+<p><strong>副载波频率的选择</strong></p>
+<p>&ensp; &emsp;&nbsp;因为主谱线$U$和$V$相互错开$f_H/2$，所以为了减小干扰，亮度信号的谱线最好是插在$U$、$V$谱线的正中间，即副载频应采用<span style="color:red">四分之一行频间置</span>。</p>
+<p><strong>色同步信号</strong></p>
+<p>$PAL$制的色同步信号有两个功能：</p>
+<ul>
+<li><p>提供基准频率和相位。</p>
+</li>
+<li><p>提供一个极性切换信息。</p>
+  <div class="note default"><p>与NTSC最大的不同：$PAL$制色同步信号中副载波是<span style="color:red">逐行倒相</span>的。</p></div>
+
+</li>
+</ul>
+<p>$PAL$<strong>编码器和解码器</strong></p>
+<p><strong>编码流程：</strong></p>
+<table>
+  <tr>
+    <td style="background-color:#F0F0F0;color:gray;font-family:Microsoft YaHei" ">
+<ul>
+<li>三基色通过矩阵电路产生亮度信号Y和色差信号U和V。</li>
+<li>U、V信号通过低通滤波器滤除高频信号来<span style="color:red">压缩色差信号带宽</span>，然后混入不同极性的K脉冲来产生色同步信号。</li>
+<li>送入U和V平衡调幅器进行平衡调幅。</li>
+<li>将Y信号通过中心频率为f<sub>sc</sub>、带宽为400kHz的-6dB陷波器，并混入复合同步和复合消隐信号。</li>
+<li>将亮度信号延时0.6<span>&mu;</span>s,使亮度信号和色度信号在时间上一致。</li>                               
+</ul>
+     </td>
+  </tr>
+</table>
+
+<p><strong>解码流程：</strong></p>
+<table>
+  <tr>
+    <td style="background-color:#F0F0F0;color:gray;font-family:Microsoft YaHei" ">
+      <ul>
+        <li>亮度信号和色度信号的分离。</li>
+        <li>色同步信号和色度信号的分离。</li>
+        <li>色度信号的两个分量F<sub>U</sub>、F<sub>V</sub>的分离</li>
+        <li>同步检波将F<sub>U</sub>、F<sub>V</sub>分量解调为U、V信号。</li>
+        <li>解码矩阵将Y、U、V信号还原为三基色信号。</li> 
+       </ul>                                                                        
+    </td>
+  </tr>
+</table>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E8%A7%86%E6%8A%80%E6%9C%AF/" rel="tag"># 电视技术</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/14/OSTCB%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5/" rel="prev" title="OSTCB中的几个概念">
+      <i class="fa fa-chevron-left"></i> OSTCB中的几个概念
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/01/%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/" rel="next" title="视频压缩技术">
+      视频压缩技术 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#兼容问题"><span class="nav-number">1.</span> <span class="nav-text">兼容问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NTSC-制"><span class="nav-number">2.</span> <span class="nav-text">$NTSC$制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PAL-制"><span class="nav-number">3.</span> <span class="nav-text">$PAL$制</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

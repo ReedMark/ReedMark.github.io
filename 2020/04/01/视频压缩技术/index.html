@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="视频压缩技术可能性 空间冗余：水平、垂直方向相邻像素变化很小，存在极强的空间相关性。又叫帧内相关性。 时间冗余：相邻场或帧的对应像素之间，亮度和色度信息存在极强的相关性。又叫帧间相关性。 结构冗余 知识冗余 视觉冗余：人眼具有视觉非均匀特性，对视觉不敏感的信息可适当舍弃。  熵编码&amp;diams;&amp;ensp;Huffman编码  &amp;ensp; &amp;emsp;&amp;nbsp;&amp;bull;&amp;ensp; 从右至">
+<meta property="og:type" content="article">
+<meta property="og:title" content="视频压缩技术">
+<meta property="og:url" content="http://yoursite.com/2020/04/01/%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="视频压缩技术可能性 空间冗余：水平、垂直方向相邻像素变化很小，存在极强的空间相关性。又叫帧内相关性。 时间冗余：相邻场或帧的对应像素之间，亮度和色度信息存在极强的相关性。又叫帧间相关性。 结构冗余 知识冗余 视觉冗余：人眼具有视觉非均匀特性，对视觉不敏感的信息可适当舍弃。  熵编码&amp;diams;&amp;ensp;Huffman编码  &amp;ensp; &amp;emsp;&amp;nbsp;&amp;bull;&amp;ensp; 从右至">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/N3vgPtEGinHCs1D.png">
+<meta property="og:image" content="https://i.loli.net/2020/04/01/TIOkVEDKnCGh2zx.png">
+<meta property="article:published_time" content="2020-04-01T02:08:22.000Z">
+<meta property="article:modified_time" content="2020-04-13T02:39:20.099Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="电视技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/01/N3vgPtEGinHCs1D.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/01/%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>视频压缩技术 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/01/%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          视频压缩技术
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-01 10:08:22" itemprop="dateCreated datePublished" datetime="2020-04-01T10:08:22+08:00">2020-04-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-13 10:39:20" itemprop="dateModified" datetime="2020-04-13T10:39:20+08:00">2020-04-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E8%A7%86%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">电视技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h5 id="视频压缩技术"><a href="#视频压缩技术" class="headerlink" title="视频压缩技术"></a>视频压缩技术</h5><h6 id="可能性"><a href="#可能性" class="headerlink" title="可能性"></a><strong>可能性</strong></h6><ul>
+<li>空间冗余：水平、垂直方向相邻像素变化很小，存在极强的空间相关性。又叫<span style="color:red">帧内相关性</span>。</li>
+<li>时间冗余：相邻场或帧的对应像素之间，亮度和色度信息存在极强的相关性。又叫<span style="color:red">帧间相关性</span>。</li>
+<li>结构冗余</li>
+<li>知识冗余</li>
+<li>视觉冗余：人眼具有视觉非均匀特性，对视觉不敏感的信息可适当舍弃。</li>
+</ul>
+<h6 id="熵编码"><a href="#熵编码" class="headerlink" title="熵编码"></a><strong>熵编码</strong></h6><p><span style="color:blue">&diams;&ensp;</span><strong>Huffman</strong>编码</p>
+<p><img src="https://i.loli.net/2020/04/01/N3vgPtEGinHCs1D.png" alt="Huffman"></p>
+<p>&ensp; &emsp;&nbsp;<span style="color:blue">&bull;&ensp;</span> 从右至左依次顺着箭头的逆方向得到不同电平的编码。</p>
+<p><span style="color:blue">&diams;&ensp;</span>算术编码：整条信息公用一个代码，效率高。</p>
+<p><span style="color:blue">&diams;&ensp;</span>游程编码：将<span style="color:red">连续出现的字符</span>用单一的记号来表示。<span style="color:green">编码、解码速度快</span>。</p>
+<h6 id="预测编码和变换编码"><a href="#预测编码和变换编码" class="headerlink" title="预测编码和变换编码"></a><strong>预测编码和变换编码</strong></h6><p><span style="color:blue">&diams;&ensp;</span>DPCM原理</p>
+<ul>
+<li><p>基于<span style="color:red">图像的统计特性</span>进行数据压缩的基本方法即预测编码。它利用了图像信号的<span style="color:green">空间或时间</span>相关性，编码的是<span style="color:red">预测误差</span>。</p>
+</li>
+<li><p>利用帧内相关性的DPCM被称为帧内预测编码，利用帧间相关性则为帧间预测编码。 <span style="color:green">帧间的效率更高</span>。</p>
+</li>
+<li><p>编码性能取决于<span style="color:red">预测器的设计</span>。</p>
+</li>
+</ul>
+<p><span style="color:blue">&diams;&ensp;</span>变换编码原理</p>
+<ul>
+<li><p>将空间域描述的图像经过某种变换在变换域中描述，便于使用<span style="color:green">Z字形扫描、自适应量化、变长编码</span>等进一步处理。</p>
+</li>
+<li><p>常采用<span style="color:red">二维正交变换</span>的方式，但整幅图作为二维矩阵计算量太大，因此分成8<span>&times;</span>8或者16<span>&times;</span>16的的小方块。</p>
+</li>
+</ul>
+<p><span style="color:blue">&diams;&ensp;</span>离散余弦变换</p>
+<ul>
+<li><p>DCT矩阵与图像内容无关，由于构成<span style="color:green">对称的数据序列</span>，因而避免了<span style="color:red">子图像轮廓处的跳跃和不连续</span>。</p>
+</li>
+<li><p>DCT系数矩阵的能量集中在反映水平和垂直<span style="color:green">低频分量</span>的<span style="color:red">左上角</span>。</p>
+</li>
+</ul>
+<h6 id="静止图像压缩标准"><a href="#静止图像压缩标准" class="headerlink" title="静止图像压缩标准"></a>静止图像压缩标准</h6><p><span style="color:blue">&diams;&ensp;</span>要求</p>
+<ul>
+<li>清晰度：要求更高的清晰度。</li>
+<li>逐渐浮现的显示方式：先传模糊的整幅图像，再逐渐变清晰。</li>
+<li>抗干扰：要求编码与调制方式都有较强抗干扰能力。</li>
+</ul>
+<p><span style="color:blue">&diams;&ensp;</span><strong>JPEG</strong>标准</p>
+<p><img src="https://i.loli.net/2020/04/01/TIOkVEDKnCGh2zx.png" alt="JPEG标准"></p>
+<ul>
+<li><p>彩色坐标转换：去除数据冗余量。</p>
+</li>
+<li><p>DCT：采用8<span>&times;</span>8子块的DCT。(0, 0)元素是块的平均值。</p>
+</li>
+<li><p>量化：丢弃对视觉效果影响不大的信息，是多对一映射，<u>是造成DCT编码信息损失的根源</u>。<span style="color:red">左上角量化间隔小右下角大</span>。</p>
+</li>
+</ul>
+<p><span style="color:blue">&diams;&ensp;</span>JPEG2000标准</p>
+<ul>
+<li>采用了<span style="color:green">小波变换</span>：没有压缩数据，使图像的能量分布发生了变换。</li>
+<li>支持有损和无损压缩。</li>
+<li>支持ROI处理。</li>
+<li>可随机获取部分压缩码流。</li>
+<li>可随机存取图像某个区域。</li>
+<li>抗误码性能得到提高。</li>
+<li>具有视觉频率加权。</li>
+</ul>
+<h6 id="活动图像压缩标准"><a href="#活动图像压缩标准" class="headerlink" title="活动图像压缩标准"></a>活动图像压缩标准</h6><p>&ensp; &emsp;&nbsp;活动图像即<strong>电视信号</strong>。其编码要求：<strong>实时和高效</strong>。</p>
+<p><span style="color:blue">&diams;&ensp;</span>帧间预测编码</p>
+<ul>
+<li><p><strong>三种区域</strong></p>
+<ul>
+<li><p>背景区：相邻帧的背景很相似，帧间相关性很强。</p>
+</li>
+<li><p>运动物体区：将物理运动看作平移则相邻帧的数据也基本相同。</p>
+</li>
+<li><p>暴露区：物体运动后所暴露出的曾被物体遮住的区域。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>五种编码</strong></p>
+<ul>
+<li>空间分辨率和时间分辨率交换：降低运动物体的分辨率，且速度越快，分辨率可以越低。</li>
+<li>帧内、帧间自适应编码：变化缓慢的帧间相关性强，运动增大时应采用帧内编码。</li>
+<li>运动补偿预测编码：估计出物体在相邻帧内的相对位移，用上一帧预测下一帧，传输预测的差值部分。<ul>
+<li>物体的划分：静止和运动。</li>
+<li>运动估计：估计每个运动物体的位移。</li>
+<li>运动补偿：由位移的估值建立同一运动物体在不同帧的空间位置对应关系。</li>
+<li>补偿后的预测信息编码：对补偿后的位移帧差信号以及运动矢量进行编码传输。</li>
+</ul>
+</li>
+<li>块匹配运动补偿预测：将图像分成互不重叠的N&times;N个像素的子块，单独预测。<ul>
+<li>全搜索算法。N小则准确度高，计算量大。</li>
+<li>三步搜索算法。搜索范围$\pm$8。</li>
+</ul>
+</li>
+<li>混合编码：变化和预测组合在一起。<ul>
+<li>DCT：空间冗余度压缩。</li>
+<li>帧间预测或运动补偿：时间冗余度压缩。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><span style="color:blue">&diams;&ensp;</span>MPEG-1</p>
+<ul>
+<li>图像格式SIF<ul>
+<li>只处理逐行扫描的图像。</li>
+<li>输入的视频信号必须是数字化的一个亮度信号和两个色差信号（$Y,C_B,C_R$）。</li>
+</ul>
+</li>
+<li>视频结构<ul>
+<li>视频序列：大致对应于一个镜头。</li>
+<li>图像组：将一个图像序列中连续的几个图像组成一个小组。</li>
+<li>图像：图像编码的基本单元。<ul>
+<li>I帧：只用本帧的信息进行编码。</li>
+<li>P帧：由一个过去的I帧或P帧采用有运动补偿的帧间预测进行更有效的编码。</li>
+<li>B帧：提供最高的压缩，双向预测。</li>
+</ul>
+</li>
+<li>像条：发生误码且不可纠正时，数据重新获得同步，从而正常解码。</li>
+<li>宏块：运动预测的基本单元：一个宏块由一个16&times;16像素的 <strong>亮度阵列</strong>和同区域内的$C_B$，$C_R$色差阵列共同组成。<ul>
+<li>MPEG-1图像色度格式为4：2：0。</li>
+<li>MPEG-2还包括4：2：2和4：4：4，因此一个宏块又由许多8&times;8的块组成。</li>
+<li>4：2：0的宏块由6个块组成：4个亮度块和2个色度块。</li>
+<li>4：2：2的宏块由8个块组成：4个亮度块，2个$C_B$块，两个$C_R$块。</li>
+<li>4：4：4的宏块由12个块组成：4个亮度块，4个$C_B$块，4个$C_R$块。</li>
+</ul>
+</li>
+<li>块：DCT变换的基本单元。</li>
+</ul>
+</li>
+<li>固定数码率和可变数码率</li>
+<li>算法概述<ul>
+<li>对DC分量采用特定的量化步长并进行预测编码</li>
+<li>对AC分量进行Z字形扫描和二维VLC编码。</li>
+</ul>
+</li>
+<li>编码：视频序列的编码顺序与显示顺序是不同的。</li>
+<li>缓存控制器<ul>
+<li>反馈控制法。</li>
+<li>跳B帧处理法。</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E8%A7%86%E6%8A%80%E6%9C%AF/" rel="tag"># 电视技术</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/16/%E5%BD%A9%E8%89%B2%E7%94%B5%E8%A7%86%E4%BF%A1%E5%8F%B7%E7%9A%84%E4%BC%A0%E8%BE%93/" rel="prev" title="彩色电视信号的传输">
+      <i class="fa fa-chevron-left"></i> 彩色电视信号的传输
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/01/ucos-II%E5%AE%9E%E7%8E%B0%E5%93%B2%E5%AD%A6%E5%AE%B6%E5%B0%B1%E9%A4%90%E9%97%AE%E9%A2%98/" rel="next" title="ucos-II实现哲学家就餐问题">
+      ucos-II实现哲学家就餐问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#视频压缩技术"><span class="nav-number">1.</span> <span class="nav-text">视频压缩技术</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#可能性"><span class="nav-number">1.1.</span> <span class="nav-text">可能性</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#熵编码"><span class="nav-number">1.2.</span> <span class="nav-text">熵编码</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#预测编码和变换编码"><span class="nav-number">1.3.</span> <span class="nav-text">预测编码和变换编码</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#静止图像压缩标准"><span class="nav-number">1.4.</span> <span class="nav-text">静止图像压缩标准</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#活动图像压缩标准"><span class="nav-number">1.5.</span> <span class="nav-text">活动图像压缩标准</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

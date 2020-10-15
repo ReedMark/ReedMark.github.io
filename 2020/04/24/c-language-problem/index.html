@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="参数传递   int型数组转为二进制的函数 void toBin(int *key, int *keyin)，具体如下： 12345678910111213141516171819202122232425262728293031323334void toBin(int *key, int *keyin)&amp;#123;    int i, j, k, n;    n &#x3D; 0;    int">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c language problem">
+<meta property="og:url" content="http://yoursite.com/2020/04/24/c-language-problem/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="参数传递   int型数组转为二进制的函数 void toBin(int *key, int *keyin)，具体如下： 12345678910111213141516171819202122232425262728293031323334void toBin(int *key, int *keyin)&amp;#123;    int i, j, k, n;    n &#x3D; 0;    int">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-04-24T01:22:10.000Z">
+<meta property="article:modified_time" content="2020-05-20T13:06:21.214Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="c">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/24/c-language-problem/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>c language problem | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/24/c-language-problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          c language problem
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-24 09:22:10" itemprop="dateCreated datePublished" datetime="2020-04-24T09:22:10+08:00">2020-04-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-20 21:06:21" itemprop="dateModified" datetime="2020-05-20T21:06:21+08:00">2020-05-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/c/" itemprop="url" rel="index"><span itemprop="name">c</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h5 id="参数传递" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#参数传递" class="headerlink" title="参数传递"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">参数传递</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p><code>int</code>型数组转为二进制的函数 <code>void toBin(int *key, int *keyin)</code>，具体如下：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">toBin</span><span class="params">(<span class="keyword">int</span> *key, <span class="keyword">int</span> *keyin)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, k, n;</span><br><span class="line">    n = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> trans[<span class="number">8</span>];</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(keyin[i] != <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            trans[j] = keyin[i] % <span class="number">2</span>;</span><br><span class="line">            keyin[i] = keyin[i] / <span class="number">2</span>;</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(; j &lt; <span class="number">8</span>; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            trans[j] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(k = <span class="number">0</span>; k &lt; <span class="number">8</span>; k++)</span><br><span class="line">        &#123;</span><br><span class="line">            key[n] = trans[<span class="number">7</span> - k];</span><br><span class="line">            n++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> data[<span class="number">64</span>];</span><br><span class="line">    <span class="keyword">int</span> data2[<span class="number">64</span>];</span><br><span class="line">    <span class="keyword">int</span> plaintext[] = &#123;<span class="number">128</span>, <span class="number">32</span>, <span class="number">5</span>, <span class="number">78</span>, <span class="number">120</span>, <span class="number">10</span>, <span class="number">140</span>, <span class="number">200</span>&#125;;</span><br><span class="line">    toBin(data, plaintext);</span><br><span class="line">    toBin(data2, plaintext);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>进行两次调用，结果第二次输出全部为 0。</p>
+<p>问题出在 <code>toBin</code>函数中，传递进去的是两个指针，第一次传入的 <code>plaintext</code>存放的数，被每次 <code>/2</code>直到全部为0了，所以要么重新传递进去一个 <code>plaintext</code>，要么在 <code>toBin</code>中不直接用 <code>keyin</code>操作，而是先将 <code>keyin</code>转移到另一个数组再进行操作。</p>
+<h5 id="字符数组" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#字符数组" class="headerlink" title="字符数组"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">字符数组</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p><strong>创建字符数组</strong>：<code>char* s = &quot;This is a test&quot;</code>，如果要对每8位进行操作，则可以使用如下操作：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; s[i]; i += <span class="number">8</span>)</span><br><span class="line">&#123;</span><br><span class="line">	function(s + i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>两个需要注意的点：</p>
+<ul>
+<li>字符数组以 <code>‘\0’</code>为结束标志，<code>ASCII</code>码为0，所以在for循环中可以直接用 <code>s[i]</code>作为结束标志。</li>
+<li><code>s + i</code>不是表示增加<code>ASCII</code>码，<code>char* s</code>是一个指针，指针加上一个数表示将指针移动相应的位置，比如 <code>i = 8</code>时，<code>s</code>的位置就移动到了 <code>a</code>的位置。</li>
+</ul>
+<p><strong>字符转二进制</strong>：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CharToBit</span><span class="params">(<span class="keyword">char</span> *<span class="built_in">bit</span>, <span class="keyword">char</span> *src, <span class="keyword">int</span> length)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j;</span><br><span class="line">    <span class="keyword">char</span> t;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; length; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">8</span>, t = src[i]; j &gt; <span class="number">0</span>; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">bit</span>[(i &lt;&lt; <span class="number">3</span>) + j] = t &amp; <span class="number">1</span>;   <span class="comment">// 取字符末位</span></span><br><span class="line">            t &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p><code>src</code>是要转换的字符数组，比如 <code>src = “romantic”</code>，长度 <code>length = 8</code>，<code>bit</code>是存放转换结果的字符数组。依次取出字符，比如现在  <code>t = ‘r’</code>，而 <code>‘r&#39;</code>的 <code>ASCII</code>码为 <code>114</code>，二进制表示为 <code>01110010</code>。那么 <code>t &amp; 1</code>就取出了末位的 <code>0</code>，然后 <code>t &gt;&gt;= 1</code>，就得到的倒数第二位的 <code>1</code>，依次就能全部变为二进制。存放在 <code>bit</code>应该是连续的，<code>i &lt;&lt; 3 + j</code>刚好就使得下标得以连续，相当于 <code>i * 8 + j</code>。</p>
+<p><strong>二进制转字符：</strong></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BitToChar</span><span class="params">(<span class="keyword">char</span> *str, <span class="keyword">char</span> *bin, <span class="keyword">int</span> length)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; length &lt;&lt; <span class="number">3</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        str[i &gt;&gt; <span class="number">3</span>] &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">        str[i &gt;&gt; <span class="number">3</span>] |= bin[i + <span class="number">1</span>];   <span class="comment">// 添加到末位</span></span><br><span class="line">    &#125;</span><br><span class="line">    str[length] = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>&ensp; &emsp;&nbsp;跟上面的想对应，长度为8的字符数组对应64位二进制数。所以这里循环次数是 <code>length &lt;&lt; 3</code>，扩大8倍，每8个二进制数对应一个字符，因此 <code>str</code>下标为 <code>i &gt;&gt; 3</code>，首先将 <code>str[i &gt;&gt; 3] &lt;&lt;= 1</code>左移1位，那么无论本来末位是0还是1，都会变成0，再与 <code>bin[i + 1]</code>相或就成功添加到了末位，然后再左移，重复这个过程。 至于为什么是 <code>bin[i + 1]</code>,是因为上面字符转二进制时，<code>j = 8; j &gt; 0</code>，所以下标是从1开始的。</p>
+<p><strong>参数传递问题</strong></p>
+<p>&ensp; &emsp;&nbsp;在传递参数时，函数本来应该是 <code>char* offset</code>，但是却传进去一个 <code>int</code>型的数组，这样在对 <code>offset</code>遍历时会出现一个什么问题呢？</p>
+<ul>
+<li>除了 <code>offset[0]</code>是对的以外，其余的 <code>offset[i]</code>都是 <code>0(&#39;\0&#39;的ASCII码)</code>。应该是转换成 <code>char*</code>的时候，自动在第一个元素后面补了一个结束标志，即 <code>&#39;\0&#39;</code>。</li>
+<li>所以说参数的类型一定要搞清楚。</li>
+</ul>
+<p></p><h5 id="uCOS-II的一个小问题" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#uCOS-II的一个小问题" class="headerlink" title="uCOS-II的一个小问题"></a><br>    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">uCOS-II的一个小问题</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5><br>&ensp; &emsp;&nbsp;如果使用了 <code>StartTask</code>来创建任务，那么在最后一定要使用 <code>OSTaskSuspend(OS_PRIO_SELF)</code>来挂起该任务或者也给它相应的延时，否则运行时会出错。<p></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/c/" rel="tag"># c</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/15/leetcode%E7%AC%94%E8%AE%B0/" rel="prev" title="leetcode笔记">
+      <i class="fa fa-chevron-left"></i> leetcode笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/20/%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/" rel="next" title="报错问题">
+      报错问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#参数传递"><span class="nav-number">1.</span> <span class="nav-text">
+    参数传递 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#字符数组"><span class="nav-number">2.</span> <span class="nav-text">
+    字符数组 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#uCOS-II的一个小问题"><span class="nav-number">3.</span> <span class="nav-text">
+    uCOS-II的一个小问题 </span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

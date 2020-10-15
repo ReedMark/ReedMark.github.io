@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="$OSTCBX&#x2F;Y$，$OSTCBBitX&#x2F;Y$的具体含义&amp;ensp; &amp;emsp;&amp;nbsp;举个例子，任务优先级$PRIO&#x3D;30$，写成$8$位二进制为 0001_1110。则$OSRdyGrp&#x3D;$ 1000_1000，$OSRdyTbl\left[3\right]&#x3D;$ 0100_0000。 &amp;ensp; &amp;emsp;&amp;nbsp;设置的编程实现过程： 12ptcb-&gt;OSTCBY &#x3D; (">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OSTCB中的几个概念">
+<meta property="og:url" content="http://yoursite.com/2020/03/14/OSTCB%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="$OSTCBX&#x2F;Y$，$OSTCBBitX&#x2F;Y$的具体含义&amp;ensp; &amp;emsp;&amp;nbsp;举个例子，任务优先级$PRIO&#x3D;30$，写成$8$位二进制为 0001_1110。则$OSRdyGrp&#x3D;$ 1000_1000，$OSRdyTbl\left[3\right]&#x3D;$ 0100_0000。 &amp;ensp; &amp;emsp;&amp;nbsp;设置的编程实现过程： 12ptcb-&gt;OSTCBY &#x3D; (">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-03-14T11:58:22.000Z">
+<meta property="article:modified_time" content="2020-04-07T02:25:19.975Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="嵌入式">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/03/14/OSTCB%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>OSTCB中的几个概念 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/14/OSTCB%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OSTCB中的几个概念
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-03-14 19:58:22" itemprop="dateCreated datePublished" datetime="2020-03-14T19:58:22+08:00">2020-03-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-07 10:25:19" itemprop="dateModified" datetime="2020-04-07T10:25:19+08:00">2020-04-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">嵌入式实时操作系统</span></a>
+                </span>
+                  >
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Knowledge/" itemprop="url" rel="index"><span itemprop="name">Knowledge</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="OSTCBX-Y-，-OSTCBBitX-Y-的具体含义"><a href="#OSTCBX-Y-，-OSTCBBitX-Y-的具体含义" class="headerlink" title="$OSTCBX/Y$，$OSTCBBitX/Y$的具体含义"></a>$OSTCBX/Y$，$OSTCBBitX/Y$的具体含义</h4><p>&ensp; &emsp;&nbsp;举个例子，任务优先级$PRIO=30$，写成$8$位二进制为 <code>0001_1110</code>。则$OSRdyGrp=$ <code>1000_1000</code>，$OSRdyTbl\left[3\right]=$ <code>0100_0000</code>。</p>
+<p>&ensp; &emsp;&nbsp;设置的编程实现过程：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ptcb-&gt;OSTCBY = (INT8U)(prio &gt;&gt; <span class="number">3</span>) = <span class="number">3</span>;</span><br><span class="line">ptcb-&gt;OSTCBX = (INT8U)(prio &amp; <span class="number">0x07</span>) = <span class="number">7</span>;</span><br></pre></td></tr></table></figure></div>
+<p>&ensp; &emsp;&nbsp;第一行求$OSRdyGrp$，第二行求<code>OSRdyTbl[ptcb-&gt;OSTCBY]</code>即 <code>OSRdyTbl[3]</code></p>
+<p>但是按位序号不好设定就绪表和就绪组，转换成：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ptcb-&gt;OSTCBBitY = (INT8U)(<span class="number">1</span> &lt;&lt; ptcb-&gt;OSTCBY);</span><br><span class="line">ptcb-&gt;OSTCBBitX = (INT8U)(<span class="number">1</span> &lt;&lt; ptcb-&gt;OSTCBX);</span><br></pre></td></tr></table></figure></div>
+<p>&ensp; &emsp;&nbsp;上述代码是将$1$向左移位，分别移动  <code>3</code> 位和 <code>7</code>位，变成：</p>
+<p><code>ptcb-&gt;OSTCBBitY: 0000_1000</code>和 <code>ptcb-&gt;OSTCBBitX: 0100_0000</code>。</p>
+<p>以后如果要使任务就绪，比如 <code>prio=30</code>的任务，只要使用：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OSRdyGrp |= ptcb-&gt;OSTCBBitY;</span><br><span class="line">OSRdyTbl[ptcb-&gt;OSTCBY] |= ptcb-&gt;OSTCBBitX;</span><br></pre></td></tr></table></figure></div>
+<p>即可实现。</p>
+<h5 id="分析-OSTimeDly-中相关代码"><a href="#分析-OSTimeDly-中相关代码" class="headerlink" title="分析$OSTimeDly$中相关代码"></a>分析$OSTimeDly$中相关代码</h5><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OSTimeDly</span><span class="params">(INT16U ticks)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_CRITICAL_METHOD == 3</span></span><br><span class="line">    OS_CPU_SR cpu_sr</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="keyword">if</span>(ticks &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        OS_ENTER_CRITICAL();</span><br><span class="line">        <span class="keyword">if</span>((OSRdyTbl[OSTCBCur-&gt;OSTCBY] &amp;= ~OSTCBCur-&gt;OSTCBBitX) == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            OSRdyGrp &amp;= ~OSTCBCur-&gt;OSTCBBitY;</span><br><span class="line">        &#125;</span><br><span class="line">        OSTCBCur-&gt;OSTCBDly = ticks;</span><br><span class="line">        OS_EXIT_CRITICAL();</span><br><span class="line">        OS_Sched();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+<p>&ensp; &emsp;&nbsp;第9行，<code>OSTCBCur-&gt;OSTCBBitX</code> 即 <code>OSRdyTbl[OSTCBCur-&gt;OSTCBY]</code>具体的值，比如 <code>`OSRdyTbl[3]=0100_0000</code>。</p>
+<p>而 <code>~</code>则代表按位取反，因此两者再按位与，如果为 <code>0</code>则代表两者相等，不为 <code>0</code>则不等。相等则意味着这个任务是就绪任务，因此下面第 <code>11</code>行就代表取消任务的就绪状态。</p>
+<h4 id="最高优先级就绪任务的查找"><a href="#最高优先级就绪任务的查找" class="headerlink" title="最高优先级就绪任务的查找"></a>最高优先级就绪任务的查找</h4><p>&ensp; &emsp;&nbsp;重点是 <code>OSUnMapTbl[]</code>的理解，这个数组表示的是 <code>一个8bit的数据最低位为1的位置</code>。比如下面两个例子：<code>1000 0000</code> 最低位为<code>1</code>的位置在第<code>7</code>位，那么 <code>OSUnMapTbl[128]=7</code>；<code>1000 0010</code> 最低位为<code>1</code>的位置在第<code>1</code>位，那么 <code>OSUnMapTbl[130]=1</code>。<span class="label default">这样做的道理是优先级别数字越小，优先级越高</span>。</p>
+<p>&ensp; &emsp;&nbsp;然后就可以用以下代码来查找：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">y = OSUnMapTbl[OSRdyGrp];</span><br><span class="line">x = OSUnMapTbl[OSRdyTbl[y]];</span><br><span class="line">prio = (y &lt;&lt; <span class="number">3</span>) + x;</span><br></pre></td></tr></table></figure></div>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag"># 嵌入式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/11/%E9%93%BE%E8%A1%A8%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" rel="prev" title="链表中的注意事项">
+      <i class="fa fa-chevron-left"></i> 链表中的注意事项
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/16/%E5%BD%A9%E8%89%B2%E7%94%B5%E8%A7%86%E4%BF%A1%E5%8F%B7%E7%9A%84%E4%BC%A0%E8%BE%93/" rel="next" title="彩色电视信号的传输">
+      彩色电视信号的传输 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#OSTCBX-Y-，-OSTCBBitX-Y-的具体含义"><span class="nav-number">1.</span> <span class="nav-text">$OSTCBX&#x2F;Y$，$OSTCBBitX&#x2F;Y$的具体含义</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#分析-OSTimeDly-中相关代码"><span class="nav-number">1.1.</span> <span class="nav-text">分析$OSTimeDly$中相关代码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最高优先级就绪任务的查找"><span class="nav-number">2.</span> <span class="nav-text">最高优先级就绪任务的查找</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

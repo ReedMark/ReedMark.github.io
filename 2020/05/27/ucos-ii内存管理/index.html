@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="在内存空间开辟了一片区域，供4个任务共享读写。1个任务在写内存时，其它任务不能读写。多个任务可以同时读该内存区域数据。 键盘按键1-4分别是 task1、task2、task3、task4的写控制键，键盘按键5-8分别是task1  task2、task3、task4的读控制键。 每按下一次写控制键，在共享区域的数据加1，超过99变为0，显示“写倒计时”在屏幕上。 按下读控制键时，对应的读任务读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ucos-ii内存管理">
+<meta property="og:url" content="http://yoursite.com/2020/05/27/ucos-ii%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在内存空间开辟了一片区域，供4个任务共享读写。1个任务在写内存时，其它任务不能读写。多个任务可以同时读该内存区域数据。 键盘按键1-4分别是 task1、task2、task3、task4的写控制键，键盘按键5-8分别是task1  task2、task3、task4的读控制键。 每按下一次写控制键，在共享区域的数据加1，超过99变为0，显示“写倒计时”在屏幕上。 按下读控制键时，对应的读任务读">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-27T07:58:58.000Z">
+<meta property="article:modified_time" content="2020-05-27T08:04:59.631Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="嵌入式">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/05/27/ucos-ii%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>ucos-ii内存管理 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/27/ucos-ii%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ucos-ii内存管理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-05-27 15:58:58 / Modified: 16:04:59" itemprop="dateCreated datePublished" datetime="2020-05-27T15:58:58+08:00">2020-05-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">嵌入式实时操作系统</span></a>
+                </span>
+                  >
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B9%A0%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">习题</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ul>
+<li>在内存空间开辟了一片区域，供4个任务共享读写。1个任务在写内存时，其它任务不能读写。多个任务可以同时读该内存区域数据。</li>
+<li>键盘按键1-4分别是 task1、task2、task3、task4的写控制键，键盘按键5-8分别是task1<br>  task2、task3、task4的读控制键。</li>
+<li>每按下一次写控制键，在共享区域的数据加1，超过99变为0，显示“写倒计时”在屏幕上。</li>
+<li>按下读控制键时，对应的读任务读取共享区域的数据并显示数据。一个任务的写控制键按下且“写倒计时”未结束时，其它任务的写控制键不能写，同时所有的读控制键也不能读，如果此时有读写动作（按下相应的按键），屏幕应显示报警。</li>
+<li>采用消息邮箱机制完成此实验。一次读或写在务持续时间5秒</li>
+</ul>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"includes.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TASK_STK_SIZE 512</span></span><br><span class="line">OS_STK TaskStk[<span class="number">4</span>][TASK_STK_SIZE];</span><br><span class="line">OS_STK StartTaskStk[TASK_STK_SIZE];</span><br><span class="line">OS_STK KeyTaskStk[TASK_STK_SIZE];</span><br><span class="line">INT8U TaskID[<span class="number">4</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line">INT16S key;</span><br><span class="line">INT16S keyID[<span class="number">9</span>] =</span><br><span class="line">&#123;</span><br><span class="line">    <span class="number">0x1B</span>, <span class="number">0x31</span>, <span class="number">0x32</span>, <span class="number">0x33</span>,</span><br><span class="line">    <span class="number">0x34</span>, <span class="number">0x35</span>, <span class="number">0x36</span>, <span class="number">0x37</span>, <span class="number">0x38</span></span><br><span class="line">&#125;;</span><br><span class="line">BOOLEAN keyFlag;</span><br><span class="line"></span><br><span class="line">OS_EVENT *Str_Box;</span><br><span class="line">OS_MEM *IntBuffer;</span><br><span class="line">INT8S IntPart[<span class="number">2</span>][<span class="number">10</span>];</span><br><span class="line">INT8S *IntBlkPtr;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Task</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">StartTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">KeyTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    INT8U err;</span><br><span class="line">    <span class="keyword">char</span> *s = <span class="string">"Buffer create successfully"</span>;</span><br><span class="line">    OSInit();</span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    PC_DOSSaveReturn();</span><br><span class="line">    PC_VectSet(uCOS, OSCtxSw);</span><br><span class="line">    OS_EXIT_CRITICAL();</span><br><span class="line">    IntBuffer = OSMemCreate(IntPart, <span class="number">2</span>, <span class="number">10</span>, &amp;err);</span><br><span class="line">	IntBlkPtr = OSMemGet(IntBuffer, &amp;err);</span><br><span class="line">	*IntBlkPtr = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(err == OS_NO_ERR)</span><br><span class="line">    &#123;</span><br><span class="line">        PC_DispStr(<span class="number">35</span>, <span class="number">19</span>,</span><br><span class="line">                   s, DISP_FGND_WHITE + DISP_BGND_BLACK );</span><br><span class="line">    &#125;</span><br><span class="line">    Str_Box = OSMboxCreate((<span class="keyword">void</span> *)<span class="number">0</span>);</span><br><span class="line">    OSTaskCreate(StartTask, (<span class="keyword">void</span> *)<span class="number">0</span>,</span><br><span class="line">                 &amp;StartTaskStk[TASK_STK_SIZE - <span class="number">1</span>], <span class="number">0</span>);</span><br><span class="line">    OSStart();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">StartTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    INT8U i, err;</span><br><span class="line">    <span class="keyword">char</span> temp[<span class="number">50</span>];</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_CRITICAL_METHOD == 3</span></span><br><span class="line">    OS_CPU_SR cpu_sr</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    pdata = pdata;</span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    PC_VectSet(<span class="number">0x08</span>, OSTickISR);</span><br><span class="line">    PC_SetTickRate(OS_TICKS_PER_SEC);</span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    OSStatInit();</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        err = OSTaskCreate( <span class="built_in">Task</span>, (<span class="keyword">void</span> *)&amp;TaskID[i],</span><br><span class="line">                            &amp;TaskStk[i][TASK_STK_SIZE - <span class="number">1</span>], i + <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">if</span>(err == OS_NO_ERR)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">sprintf</span>(temp, <span class="string">"task %d create successfully"</span>, i + <span class="number">1</span>);</span><br><span class="line">            PC_DispStr(<span class="number">35</span>, <span class="number">20</span> + i, temp,</span><br><span class="line">                       DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    OSTaskCreate(KeyTask, (<span class="keyword">void</span> *)<span class="number">0</span>,</span><br><span class="line">                 &amp;KeyTaskStk[TASK_STK_SIZE - <span class="number">1</span>], <span class="number">1</span>);</span><br><span class="line">    OSTaskSuspend(OS_PRIO_SELF);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">KeyTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    pdata = pdata;</span><br><span class="line">    <span class="keyword">for</span>(;;)</span><br><span class="line">    &#123;</span><br><span class="line">        keyFlag = PC_GetKey(&amp;key);</span><br><span class="line">        <span class="keyword">if</span>(keyFlag)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(key == keyID[<span class="number">0</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                PC_DOSReturn();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        OSTimeDly(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Task</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> temp[<span class="number">50</span>];</span><br><span class="line">    INT8U ID = *(INT8U *)pdata;</span><br><span class="line">    INT8U err, i;</span><br><span class="line">    <span class="keyword">char</span> *s;</span><br><span class="line">    <span class="keyword">char</span> *clean = <span class="string">"                                                                        "</span>;</span><br><span class="line">    pdata = pdata;</span><br><span class="line">    <span class="keyword">for</span>(;;)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(keyFlag &amp;&amp; key == keyID[ID])</span><br><span class="line">        &#123;</span><br><span class="line">            err = OSMboxPost(Str_Box, <span class="string">"1"</span>);</span><br><span class="line">            <span class="keyword">if</span>(err == OS_NO_ERR)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//IntBlkPtr = OSMemGet(IntBuffer, &amp;err);  /*只用申请一次，如果这里再申请，相当于申请了新的内存块                                                            而且每个Task都会申请一次*/</span></span><br><span class="line">                (*IntBlkPtr)++;</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"Task %d is writing :  %d,  the value: %d"</span>, ID, <span class="number">5</span> - i, *IntBlkPtr);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID, temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    <span class="keyword">if</span>(i == <span class="number">5</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        OSMboxPend(Str_Box, <span class="number">1</span>, &amp;err);</span><br><span class="line">                    &#125;</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"warning:task %d reply writing failed"</span>, ID);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                               temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(*IntBlkPtr &gt; <span class="number">99</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                *IntBlkPtr = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(keyFlag &amp;&amp; key == keyID[ID + <span class="number">4</span>])</span><br><span class="line">        &#123;</span><br><span class="line">            s = OSMboxPend(Str_Box, <span class="number">1</span>, &amp;err);</span><br><span class="line">            <span class="keyword">if</span>(s == <span class="literal">NULL</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"task %d is reading Blk: %d , time left: %d"</span>, ID, *IntBlkPtr, <span class="number">5</span> - i);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                               temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                OSMboxPost(Str_Box, <span class="string">"1"</span>);</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"warning:task %d reply reading failed"</span>, ID);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                               temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                       clean, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">        &#125;</span><br><span class="line">        OSTimeDly(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag"># 嵌入式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/27/ucos-ii%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E2%80%9C/" rel="prev" title="ucos-ii内存管理">
+      <i class="fa fa-chevron-left"></i> ucos-ii内存管理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/15/%E6%A0%91%E8%8E%93%E6%B4%BE%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA/" rel="next" title="树莓派快速搭建">
+      树莓派快速搭建 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

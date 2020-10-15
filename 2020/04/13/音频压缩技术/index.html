@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="音频信号压缩的可能性时域冗余 幅度分布的非均匀性：小幅度值比大幅度值出现的概率大。 数值间的相关性。 周期之间的相关性。 基音之间的相关性。 浊音。 清音。   长时自相关函数。 静止系数。  频域冗余 长时功率谱密度的非均匀性。 短时功率谱密度在某些频率上出现峰值，在另一些频率上出现谷值。  听觉冗余 频谱掩蔽效应   人对各种频率可听见的最小声级叫绝对可听域，也称静听域。在20Hz~20kHz">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音频压缩技术">
+<meta property="og:url" content="http://yoursite.com/2020/04/13/%E9%9F%B3%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="音频信号压缩的可能性时域冗余 幅度分布的非均匀性：小幅度值比大幅度值出现的概率大。 数值间的相关性。 周期之间的相关性。 基音之间的相关性。 浊音。 清音。   长时自相关函数。 静止系数。  频域冗余 长时功率谱密度的非均匀性。 短时功率谱密度在某些频率上出现峰值，在另一些频率上出现谷值。  听觉冗余 频谱掩蔽效应   人对各种频率可听见的最小声级叫绝对可听域，也称静听域。在20Hz~20kHz">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-04-13T02:46:24.000Z">
+<meta property="article:modified_time" content="2020-04-13T06:24:17.460Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="电视技术">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/04/13/%E9%9F%B3%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>音频压缩技术 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/13/%E9%9F%B3%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          音频压缩技术
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-04-13 10:46:24 / Modified: 14:24:17" itemprop="dateCreated datePublished" datetime="2020-04-13T10:46:24+08:00">2020-04-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E8%A7%86%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">电视技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="音频信号压缩的可能性"><a href="#音频信号压缩的可能性" class="headerlink" title="音频信号压缩的可能性"></a>音频信号压缩的可能性</h4><h5 id="时域冗余"><a href="#时域冗余" class="headerlink" title="时域冗余"></a>时域冗余</h5><ul>
+<li>幅度分布的非均匀性：小幅度值比大幅度值出现的概率大。</li>
+<li>数值间的相关性。</li>
+<li>周期之间的相关性。</li>
+<li>基音之间的相关性。<ul>
+<li>浊音。</li>
+<li>清音。</li>
+</ul>
+</li>
+<li>长时自相关函数。</li>
+<li>静止系数。</li>
+</ul>
+<h5 id="频域冗余"><a href="#频域冗余" class="headerlink" title="频域冗余"></a>频域冗余</h5><ul>
+<li>长时功率谱密度的非均匀性。</li>
+<li>短时功率谱密度在某些频率上出现峰值，在另一些频率上出现谷值。</li>
+</ul>
+<h5 id="听觉冗余"><a href="#听觉冗余" class="headerlink" title="听觉冗余"></a>听觉冗余</h5><ul>
+<li><p>频谱掩蔽效应</p>
+<p>  人对各种频率可听见的最小声级叫绝对可听域，也称静听域。在20Hz~20kHz的可听范围内，人耳对频率为3 ~4kHz附近的声音最敏感，对太低和太高频率的声音感觉都很迟钝。</p>
+</li>
+<li><p>时间掩蔽效应</p>
+<ul>
+<li>前掩蔽：听到强音之前的短暂时间内已经存在的弱音被掩蔽而听不到。</li>
+<li>同期掩蔽：强音和弱音同时存在，弱音被强音掩蔽。</li>
+<li>后掩蔽：强音消失后，经过较长的持续时间，才能重新听到弱音信号。</li>
+</ul>
+</li>
+</ul>
+<h5 id="MUSICAM特点"><a href="#MUSICAM特点" class="headerlink" title="MUSICAM特点"></a><strong>MUSICAM</strong>特点</h5><ul>
+<li>利用 <strong>声音信号的统计规律</strong>和 <strong>人的听觉心理模型</strong>，在降低数据处理复杂性和技术实现难度的基础上，有效地降低了数据传输率，在保证高音质地前提下实现了压缩编码。</li>
+<li><p>用<strong>查表</strong>的方式实现了声音特征得提取、量化、编码以及传输格式的形成和编码，有利于信号处理和压缩编码。</p>
+</li>
+<li><p>改变每个子频带的比特分配表，就可以控制MUSICAM处理数据的数码率，具有灵活的数据处理和应用能力。</p>
+</li>
+</ul>
+<h5 id="AC-3特点"><a href="#AC-3特点" class="headerlink" title="AC-3特点"></a>AC-3特点</h5><ul>
+<li>降低噪声以保证音质。</li>
+<li>对各频带采用不同的采样率，以降低数码率。</li>
+<li>将多声道作为一个整体进行编码。</li>
+<li>对各个声道和每个声音内的各频带信号用不同的取样率进行量化，对噪声进行衰减或遮掩。</li>
+</ul>
+<h5 id="DVD单面双层原理"><a href="#DVD单面双层原理" class="headerlink" title="DVD单面双层原理"></a>DVD单面双层原理</h5><p>&ensp; &emsp;&nbsp;表层称为第0层，下层称第1层。第0层为半透射层，能让较长波长的激光透过并读取第1层上的坑、岛信息。当第1层上面的信息读完时，接着由较短波长的激光读取第0层上面的信息。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E8%A7%86%E6%8A%80%E6%9C%AF/" rel="tag"># 电视技术</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/12/leetcode5-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2/" rel="prev" title="leetcode5-最长回文子串">
+      <i class="fa fa-chevron-left"></i> leetcode5-最长回文子串
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/13/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" rel="next" title="多路复用">
+      多路复用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#音频信号压缩的可能性"><span class="nav-number">1.</span> <span class="nav-text">音频信号压缩的可能性</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#时域冗余"><span class="nav-number">1.1.</span> <span class="nav-text">时域冗余</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#频域冗余"><span class="nav-number">1.2.</span> <span class="nav-text">频域冗余</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#听觉冗余"><span class="nav-number">1.3.</span> <span class="nav-text">听觉冗余</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#MUSICAM特点"><span class="nav-number">1.4.</span> <span class="nav-text">MUSICAM特点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AC-3特点"><span class="nav-number">1.5.</span> <span class="nav-text">AC-3特点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#DVD单面双层原理"><span class="nav-number">1.6.</span> <span class="nav-text">DVD单面双层原理</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>
