@@ -18,20 +18,20 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
-  <meta name="description" content="搜索旋转排序数组                                                  假设按照升序排序的数组在预先未知的某个点上进行了旋转。  例如，数组 [0,1,2,4,5,6,7] 可能变为 [4,5,6,7,0,1,2]。                  搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。">
+  <meta name="description" content="1.安装系统，换源等参考网上其他教程。2.更改默认的python版本为3.7.12345sudo rm &#x2F;usr&#x2F;bin&#x2F;pythonsudo rm &#x2F;usr&#x2F;bin&#x2F;pipsudo ln -s &#x2F;usr&#x2F;bin&#x2F;python3 &#x2F;usr&#x2F;bin&#x2F;pythoncsudo ln -s &#x2F;usr&#x2F;bin&#x2F;pip3 &#x2F;usr&#x2F;bin&#x2F;pip 3.下载Opencv。由于在终端下载非常慢，我们可以去网站ht">
 <meta property="og:type" content="article">
-<meta property="og:title" content="leetcode33-搜索旋转排序数组">
-<meta property="og:url" content="http://yoursite.com/2020/04/05/leetcode33-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/index.html">
+<meta property="og:title" content="树莓派4B搭建Tensorflow+Opencv运行Yolo-V3+Deep_Sort全过程记录">
+<meta property="og:url" content="http://yoursite.com/2020/10/22/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E6%90%AD%E5%BB%BATensorflow+Opencv%E8%BF%90%E8%A1%8CYolo-V3+Deep_Sort%E5%85%A8%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="搜索旋转排序数组                                                  假设按照升序排序的数组在预先未知的某个点上进行了旋转。  例如，数组 [0,1,2,4,5,6,7] 可能变为 [4,5,6,7,0,1,2]。                  搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。">
+<meta property="og:description" content="1.安装系统，换源等参考网上其他教程。2.更改默认的python版本为3.7.12345sudo rm &#x2F;usr&#x2F;bin&#x2F;pythonsudo rm &#x2F;usr&#x2F;bin&#x2F;pipsudo ln -s &#x2F;usr&#x2F;bin&#x2F;python3 &#x2F;usr&#x2F;bin&#x2F;pythoncsudo ln -s &#x2F;usr&#x2F;bin&#x2F;pip3 &#x2F;usr&#x2F;bin&#x2F;pip 3.下载Opencv。由于在终端下载非常慢，我们可以去网站ht">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-04-05T03:06:28.000Z">
-<meta property="article:modified_time" content="2020-04-05T07:00:11.493Z">
+<meta property="article:published_time" content="2020-10-22T13:35:02.000Z">
+<meta property="article:modified_time" content="2020-10-22T13:48:49.207Z">
 <meta property="article:author" content="ReedMark">
-<meta property="article:tag" content="算法">
+<meta property="article:tag" content="树莓派">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2020/04/05/leetcode33-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/">
+<link rel="canonical" href="http://yoursite.com/2020/10/22/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E6%90%AD%E5%BB%BATensorflow+Opencv%E8%BF%90%E8%A1%8CYolo-V3+Deep_Sort%E5%85%A8%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95/">
 
 
 <script id="page-configurations">
@@ -43,7 +43,7 @@
   };
 </script>
 
-  <title>leetcode33-搜索旋转排序数组 | Hexo</title>
+  <title>树莓派4B搭建Tensorflow+Opencv运行Yolo-V3+Deep_Sort全过程记录 | Hexo</title>
   
 
 
@@ -169,7 +169,7 @@ $(window).load(function(){
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/05/leetcode33-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/22/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E6%90%AD%E5%BB%BATensorflow+Opencv%E8%BF%90%E8%A1%8CYolo-V3+Deep_Sort%E5%85%A8%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -182,7 +182,7 @@ $(window).load(function(){
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          leetcode33-搜索旋转排序数组
+          树莓派4B搭建Tensorflow+Opencv运行Yolo-V3+Deep_Sort全过程记录
         </h1>
 
         <div class="post-meta">
@@ -193,7 +193,7 @@ $(window).load(function(){
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-04-05 11:06:28 / Modified: 15:00:11" itemprop="dateCreated datePublished" datetime="2020-04-05T11:06:28+08:00">2020-04-05</time>
+              <time title="Created: 2020-10-22 21:35:02 / Modified: 21:48:49" itemprop="dateCreated datePublished" datetime="2020-10-22T21:35:02+08:00">2020-10-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -201,7 +201,7 @@ $(window).load(function(){
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Leetcode%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">Leetcode题解</span></a>
+                  <a href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/" itemprop="url" rel="index"><span itemprop="name">树莓派</span></a>
                 </span>
             </span>
 
@@ -216,49 +216,12 @@ $(window).load(function(){
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><strong>搜索旋转排序数组</strong></p>
-<table>
-     <tr>
-         <td style="background-color:#F0F0F0;color:gray">
-             <ul>
-                 <li> 假设按照升序排序的数组在预先未知的某个点上进行了旋转。
- 例如，数组 <code>[0,1,2,4,5,6,7]</code> 可能变为 <code>[4,5,6,7,0,1,2]</code>。</li>
-                 <li>搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 <code>-1</code> 。</li>
-                 <li>你可以假设数组中不存在重复的元素。你的算法时间复杂度必须是<code>O(log n)</code> 级别。</li>
-             </ul>
-         </td>
-    </tr>
-</table>
-
-
-<p><strong>示例</strong></p>
-<p><table>
-    <tr>
-        <td style="background-color:#F0F0F0;color:gray">
-            <ul style="list-style-type:decimal">
-                <li><ul style="list-style-type:disc">
-                    <li>输入: <code>nums = [4,5,6,7,0,1,2], target = 0</code></li>
-                    <li>输出: <code>4</code></li>
-                    </ul></li>
-                <li><ul style="list-style-type:disc">
-                    <li>输入: <code>nums = [4,5,6,7,0,1,2], target = 3</code></li>
-                    <li>输出: <code>-1</code></li>
-                    </ul></li>
-            </ul>
-        </td>
-    </tr>
-</table></p>
-<div class="note default">
-    <p>
-        <code>O(log n)</code>自然想到的是二分查找,怎么分就很关键了。像<code>[1, 2, 3, 4, 5, 6, 7]</code>大概可以分成两类：<ul>
-    <li><code>[2, 3, 4, 5, 6, 7, 1]</code>这种，<code>nums[start] &le; nums[mid]</code>,此时左边是有序的，如果<code>nums[start] &le; target &lt; nums[mid]</code>,则在前面查找，否则去后面。</li>
-     <li><code>[6, 7, 1, 2, 3, 4, 5]</code>这种，<code>nums[start] &gt; nums[mid]</code>,此时右边是有序的，如果<code>nums[mid] &lt; target &le; nums[end]</code>,则在后面查找，否则去前面。</li>
-    </ul>
-    </p>
-</div>
-
-<p><strong>代码实现</strong></p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//nums[start] &lt; nums[mid] 左边是有序的，</span></span><br><span class="line">        <span class="comment">//若nums[start] &lt;= target &lt; nums[mid]则在左边查找</span></span><br><span class="line">        <span class="comment">//nums[start] &gt; nums[mid] 右边是有序的</span></span><br><span class="line">        <span class="comment">//若nums[mid] &lt; target &lt;= nums[end]则在右边查找</span></span><br><span class="line">        <span class="keyword">int</span> start = <span class="number">0</span>, end = nums.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> mid;</span><br><span class="line">        <span class="keyword">while</span>(start &lt;= end)&#123;</span><br><span class="line">            mid = start + (end - start) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid] == target)&#123;</span><br><span class="line">                <span class="keyword">return</span> mid;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//注意下面要用 &lt;= ，否则如果漏掉 = 的条件，就会出现错误</span></span><br><span class="line">            <span class="keyword">if</span>(nums[start] &lt;= nums[mid])&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[start] &lt;= target &amp;&amp; nums[mid] &gt; target)&#123;</span><br><span class="line">                    <span class="comment">//由于mid已经不等于target了，所以加1减1</span></span><br><span class="line">                    <span class="comment">//而且由于循环停止条件是 &lt;= ，如果不加1减1最终可能陷入死循环</span></span><br><span class="line">                    end = mid - <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    start = mid + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[start] &gt;= nums[mid])&#123;</span><br><span class="line">                    <span class="keyword">if</span>(nums[mid] &lt; target &amp;&amp; nums[end] &gt;= target)&#123;</span><br><span class="line">                        start = mid + <span class="number">1</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        end = mid - <span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+        <h4 id="1-安装系统，换源等参考网上其他教程。"><a href="#1-安装系统，换源等参考网上其他教程。" class="headerlink" title="1.安装系统，换源等参考网上其他教程。"></a>1.安装系统，换源等参考网上其他教程。</h4><h4 id="2-更改默认的python版本为3-7"><a href="#2-更改默认的python版本为3-7" class="headerlink" title="2.更改默认的python版本为3.7."></a>2.更改默认的python版本为3.7.</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo rm /usr/bin/python</span><br><span class="line">sudo rm /usr/bin/pip</span><br><span class="line"></span><br><span class="line">sudo ln -s /usr/bin/python3 /usr/bin/pythonc</span><br><span class="line">sudo ln -s /usr/bin/pip3 /usr/bin/pip</span><br></pre></td></tr></table></figure></div>
+<h4 id="3-下载Opencv。"><a href="#3-下载Opencv。" class="headerlink" title="3.下载Opencv。"></a>3.下载<code>Opencv</code>。</h4><p>由于在终端下载非常慢，我们可以去网站<a href="https://www.piwheels.org/simple/opencv-python/里面下载对应python版本的`Opencv`。然后放入" target="_blank" rel="noopener">https://www.piwheels.org/simple/opencv-python/里面下载对应python版本的`Opencv`。然后放入</a> <code>/home/pi</code>中，比如我们这里下载的文件是 <code>opencv_python-4.4.0.44-cp37-cp37m-linux_armv7l.whl</code>。</p>
+<h4 id="4-安装必要的依赖库。"><a href="#4-安装必要的依赖库。" class="headerlink" title="4.安装必要的依赖库。"></a>4.安装必要的依赖库。</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">get</span> install libcblas-dev</span><br><span class="line">sudo apt-<span class="built_in">get</span> install libhdf5-dev</span><br><span class="line">sudo apt-<span class="built_in">get</span> install libhdf5-serial-dev</span><br><span class="line">sudo apt-<span class="built_in">get</span> install libatlas-base-dev</span><br><span class="line">sudo apt-<span class="built_in">get</span> install libjasper-dev </span><br><span class="line">sudo apt-<span class="built_in">get</span> install libqtgui4 </span><br><span class="line">sudo apt-<span class="built_in">get</span> install libqt4-testc</span><br></pre></td></tr></table></figure></div>
+<h4 id="5-安装-Opencv"><a href="#5-安装-Opencv" class="headerlink" title="5.安装 Opencv"></a>5.安装 <code>Opencv</code></h4><p>使用命令 <code>sudo pip install opencv_python-4.4.0.44-cp37-cp37m-linux_armv7l.whl</code> </p>
+<p>进行安装，期间如遇到较大的库也可选择去网站下载，然后单独安装。</p>
+<h4 id="6-下载安装Tensorflow"><a href="#6-下载安装Tensorflow" class="headerlink" title="6.下载安装Tensorflow"></a>6.下载安装<code>Tensorflow</code></h4><p>上面提到的网站上面对 <code>Tensorflow</code>的支持只到1.14.0，而python3.7是不支持这个版本的，所以需要下载更高版本的 <code>Tensorflow</code>，我们可以找到2.3.0版本的<code>whl</code>包进行安装，步骤与上面相似。</p>
 
     </div>
 
@@ -268,7 +231,7 @@ $(window).load(function(){
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag"># 树莓派</a>
           </div>
 
         
@@ -277,12 +240,12 @@ $(window).load(function(){
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/04/04/leetcode31-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" rel="prev" title="leetcode31-下一个排列">
-      <i class="fa fa-chevron-left"></i> leetcode31-下一个排列
+    <a href="/2020/10/21/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E5%AE%89%E8%A3%85Python3.6/" rel="prev" title="树莓派4B安装Python3.6">
+      <i class="fa fa-chevron-left"></i> 树莓派4B安装Python3.6
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/04/06/leetcode34-%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E4%BD%8D%E7%BD%AE/" rel="next" title="leetcode34-在排序数组中查找元素的第一个和最后一个位置">
-      leetcode34-在排序数组中查找元素的第一个和最后一个位置 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/11/04/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%BD%BF%E7%94%A8%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%90%AD%E5%BB%BA%E8%87%AA%E5%8A%A8%E8%B7%9F%E9%9A%8F%E5%B0%8F%E8%BD%A6/" rel="next" title="树莓派4B使用深度学习搭建自动跟随小车">
+      树莓派4B使用深度学习搭建自动跟随小车 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -343,6 +306,7 @@ $(window).load(function(){
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-安装系统，换源等参考网上其他教程。"><span class="nav-number">1.</span> <span class="nav-text">1.安装系统，换源等参考网上其他教程。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-更改默认的python版本为3-7"><span class="nav-number">2.</span> <span class="nav-text">2.更改默认的python版本为3.7.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-下载Opencv。"><span class="nav-number">3.</span> <span class="nav-text">3.下载Opencv。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-安装必要的依赖库。"><span class="nav-number">4.</span> <span class="nav-text">4.安装必要的依赖库。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-安装-Opencv"><span class="nav-number">5.</span> <span class="nav-text">5.安装 Opencv</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-下载安装Tensorflow"><span class="nav-number">6.</span> <span class="nav-text">6.下载安装Tensorflow</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

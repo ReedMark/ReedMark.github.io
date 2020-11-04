@@ -164,6 +164,252 @@ $(window).load(function(){
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/04/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%BD%BF%E7%94%A8%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%90%AD%E5%BB%BA%E8%87%AA%E5%8A%A8%E8%B7%9F%E9%9A%8F%E5%B0%8F%E8%BD%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/04/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%BD%BF%E7%94%A8%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%90%AD%E5%BB%BA%E8%87%AA%E5%8A%A8%E8%B7%9F%E9%9A%8F%E5%B0%8F%E8%BD%A6/" class="post-title-link" itemprop="url">树莓派4B使用深度学习搭建自动跟随小车</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-11-04 22:00:21 / Modified: 22:14:39" itemprop="dateCreated datePublished" datetime="2020-11-04T22:00:21+08:00">2020-11-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/" itemprop="url" rel="index"><span itemprop="name">树莓派</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1-树莓派环境搭建"><a href="#1-树莓派环境搭建" class="headerlink" title="1.树莓派环境搭建"></a>1.树莓派环境搭建</h4><p>这里就不详细介绍了，使用的buster系统，python版本为默认的3.7.</p>
+<p>安装好 <code>numpy</code>、 <code>opencv</code>。如果需要使用 <code>Intel</code>神经棒进行加速，则需要安装 <code>mvnc</code>,可以自行寻找教程。我们最终是通过摄像头来跑深度学习从而识别人体，根据识别到的方框来判断人具体的位置，从而控制小车。</p>
+<h4 id="2-关于小车"><a href="#2-关于小车" class="headerlink" title="2.关于小车"></a>2.关于小车</h4><p>这里使用的小车是全向三轮车，可以使用串口来进行控制，通过不同的串口指令可以实现前进、后退以及顺时针或逆时针旋转等操作。我们需要使树莓派作为控制器向小车发送串口指令。在 <code>python</code>中，只需导入 <code>serial</code>包，就可以通过串口发送数据了。</p>
+<h4 id="3-小车控制部分代码"><a href="#3-小车控制部分代码" class="headerlink" title="3.小车控制部分代码"></a>3.小车控制部分代码</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PYTHON"><figure class="iseeu highlight /python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_forward</span><span class="params">()</span>:</span></span><br><span class="line">    forwardInput = <span class="string">'ff fe 01 00 00 00 12 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(forwardInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_backward</span><span class="params">()</span>:</span></span><br><span class="line">    backwardInput = <span class="string">'ff fe 01 00 00 00 12 00 00 02'</span></span><br><span class="line">    ser.write(bytes.fromhex(backwardInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stop_car</span><span class="params">()</span>:</span></span><br><span class="line">    stopInput = <span class="string">'ff fe 01 00 00 00 00 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(stopInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_left</span><span class="params">()</span>:</span></span><br><span class="line">    leftInput = <span class="string">'ff fe 01 00 12 00 00 00 00 04'</span></span><br><span class="line">    ser.write(bytes.fromhex(leftInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_right</span><span class="params">()</span>:</span></span><br><span class="line">    rightInput = <span class="string">'ff fe 01 00 12 00 00 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(rightInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_zpositive</span><span class="params">()</span>:</span></span><br><span class="line">    zpositiveInput = <span class="string">'ff fe 01 00 00 00 00 00 06 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(zpositiveInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_znegetive</span><span class="params">()</span>:</span></span><br><span class="line">    znegetiveInput = <span class="string">'ff fe 01 00 00 00 00 00 06 01'</span></span><br><span class="line">    ser.write(bytes.fromhex(znegetiveInput))</span><br></pre></td></tr></table></figure></div>
+<p>具体的串口命令可以根据你所使用的小车来改变。这里要注意的是，串口命令一般是16进制发送的，而 <code>python</code>中默认是字符串格式，所以需要格式转换。</p>
+<h4 id="4-总体代码"><a href="#4-总体代码" class="headerlink" title="4.总体代码"></a>4.总体代码</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PYTHON"><figure class="iseeu highlight /python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># USAGE</span></span><br><span class="line"><span class="comment"># python ncs_realtime_objectdetection.py --graph graphs/mobilenetgraph --display 1</span></span><br><span class="line"><span class="comment"># python ncs_realtime_objectdetection.py --graph graphs/mobilenetgraph --confidence 0.5 --display 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># import the necessary packages</span></span><br><span class="line"><span class="keyword">from</span> mvnc <span class="keyword">import</span> mvncapi <span class="keyword">as</span> mvnc</span><br><span class="line"><span class="keyword">from</span> imutils.video <span class="keyword">import</span> VideoStream</span><br><span class="line"><span class="keyword">from</span> imutils.video <span class="keyword">import</span> FPS</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> serial</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># initialize the list of class labels our network was trained to</span></span><br><span class="line"><span class="comment"># detect, then generate a set of bounding box colors for each class</span></span><br><span class="line">CLASSES = (<span class="string">"background"</span>, <span class="string">"aeroplane"</span>, <span class="string">"bicycle"</span>, <span class="string">"bird"</span>,</span><br><span class="line">    <span class="string">"boat"</span>, <span class="string">"bottle"</span>, <span class="string">"bus"</span>, <span class="string">"car"</span>, <span class="string">"cat"</span>, <span class="string">"chair"</span>, <span class="string">"cow"</span>,</span><br><span class="line">    <span class="string">"diningtable"</span>, <span class="string">"dog"</span>, <span class="string">"horse"</span>, <span class="string">"motorbike"</span>, <span class="string">"person"</span>,</span><br><span class="line">    <span class="string">"pottedplant"</span>, <span class="string">"sheep"</span>, <span class="string">"sofa"</span>, <span class="string">"train"</span>, <span class="string">"tvmonitor"</span>)</span><br><span class="line">COLORS = np.random.uniform(<span class="number">0</span>, <span class="number">255</span>, size=(len(CLASSES), <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># frame dimensions should be sqaure</span></span><br><span class="line">PREPROCESS_DIMS = (<span class="number">300</span>, <span class="number">300</span>)</span><br><span class="line">DISPLAY_DIMS = (<span class="number">900</span>, <span class="number">900</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># calculate the multiplier needed to scale the bounding boxes</span></span><br><span class="line">DISP_MULTIPLIER = DISPLAY_DIMS[<span class="number">0</span>] // PREPROCESS_DIMS[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">ser = serial.Serial(<span class="string">"/dev/ttyUSB0"</span>, <span class="number">115200</span>, timeout = <span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_forward</span><span class="params">()</span>:</span></span><br><span class="line">    forwardInput = <span class="string">'ff fe 01 00 00 00 12 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(forwardInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_backward</span><span class="params">()</span>:</span></span><br><span class="line">    backwardInput = <span class="string">'ff fe 01 00 00 00 12 00 00 02'</span></span><br><span class="line">    ser.write(bytes.fromhex(backwardInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stop_car</span><span class="params">()</span>:</span></span><br><span class="line">    stopInput = <span class="string">'ff fe 01 00 00 00 00 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(stopInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_left</span><span class="params">()</span>:</span></span><br><span class="line">    leftInput = <span class="string">'ff fe 01 00 12 00 00 00 00 04'</span></span><br><span class="line">    ser.write(bytes.fromhex(leftInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_right</span><span class="params">()</span>:</span></span><br><span class="line">    rightInput = <span class="string">'ff fe 01 00 12 00 00 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(rightInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_zpositive</span><span class="params">()</span>:</span></span><br><span class="line">    zpositiveInput = <span class="string">'ff fe 01 00 00 00 00 00 06 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(zpositiveInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_znegetive</span><span class="params">()</span>:</span></span><br><span class="line">    znegetiveInput = <span class="string">'ff fe 01 00 00 00 00 00 06 01'</span></span><br><span class="line">    ser.write(bytes.fromhex(znegetiveInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">preprocess_image</span><span class="params">(input_image)</span>:</span></span><br><span class="line">    <span class="comment"># preprocess the image</span></span><br><span class="line">    preprocessed = cv2.resize(input_image, PREPROCESS_DIMS)</span><br><span class="line">    preprocessed = preprocessed - <span class="number">127.5</span></span><br><span class="line">    preprocessed = preprocessed * <span class="number">0.007843</span></span><br><span class="line">    preprocessed = preprocessed.astype(np.float16)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># return the image to the calling function</span></span><br><span class="line">    <span class="keyword">return</span> preprocessed</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(image, graph)</span>:</span></span><br><span class="line">    <span class="comment"># preprocess the image</span></span><br><span class="line">    image = preprocess_image(image)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># send the image to the NCS and run a forward pass to grab the</span></span><br><span class="line">    <span class="comment"># network predictions</span></span><br><span class="line">    graph.LoadTensor(image, <span class="literal">None</span>)</span><br><span class="line">    (output, _) = graph.GetResult()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># grab the number of valid object predictions from the output,</span></span><br><span class="line">    <span class="comment"># then initialize the list of predictions</span></span><br><span class="line">    num_valid_boxes = output[<span class="number">0</span>]</span><br><span class="line">    predictions = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># loop over results</span></span><br><span class="line">    <span class="keyword">for</span> box_index <span class="keyword">in</span> range(int(num_valid_boxes)):</span><br><span class="line">        <span class="comment"># calculate the base index into our array so we can extract</span></span><br><span class="line">        <span class="comment"># bounding box information</span></span><br><span class="line">        base_index = <span class="number">7</span> + box_index * <span class="number">7</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># boxes with non-finite (inf, nan, etc) numbers must be ignored</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">not</span> np.isfinite(output[base_index]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">1</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">2</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">3</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">4</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">5</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">6</span>])):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># extract the image width and height and clip the boxes to the</span></span><br><span class="line">        <span class="comment"># image size in case network returns boxes outside of the image</span></span><br><span class="line">        <span class="comment"># boundaries</span></span><br><span class="line">        (h, w) = image.shape[:<span class="number">2</span>]</span><br><span class="line">        x1 = max(<span class="number">0</span>, int(output[base_index + <span class="number">3</span>] * w))</span><br><span class="line">        y1 = max(<span class="number">0</span>, int(output[base_index + <span class="number">4</span>] * h))</span><br><span class="line">        x2 = min(w, int(output[base_index + <span class="number">5</span>] * w))</span><br><span class="line">        y2 = min(h, int(output[base_index + <span class="number">6</span>] * h))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># grab the prediction class label, confidence (i.e., probability),</span></span><br><span class="line">        <span class="comment"># and bounding box (x, y)-coordinates</span></span><br><span class="line">        pred_class = int(output[base_index + <span class="number">1</span>])</span><br><span class="line">        pred_conf = output[base_index + <span class="number">2</span>]</span><br><span class="line">        pred_boxpts = ((x1, y1), (x2, y2))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># create prediciton tuple and append the prediction to the</span></span><br><span class="line">        <span class="comment"># predictions list</span></span><br><span class="line">        prediction = (pred_class, pred_conf, pred_boxpts)</span><br><span class="line">        predictions.append(prediction)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># return the list of predictions to the calling function</span></span><br><span class="line">    <span class="keyword">return</span> predictions</span><br><span class="line"></span><br><span class="line"><span class="comment"># construct the argument parser and parse the arguments</span></span><br><span class="line">ap = argparse.ArgumentParser()</span><br><span class="line">ap.add_argument(<span class="string">"-g"</span>, <span class="string">"--graph"</span>, required=<span class="literal">True</span>,</span><br><span class="line">    help=<span class="string">"path to input graph file"</span>)</span><br><span class="line">ap.add_argument(<span class="string">"-c"</span>, <span class="string">"--confidence"</span>, default=<span class="number">.5</span>,</span><br><span class="line">    help=<span class="string">"confidence threshold"</span>)</span><br><span class="line">ap.add_argument(<span class="string">"-d"</span>, <span class="string">"--display"</span>, type=int, default=<span class="number">0</span>,</span><br><span class="line">    help=<span class="string">"switch to display image on screen"</span>)</span><br><span class="line">args = vars(ap.parse_args())</span><br><span class="line"></span><br><span class="line"><span class="comment"># grab a list of all NCS devices plugged in to USB</span></span><br><span class="line">print(<span class="string">"[INFO] finding NCS devices..."</span>)</span><br><span class="line">devices = mvnc.EnumerateDevices()</span><br><span class="line"></span><br><span class="line"><span class="comment"># if no devices found, exit the script</span></span><br><span class="line"><span class="keyword">if</span> len(devices) == <span class="number">0</span>:</span><br><span class="line">    print(<span class="string">"[INFO] No devices found. Please plug in a NCS"</span>)</span><br><span class="line">    quit()</span><br><span class="line"></span><br><span class="line"><span class="comment"># use the first device since this is a simple test script</span></span><br><span class="line"><span class="comment"># (you'll want to modify this is using multiple NCS devices)</span></span><br><span class="line">print(<span class="string">"[INFO] found &#123;&#125; devices. device0 will be used. "</span></span><br><span class="line">    <span class="string">"opening device0..."</span>.format(len(devices)))</span><br><span class="line">device = mvnc.Device(devices[<span class="number">0</span>])</span><br><span class="line">device.OpenDevice()</span><br><span class="line"></span><br><span class="line"><span class="comment"># open the CNN graph file</span></span><br><span class="line">print(<span class="string">"[INFO] loading the graph file into RPi memory..."</span>)</span><br><span class="line"><span class="keyword">with</span> open(args[<span class="string">"graph"</span>], mode=<span class="string">"rb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">    graph_in_memory = f.read()</span><br><span class="line"></span><br><span class="line"><span class="comment"># load the graph into the NCS</span></span><br><span class="line">print(<span class="string">"[INFO] allocating the graph on the NCS..."</span>)</span><br><span class="line">graph = device.AllocateGraph(graph_in_memory)</span><br><span class="line"></span><br><span class="line"><span class="comment"># open a pointer to the video stream thread and allow the buffer to</span></span><br><span class="line"><span class="comment"># start to fill, then start the FPS counter</span></span><br><span class="line">print(<span class="string">"[INFO] starting the video stream and FPS counter..."</span>)</span><br><span class="line">vs = VideoStream(usePiCamera=<span class="literal">False</span>).start()</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line">fps = FPS().start()</span><br><span class="line"></span><br><span class="line"><span class="comment"># loop over frames from the video file stream</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># grab the frame from the threaded video stream</span></span><br><span class="line">        <span class="comment"># make a copy of the frame and resize it for display/video purposes</span></span><br><span class="line">        frame = vs.read()</span><br><span class="line">        image_for_result = frame.copy()</span><br><span class="line">        image_for_result = cv2.resize(image_for_result, DISPLAY_DIMS)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># use the NCS to acquire predictions</span></span><br><span class="line">        predictions = predict(frame, graph)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># loop over our predictions</span></span><br><span class="line">        <span class="keyword">for</span> (i, pred) <span class="keyword">in</span> enumerate(predictions):</span><br><span class="line">            <span class="comment"># extract prediction data for readability</span></span><br><span class="line">            (pred_class, pred_conf, pred_boxpts) = pred</span><br><span class="line"></span><br><span class="line">            <span class="comment"># filter out weak detections by ensuring the `confidence`</span></span><br><span class="line">            <span class="comment"># is greater than the minimum confidence</span></span><br><span class="line">            <span class="comment">#if pred_conf &gt; args["confidence"]:</span></span><br><span class="line">            <span class="keyword">if</span> CLASSES[pred_class] == <span class="string">'person'</span>:</span><br><span class="line">                area = (pred_boxpts[<span class="number">1</span>][<span class="number">0</span>] - pred_boxpts[<span class="number">0</span>][<span class="number">0</span>]) * (pred_boxpts[<span class="number">1</span>][<span class="number">1</span>] - pred_boxpts[<span class="number">0</span>][<span class="number">1</span>])</span><br><span class="line">                <span class="keyword">if</span> ((pred_boxpts[<span class="number">0</span>][<span class="number">0</span>] + pred_boxpts[<span class="number">1</span>][<span class="number">0</span>]) // <span class="number">2</span>) - <span class="number">150</span> &gt; <span class="number">20</span>:</span><br><span class="line">                    move_zpositive()</span><br><span class="line">                <span class="keyword">elif</span> ((pred_boxpts[<span class="number">0</span>][<span class="number">0</span>] + pred_boxpts[<span class="number">1</span>][<span class="number">0</span>]) // <span class="number">2</span>) - <span class="number">150</span> &lt; <span class="number">-20</span>:</span><br><span class="line">                    move_znegetive()</span><br><span class="line">                <span class="keyword">elif</span> area &lt; <span class="number">150</span> * <span class="number">150</span>:</span><br><span class="line">                    move_forward()</span><br><span class="line">                <span class="keyword">elif</span> area &gt; <span class="number">250</span> * <span class="number">250</span>:</span><br><span class="line">                    move_backward()</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    stop_car()</span><br><span class="line">                </span><br><span class="line">                <span class="comment">#print(area)</span></span><br><span class="line">                <span class="comment">#print(((pred_boxpts[0][0] + pred_boxpts[1][0]) // 2) - 150)</span></span><br><span class="line">                <span class="comment"># print prediction to terminal</span></span><br><span class="line">                <span class="comment">#print("[INFO] Prediction #&#123;&#125;: class=&#123;&#125;, confidence=&#123;&#125;, "</span></span><br><span class="line">                    <span class="comment">#"boxpoints=&#123;&#125;".format(i, CLASSES[pred_class], pred_conf,</span></span><br><span class="line">                    <span class="comment">#pred_boxpts))</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># check if we should show the prediction data</span></span><br><span class="line">                <span class="comment"># on the frame</span></span><br><span class="line">                <span class="keyword">if</span> args[<span class="string">"display"</span>] &gt; <span class="number">0</span>:</span><br><span class="line">                    <span class="comment"># build a label consisting of the predicted class and</span></span><br><span class="line">                    <span class="comment"># associated probability</span></span><br><span class="line">                    label = <span class="string">"&#123;&#125;: &#123;:.2f&#125;%"</span>.format(CLASSES[pred_class],</span><br><span class="line">                        pred_conf * <span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">                    <span class="comment"># extract information from the prediction boxpoints</span></span><br><span class="line">                    (ptA, ptB) = (pred_boxpts[<span class="number">0</span>], pred_boxpts[<span class="number">1</span>])</span><br><span class="line">                    ptA = (ptA[<span class="number">0</span>] * DISP_MULTIPLIER, ptA[<span class="number">1</span>] * DISP_MULTIPLIER)</span><br><span class="line">                    ptB = (ptB[<span class="number">0</span>] * DISP_MULTIPLIER, ptB[<span class="number">1</span>] * DISP_MULTIPLIER)</span><br><span class="line">                    (startX, startY) = (ptA[<span class="number">0</span>], ptA[<span class="number">1</span>])</span><br><span class="line">                    y = startY - <span class="number">15</span> <span class="keyword">if</span> startY - <span class="number">15</span> &gt; <span class="number">15</span> <span class="keyword">else</span> startY + <span class="number">15</span></span><br><span class="line"></span><br><span class="line">                    <span class="comment"># display the rectangle and label text</span></span><br><span class="line">                    cv2.rectangle(image_for_result, ptA, ptB,</span><br><span class="line">                        COLORS[pred_class], <span class="number">2</span>)</span><br><span class="line">                    cv2.putText(image_for_result, label, (startX, y),</span><br><span class="line">                        cv2.FONT_HERSHEY_SIMPLEX, <span class="number">1</span>, COLORS[pred_class], <span class="number">3</span>)</span><br><span class="line">            </span><br><span class="line">            </span><br><span class="line">        <span class="comment"># check if we should display the frame on the screen</span></span><br><span class="line">        <span class="comment"># with prediction data (you can achieve faster FPS if you</span></span><br><span class="line">        <span class="comment"># do not output to the screen)</span></span><br><span class="line">        <span class="keyword">if</span> args[<span class="string">"display"</span>] &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># display the frame to the screen</span></span><br><span class="line">            cv2.imshow(<span class="string">"Output"</span>, image_for_result)</span><br><span class="line">            key = cv2.waitKey(<span class="number">1</span>) &amp; <span class="number">0xFF</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># if the `q` key was pressed, break from the loop</span></span><br><span class="line">            <span class="keyword">if</span> key == ord(<span class="string">"q"</span>):</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># update the FPS counter</span></span><br><span class="line">        fps.update()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># if "ctrl+c" is pressed in the terminal, break from the loop</span></span><br><span class="line">    <span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># if there's a problem reading a frame, break gracefully</span></span><br><span class="line">    <span class="keyword">except</span> AttributeError:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># stop the FPS counter timer</span></span><br><span class="line">fps.stop()</span><br><span class="line"></span><br><span class="line"><span class="comment"># destroy all windows if we are displaying them</span></span><br><span class="line"><span class="keyword">if</span> args[<span class="string">"display"</span>] &gt; <span class="number">0</span>:</span><br><span class="line">    cv2.destroyAllWindows()</span><br><span class="line"></span><br><span class="line"><span class="comment"># stop the video stream</span></span><br><span class="line">vs.stop()</span><br><span class="line"></span><br><span class="line"><span class="comment"># clean up the graph and device</span></span><br><span class="line">graph.DeallocateGraph()</span><br><span class="line">device.CloseDevice()</span><br><span class="line"></span><br><span class="line"><span class="comment"># display FPS information</span></span><br><span class="line">print(<span class="string">"[INFO] elapsed time: &#123;:.2f&#125;"</span>.format(fps.elapsed()))</span><br><span class="line">print(<span class="string">"[INFO] approx. FPS: &#123;:.2f&#125;"</span>.format(fps.fps()))</span><br></pre></td></tr></table></figure></div>
+<p>深度学习算法模型的导入以及调用就不多说了，要达到跟随行人的目的，重点是第186行开始，如果检测到的是类别是 <code>person</code>，那么根据方框 <code>pred_boxpts</code>的相关参数，可以算出水平方向与整个图像中心点的偏差，从而来控制小车的方向；至于前后方向，我们可以根据方框计算其所占的面积大小，如果人体远离摄像头那么整个面积必然会减小，这时前进即可，反之亦然。</p>
+<p>这个方法虽然比较简单，但是实际的效果还是不错的。至于其他部分，注释比较多，就不再细说了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/22/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E6%90%AD%E5%BB%BATensorflow+Opencv%E8%BF%90%E8%A1%8CYolo-V3+Deep_Sort%E5%85%A8%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/22/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E6%90%AD%E5%BB%BATensorflow+Opencv%E8%BF%90%E8%A1%8CYolo-V3+Deep_Sort%E5%85%A8%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">树莓派4B搭建Tensorflow+Opencv运行Yolo-V3+Deep_Sort全过程记录</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-10-22 21:35:02 / Modified: 21:48:49" itemprop="dateCreated datePublished" datetime="2020-10-22T21:35:02+08:00">2020-10-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/" itemprop="url" rel="index"><span itemprop="name">树莓派</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="1-安装系统，换源等参考网上其他教程。"><a href="#1-安装系统，换源等参考网上其他教程。" class="headerlink" title="1.安装系统，换源等参考网上其他教程。"></a>1.安装系统，换源等参考网上其他教程。</h4><h4 id="2-更改默认的python版本为3-7"><a href="#2-更改默认的python版本为3-7" class="headerlink" title="2.更改默认的python版本为3.7."></a>2.更改默认的python版本为3.7.</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo rm /usr/bin/python</span><br><span class="line">sudo rm /usr/bin/pip</span><br><span class="line"></span><br><span class="line">sudo ln -s /usr/bin/python3 /usr/bin/pythonc</span><br><span class="line">sudo ln -s /usr/bin/pip3 /usr/bin/pip</span><br></pre></td></tr></table></figure></div>
+<h4 id="3-下载Opencv。"><a href="#3-下载Opencv。" class="headerlink" title="3.下载Opencv。"></a>3.下载<code>Opencv</code>。</h4><p>由于在终端下载非常慢，我们可以去网站<a href="https://www.piwheels.org/simple/opencv-python/里面下载对应python版本的`Opencv`。然后放入" target="_blank" rel="noopener">https://www.piwheels.org/simple/opencv-python/里面下载对应python版本的`Opencv`。然后放入</a> <code>/home/pi</code>中，比如我们这里下载的文件是 <code>opencv_python-4.4.0.44-cp37-cp37m-linux_armv7l.whl</code>。</p>
+<h4 id="4-安装必要的依赖库。"><a href="#4-安装必要的依赖库。" class="headerlink" title="4.安装必要的依赖库。"></a>4.安装必要的依赖库。</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">get</span> install libcblas-dev</span><br><span class="line">sudo apt-<span class="built_in">get</span> install libhdf5-dev</span><br><span class="line">sudo apt-<span class="built_in">get</span> install libhdf5-serial-dev</span><br><span class="line">sudo apt-<span class="built_in">get</span> install libatlas-base-dev</span><br><span class="line">sudo apt-<span class="built_in">get</span> install libjasper-dev </span><br><span class="line">sudo apt-<span class="built_in">get</span> install libqtgui4 </span><br><span class="line">sudo apt-<span class="built_in">get</span> install libqt4-testc</span><br></pre></td></tr></table></figure></div>
+<h4 id="5-安装-Opencv"><a href="#5-安装-Opencv" class="headerlink" title="5.安装 Opencv"></a>5.安装 <code>Opencv</code></h4><p>使用命令 <code>sudo pip install opencv_python-4.4.0.44-cp37-cp37m-linux_armv7l.whl</code> </p>
+<p>进行安装，期间如遇到较大的库也可选择去网站下载，然后单独安装。</p>
+<h4 id="6-下载安装Tensorflow"><a href="#6-下载安装Tensorflow" class="headerlink" title="6.下载安装Tensorflow"></a>6.下载安装<code>Tensorflow</code></h4><p>上面提到的网站上面对 <code>Tensorflow</code>的支持只到1.14.0，而python3.7是不支持这个版本的，所以需要下载更高版本的 <code>Tensorflow</code>，我们可以找到2.3.0版本的<code>whl</code>包进行安装，步骤与上面相似。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/21/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E5%AE%89%E8%A3%85Python3.6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/21/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E5%AE%89%E8%A3%85Python3.6/" class="post-title-link" itemprop="url">树莓派4B安装Python3.6</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-10-21 16:27:12 / Modified: 20:32:06" itemprop="dateCreated datePublished" datetime="2020-10-21T16:27:12+08:00">2020-10-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/" itemprop="url" rel="index"><span itemprop="name">树莓派</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ol>
+<li><p>安装树莓派系统。</p>
+</li>
+<li><p>更换系统更新源：</p>
+<p> 在终端输入<code>sudo nano /etc/apt/sources.list</code></p>
+<p> 用 <code>#</code>注释原内容，添加以下内容：</p>
+ <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb http:<span class="comment">//mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ buster main  contrib non-free rpi</span></span><br><span class="line">deb-src http:<span class="comment">//mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ buster main contrib non-free rpi</span></span><br></pre></td></tr></table></figure></div>
+<p> <code>Ctrl+O</code>保存， <code>Ctrl+X</code>退出。</p>
+<p> 在终端输入 <code>sudo nano /etc/apt/sources.list.d/raspi.list</code> </p>
+<p> 用 <code>#</code>注释原内容，添加以下内容：</p>
+ <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb http:<span class="comment">//mirrors.tuna.tsinghua.edu.cn/raspberrypi/ buster main ui</span></span><br><span class="line">deb-src http:<span class="comment">//mirrors.tuna.tsinghua.edu.cn/raspberrypi/ buster main ui</span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>更新软件源列表，更新软件：</p>
+ <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">get</span> update</span><br><span class="line">sudo apt-<span class="built_in">get</span> upgrade</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>安装 <code>Python</code>依赖环境：</p>
+ <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="built_in">get</span> install build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5<span class="number">.3</span>-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>下载 <code>Python3.6</code>源码并解压：</p>
+ <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https:<span class="comment">//www.python.org/ftp/python/3.6.9/Python-3.6.9.tgz</span></span><br><span class="line">tar zxvf Python<span class="number">-3.6</span><span class="number">.9</span>.tgz</span><br><span class="line">cd Python<span class="number">-3.6</span><span class="number">.9</span></span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>编译安装：</p>
+ <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ./configure &amp;&amp; sudo make &amp;&amp; sudo make install</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>将 <code>Python3.6</code>软链接至 <code>Python</code>上。</p>
+ <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo rm /usr/bin/python</span><br><span class="line">sudo rm /usr/bin/pip</span><br><span class="line"></span><br><span class="line">sudo ln -s /usr/local/bin/python3<span class="number">.6</span> /usr/bin/python</span><br><span class="line">sudo ln -s /usr/local/bin/pip3 /usr/bin/pip</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>这样终端输入 <code>python</code>就会显示 <code>Python3.6</code>版本了。</p>
+</li>
+<li></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/15/%E6%A0%91%E8%8E%93%E6%B4%BE%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -753,386 +999,6 @@ index:   0 1 2 3 2 1 0 1 2 3 2</pre>
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/13/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/13/%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" class="post-title-link" itemprop="url">多路复用</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-04-13 14:25:26 / Modified: 21:58:30" itemprop="dateCreated datePublished" datetime="2020-04-13T14:25:26+08:00">2020-04-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%B5%E8%A7%86%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">电视技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="节目复用"><a href="#节目复用" class="headerlink" title="节目复用"></a>节目复用</h4><h5 id="PES包"><a href="#PES包" class="headerlink" title="PES包"></a>PES包</h5><p>&ensp; &emsp;&nbsp;系统层将不同的基本流分别加包头打包就称为PES包，又称分组基本码流。</p>
-<h5 id="TS包"><a href="#TS包" class="headerlink" title="TS包"></a>TS包</h5><ul>
-<li><p>为进行多路数字节目流的复用和有效传输，又将PES包作为负载分别插入传送流TS包中。</p>
-</li>
-<li><p>固定188Bit，包头共4Bit。</p>
-</li>
-</ul>
-<h5 id="节目特定信息"><a href="#节目特定信息" class="headerlink" title="节目特定信息"></a>节目特定信息</h5><ul>
-<li>PSI信息以 <strong>段</strong>为单位进行组织。</li>
-<li>每个TS流必须有一个完整有效的节目关联表（PAT）。</li>
-</ul>
-<h5 id="习题"><a href="#习题" class="headerlink" title="习题"></a>习题</h5><h6 id="节目复用和系统复用有什么区别？"><a href="#节目复用和系统复用有什么区别？" class="headerlink" title="节目复用和系统复用有什么区别？"></a>节目复用和系统复用有什么区别？</h6><ul>
-<li><p>节目复用：将一路数字电视节目的视频、音频和数据等各种媒体按照一定的方法<strong>时分复用</strong>成一个单一的数据流。</p>
-</li>
-<li><p>系统复用：将各路数字电视节目的数据流进行再复用，实现节目间的动态带宽分配。</p>
-</li>
-</ul>
-<h6 id="简述PES包的结构，PES包的长度是多少？"><a href="#简述PES包的结构，PES包的长度是多少？" class="headerlink" title="简述PES包的结构，PES包的长度是多少？"></a>简述PES包的结构，PES包的长度是多少？</h6><ul>
-<li>包头<ul>
-<li>起始码前缀：23个0和1个1组成。</li>
-<li>包识别：表示序号。</li>
-<li>PES长度：表示这个字段后有多少字节。</li>
-<li>PES头部标志：14bit。</li>
-<li>PES头部长度。</li>
-<li>PES头部可选区域。</li>
-</ul>
-</li>
-<li>PES数据块</li>
-</ul>
-<p>&ensp; &emsp;&nbsp;PES包的长度不固定。</p>
-<h6 id="简述TS包的结构，TS包的长度是多少？"><a href="#简述TS包的结构，TS包的长度是多少？" class="headerlink" title="简述TS包的结构，TS包的长度是多少？"></a>简述TS包的结构，TS包的长度是多少？</h6><ul>
-<li>包头：4bit<ul>
-<li>同步字节</li>
-<li>误码指示</li>
-<li>有效负荷单元起始指示</li>
-<li>传输优先级</li>
-<li>包标识</li>
-<li>加扰标识</li>
-<li>适配区域标识</li>
-<li>连续计数器</li>
-</ul>
-</li>
-<li>有用信息，又称负载。</li>
-</ul>
-<p>&ensp; &emsp;&nbsp;TS包长度固定188bit。</p>
-<h6 id="包标识域（PID码）起什么作用？"><a href="#包标识域（PID码）起什么作用？" class="headerlink" title="包标识域（PID码）起什么作用？"></a>包标识域（PID码）起什么作用？</h6><p>借助PID，用户可以将自己感兴趣的TS包从TS流中挑选出来，对不感兴趣的TS包可置之不理。保证了数字电视系统的可扩展性。</p>
-<h6 id="PSI主要有哪4种？"><a href="#PSI主要有哪4种？" class="headerlink" title="PSI主要有哪4种？"></a>PSI主要有哪4种？</h6><ul>
-<li>节目关联表</li>
-<li>节目映射表</li>
-<li>网络信息表</li>
-<li>条件接收表</li>
-</ul>
-<h6 id="SI有哪9种？"><a href="#SI有哪9种？" class="headerlink" title="SI有哪9种？"></a>SI有哪9种？</h6><p>SI：业务信息。</p>
-<ul>
-<li>业务描述表</li>
-<li>业务群关联表</li>
-<li>事件信息表</li>
-<li>运行状态表</li>
-<li>时间日期表</li>
-<li>时间偏移表</li>
-<li>填充表</li>
-<li>选择信息表</li>
-<li>间断信息表</li>
-</ul>
-<h6 id="系统复用最主要的工作是什么？"><a href="#系统复用最主要的工作是什么？" class="headerlink" title="系统复用最主要的工作是什么？"></a>系统复用最主要的工作是什么？</h6><ul>
-<li>PSI信息的重构</li>
-<li>PCR修正</li>
-</ul>
-<h6 id="在数字电视中开展增值业务，加入的方法有几种？"><a href="#在数字电视中开展增值业务，加入的方法有几种？" class="headerlink" title="在数字电视中开展增值业务，加入的方法有几种？"></a>在数字电视中开展增值业务，加入的方法有几种？</h6><ul>
-<li>从节目复用中加入，适用于数据量不大的情况。</li>
-<li>从系统复用中加入。</li>
-</ul>
-<h6 id="DVB为数据广播定义了哪7种数据广播方式？"><a href="#DVB为数据广播定义了哪7种数据广播方式？" class="headerlink" title="DVB为数据广播定义了哪7种数据广播方式？"></a>DVB为数据广播定义了哪7种数据广播方式？</h6><ul>
-<li>数据管道</li>
-<li>异步数据流</li>
-<li>同步数据流</li>
-<li>被同步数据流</li>
-<li>多协议封装</li>
-<li>数据循环</li>
-<li>对象循环</li>
-</ul>
-<h6 id="EPG系统有什么用处？EPG系统的关键技术是什么？"><a href="#EPG系统有什么用处？EPG系统的关键技术是什么？" class="headerlink" title="EPG系统有什么用处？EPG系统的关键技术是什么？"></a>EPG系统有什么用处？EPG系统的关键技术是什么？</h6><p>&ensp; &emsp;&nbsp;给用户提供了一种快速访问节目的方式。</p>
-<p>关键技术：</p>
-<ul>
-<li>SI数据的接收和解析</li>
-<li>SI数据库的建立</li>
-<li>EPG界面的显示</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/13/%E9%9F%B3%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/13/%E9%9F%B3%E9%A2%91%E5%8E%8B%E7%BC%A9%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">音频压缩技术</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-04-13 10:46:24 / Modified: 14:24:17" itemprop="dateCreated datePublished" datetime="2020-04-13T10:46:24+08:00">2020-04-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%B5%E8%A7%86%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">电视技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="音频信号压缩的可能性"><a href="#音频信号压缩的可能性" class="headerlink" title="音频信号压缩的可能性"></a>音频信号压缩的可能性</h4><h5 id="时域冗余"><a href="#时域冗余" class="headerlink" title="时域冗余"></a>时域冗余</h5><ul>
-<li>幅度分布的非均匀性：小幅度值比大幅度值出现的概率大。</li>
-<li>数值间的相关性。</li>
-<li>周期之间的相关性。</li>
-<li>基音之间的相关性。<ul>
-<li>浊音。</li>
-<li>清音。</li>
-</ul>
-</li>
-<li>长时自相关函数。</li>
-<li>静止系数。</li>
-</ul>
-<h5 id="频域冗余"><a href="#频域冗余" class="headerlink" title="频域冗余"></a>频域冗余</h5><ul>
-<li>长时功率谱密度的非均匀性。</li>
-<li>短时功率谱密度在某些频率上出现峰值，在另一些频率上出现谷值。</li>
-</ul>
-<h5 id="听觉冗余"><a href="#听觉冗余" class="headerlink" title="听觉冗余"></a>听觉冗余</h5><ul>
-<li><p>频谱掩蔽效应</p>
-<p>  人对各种频率可听见的最小声级叫绝对可听域，也称静听域。在20Hz~20kHz的可听范围内，人耳对频率为3 ~4kHz附近的声音最敏感，对太低和太高频率的声音感觉都很迟钝。</p>
-</li>
-<li><p>时间掩蔽效应</p>
-<ul>
-<li>前掩蔽：听到强音之前的短暂时间内已经存在的弱音被掩蔽而听不到。</li>
-<li>同期掩蔽：强音和弱音同时存在，弱音被强音掩蔽。</li>
-<li>后掩蔽：强音消失后，经过较长的持续时间，才能重新听到弱音信号。</li>
-</ul>
-</li>
-</ul>
-<h5 id="MUSICAM特点"><a href="#MUSICAM特点" class="headerlink" title="MUSICAM特点"></a><strong>MUSICAM</strong>特点</h5><ul>
-<li>利用 <strong>声音信号的统计规律</strong>和 <strong>人的听觉心理模型</strong>，在降低数据处理复杂性和技术实现难度的基础上，有效地降低了数据传输率，在保证高音质地前提下实现了压缩编码。</li>
-<li><p>用<strong>查表</strong>的方式实现了声音特征得提取、量化、编码以及传输格式的形成和编码，有利于信号处理和压缩编码。</p>
-</li>
-<li><p>改变每个子频带的比特分配表，就可以控制MUSICAM处理数据的数码率，具有灵活的数据处理和应用能力。</p>
-</li>
-</ul>
-<h5 id="AC-3特点"><a href="#AC-3特点" class="headerlink" title="AC-3特点"></a>AC-3特点</h5><ul>
-<li>降低噪声以保证音质。</li>
-<li>对各频带采用不同的采样率，以降低数码率。</li>
-<li>将多声道作为一个整体进行编码。</li>
-<li>对各个声道和每个声音内的各频带信号用不同的取样率进行量化，对噪声进行衰减或遮掩。</li>
-</ul>
-<h5 id="DVD单面双层原理"><a href="#DVD单面双层原理" class="headerlink" title="DVD单面双层原理"></a>DVD单面双层原理</h5><p>&ensp; &emsp;&nbsp;表层称为第0层，下层称第1层。第0层为半透射层，能让较长波长的激光透过并读取第1层上的坑、岛信息。当第1层上面的信息读完时，接着由较短波长的激光读取第0层上面的信息。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/12/leetcode5-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/12/leetcode5-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2/" class="post-title-link" itemprop="url">leetcode5-最长回文子串</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-04-12 22:48:43 / Modified: 23:41:46" itemprop="dateCreated datePublished" datetime="2020-04-12T22:48:43+08:00">2020-04-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Leetcode%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">Leetcode题解</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <section style="display: inline-block;width: 97%;vertical-align: top;letter-spacing: 0px;padding-right: 25px;padding-left: 0px;box-shadow: rgb(0, 0, 0) 0px 0px 0px;">
-  <section style="margin-top: 10px;margin-bottom: 10px;">
-    <section style="display: inline-block;width: 100%;vertical-align: top;border-width: 1px;border-style: solid;border-color: transparent;padding: 10px;box-shadow: rgb(170, 170, 170) 0px 0px 10px;background-color:#e0e7ff">
-      <section style="margin-top: -60px;margin-right: 0%;margin-left: 0%;transform: translate3d(1px, 20px, 0px);text-align: justify;">
-        <section style="display: inline-block;vertical-align: top;box-shadow: rgb(114, 106, 106) 0em 0.1em 0.3em;border-radius: 0px 0px 0.3em 0.3em;background-color: rgb(95, 156, 239);color: rgb(248, 240, 240);font-size: 18px;padding-left: 10px;padding-right: 10px;width: fit-content;text-align: justify;height: 70px;">
-          <h5 id="最长回文子串"><a href="#最长回文子串" class="headerlink" title="最长回文子串"></a>最长回文子串</h5>
-          <section style="display: inline-block;vertical-align: top;width: auto;"></section>
-        </section>
-      </section><br>
-      <span style="font-size: 16px;color: rgb(0, 0, 0);">&ensp; &emsp;&nbsp;给定一个字符串 s，找到 s 中最长的回文子串。你可以假设 s 的最大长度为 1000。</span><br>
-      <br>
-      <span style="font-size: 16px;color: rgb(0, 0, 0);">示例:</span>
-      <ol>
-        <li>
-          <ul style="list-style-type:disc">
-            <li><span style="font-size: 16px;color: rgb(0, 0, 0);">输入:"babad"</span></li>
-            <li><span style="font-size: 16px;color: rgb(0, 0, 0);">输出: "bab"或"aba"</span></li>
-          </ul>
-        </li><br>
-        <li>
-          <ul style="list-style-type:disc">
-            <li><span style="font-size: 16px;color: rgb(0, 0, 0);">输入: "cbbd"</span></li>
-            <li><span style="font-size: 16px;color: rgb(0, 0, 0);">输出: "bb"</span></li><br>
-          </ul>
-        </li>
-      </ol>
-      <section style="margin-left: 8px;margin-right: 8px;line-height: 2em;"></section>
-    </section>
-  </section>
-</section>
-
-
-
-
-
-<h5 id="分析" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#分析" class="headerlink" title="分析"></a><span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">分析</span> <span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"></span></h5>
-<blockquote style="font-size: 0.9em;overflow: auto;color: rgb(106, 115, 125);padding: 10px 10px 10px 20px;margin-bottom: 0px;margin-top: 0px;border-left-color: rgb(239, 112, 96);background: rgb(255, 249, 249);border-right: 2px solid rgb(239, 112, 96); border-bottom: 2px solid rgb(239, 112, 96);border-top: 2px solid rgb(239, 112, 96);">
-  <span style="font-size: 16px;padding-top: 8px;padding-bottom: 8px;color: black;line-height: 26px;"></span>
-  <ul>
-    <li><span style="font-size: 16px;padding-top: 8px;padding-bottom: 8px;color: black;line-height: 26px;">如果用暴力法，即对s的所有字串进行判断，显然过于复杂。</span></li>
-    <li><span style="font-size: 16px;padding-top: 8px;padding-bottom: 8px;color: black;line-height: 26px;">考虑回文串的特点，比如aba或者abba，都是中心镜像对称的，也就是说从中心向两侧进行扩展，左右应该都是相等的。</span></li>
-    <li><span style="font-size: 16px;padding-top: 8px;padding-bottom: 8px;color: black;line-height: 26px;">对于奇数长度的回文子串，如aba应该从(i,i)处进行遍历，当i=1时，就满足条件。而对于偶数长度的回文子串，则应该从(i,i+1)处进行遍历，比如abba,当i=1时，也满足条件。</span></li>
-    <li><span style="font-size: 16px;padding-top: 8px;padding-bottom: 8px;color: black;line-height: 26px;">要求最长，并且需要返回下标，则需要计算处开始位置start和结束位置end，只有当下一个回文子串的长度大于end-start时，才更新start和end。</span></li>
-    <li><span style="font-size: 16px;padding-top: 8px;padding-bottom: 8px;color: black;line-height: 26px;">中心扩展返回的的字串的长度，并且知道其中心为i，故<code>start=i-(len-1)/2</code>,减1是由于偶数时，比如abba，i的位置为1，len=4，如果不减去1则会越界。而<code>end=i+len/2</code>。</span></li>
-  </ul>
-</blockquote>
-
-<h5 id="代码" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#代码" class="headerlink" title="代码"></a><span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">代码</span> <span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"></span></h5>
-
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(s.length() &lt; <span class="number">2</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> s;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> len1, len2, len;</span><br><span class="line">        <span class="keyword">int</span> start = <span class="number">0</span>, end = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++)&#123;</span><br><span class="line">            len1 = expandCenter(s, i, i);</span><br><span class="line">            len2 = expandCenter(s, i, i + <span class="number">1</span>);</span><br><span class="line">            len = Math.max(len1, len2);</span><br><span class="line">            <span class="keyword">if</span>(len &gt; end - start)&#123;</span><br><span class="line">                start = i - (len - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">                end = i + len / <span class="number">2</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.substring(start, end + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">expandCenter</span><span class="params">(String s, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(left &gt;= <span class="number">0</span> &amp;&amp; right &lt; s.length() &amp;&amp; s.charAt(left) == s.charAt(right))&#123;</span><br><span class="line">            left--;</span><br><span class="line">            right++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> right - left - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1203,7 +1069,7 @@ index:   0 1 2 3 2 1 0 1 2 3 2</pre>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

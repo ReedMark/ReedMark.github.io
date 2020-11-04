@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="1.树莓派环境搭建这里就不详细介绍了，使用的buster系统，python版本为默认的3.7. 安装好 numpy、 opencv。如果需要使用 Intel神经棒进行加速，则需要安装 mvnc,可以自行寻找教程。我们最终是通过摄像头来跑深度学习从而识别人体，根据识别到的方框来判断人具体的位置，从而控制小车。 2.关于小车这里使用的小车是全向三轮车，可以使用串口来进行控制，通过不同的串口指令可以实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树莓派4B使用深度学习搭建自动跟随小车">
+<meta property="og:url" content="http://yoursite.com/2020/11/04/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%BD%BF%E7%94%A8%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%90%AD%E5%BB%BA%E8%87%AA%E5%8A%A8%E8%B7%9F%E9%9A%8F%E5%B0%8F%E8%BD%A6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1.树莓派环境搭建这里就不详细介绍了，使用的buster系统，python版本为默认的3.7. 安装好 numpy、 opencv。如果需要使用 Intel神经棒进行加速，则需要安装 mvnc,可以自行寻找教程。我们最终是通过摄像头来跑深度学习从而识别人体，根据识别到的方框来判断人具体的位置，从而控制小车。 2.关于小车这里使用的小车是全向三轮车，可以使用串口来进行控制，通过不同的串口指令可以实现">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-04T14:00:21.000Z">
+<meta property="article:modified_time" content="2020-11-04T14:14:39.487Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="树莓派">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/11/04/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%BD%BF%E7%94%A8%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%90%AD%E5%BB%BA%E8%87%AA%E5%8A%A8%E8%B7%9F%E9%9A%8F%E5%B0%8F%E8%BD%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>树莓派4B使用深度学习搭建自动跟随小车 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/04/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E4%BD%BF%E7%94%A8%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%90%AD%E5%BB%BA%E8%87%AA%E5%8A%A8%E8%B7%9F%E9%9A%8F%E5%B0%8F%E8%BD%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          树莓派4B使用深度学习搭建自动跟随小车
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-11-04 22:00:21 / Modified: 22:14:39" itemprop="dateCreated datePublished" datetime="2020-11-04T22:00:21+08:00">2020-11-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/" itemprop="url" rel="index"><span itemprop="name">树莓派</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="1-树莓派环境搭建"><a href="#1-树莓派环境搭建" class="headerlink" title="1.树莓派环境搭建"></a>1.树莓派环境搭建</h4><p>这里就不详细介绍了，使用的buster系统，python版本为默认的3.7.</p>
+<p>安装好 <code>numpy</code>、 <code>opencv</code>。如果需要使用 <code>Intel</code>神经棒进行加速，则需要安装 <code>mvnc</code>,可以自行寻找教程。我们最终是通过摄像头来跑深度学习从而识别人体，根据识别到的方框来判断人具体的位置，从而控制小车。</p>
+<h4 id="2-关于小车"><a href="#2-关于小车" class="headerlink" title="2.关于小车"></a>2.关于小车</h4><p>这里使用的小车是全向三轮车，可以使用串口来进行控制，通过不同的串口指令可以实现前进、后退以及顺时针或逆时针旋转等操作。我们需要使树莓派作为控制器向小车发送串口指令。在 <code>python</code>中，只需导入 <code>serial</code>包，就可以通过串口发送数据了。</p>
+<h4 id="3-小车控制部分代码"><a href="#3-小车控制部分代码" class="headerlink" title="3.小车控制部分代码"></a>3.小车控制部分代码</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PYTHON"><figure class="iseeu highlight /python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_forward</span><span class="params">()</span>:</span></span><br><span class="line">    forwardInput = <span class="string">'ff fe 01 00 00 00 12 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(forwardInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_backward</span><span class="params">()</span>:</span></span><br><span class="line">    backwardInput = <span class="string">'ff fe 01 00 00 00 12 00 00 02'</span></span><br><span class="line">    ser.write(bytes.fromhex(backwardInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stop_car</span><span class="params">()</span>:</span></span><br><span class="line">    stopInput = <span class="string">'ff fe 01 00 00 00 00 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(stopInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_left</span><span class="params">()</span>:</span></span><br><span class="line">    leftInput = <span class="string">'ff fe 01 00 12 00 00 00 00 04'</span></span><br><span class="line">    ser.write(bytes.fromhex(leftInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_right</span><span class="params">()</span>:</span></span><br><span class="line">    rightInput = <span class="string">'ff fe 01 00 12 00 00 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(rightInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_zpositive</span><span class="params">()</span>:</span></span><br><span class="line">    zpositiveInput = <span class="string">'ff fe 01 00 00 00 00 00 06 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(zpositiveInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_znegetive</span><span class="params">()</span>:</span></span><br><span class="line">    znegetiveInput = <span class="string">'ff fe 01 00 00 00 00 00 06 01'</span></span><br><span class="line">    ser.write(bytes.fromhex(znegetiveInput))</span><br></pre></td></tr></table></figure></div>
+<p>具体的串口命令可以根据你所使用的小车来改变。这里要注意的是，串口命令一般是16进制发送的，而 <code>python</code>中默认是字符串格式，所以需要格式转换。</p>
+<h4 id="4-总体代码"><a href="#4-总体代码" class="headerlink" title="4.总体代码"></a>4.总体代码</h4><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="PYTHON"><figure class="iseeu highlight /python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># USAGE</span></span><br><span class="line"><span class="comment"># python ncs_realtime_objectdetection.py --graph graphs/mobilenetgraph --display 1</span></span><br><span class="line"><span class="comment"># python ncs_realtime_objectdetection.py --graph graphs/mobilenetgraph --confidence 0.5 --display 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># import the necessary packages</span></span><br><span class="line"><span class="keyword">from</span> mvnc <span class="keyword">import</span> mvncapi <span class="keyword">as</span> mvnc</span><br><span class="line"><span class="keyword">from</span> imutils.video <span class="keyword">import</span> VideoStream</span><br><span class="line"><span class="keyword">from</span> imutils.video <span class="keyword">import</span> FPS</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">import</span> serial</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># initialize the list of class labels our network was trained to</span></span><br><span class="line"><span class="comment"># detect, then generate a set of bounding box colors for each class</span></span><br><span class="line">CLASSES = (<span class="string">"background"</span>, <span class="string">"aeroplane"</span>, <span class="string">"bicycle"</span>, <span class="string">"bird"</span>,</span><br><span class="line">    <span class="string">"boat"</span>, <span class="string">"bottle"</span>, <span class="string">"bus"</span>, <span class="string">"car"</span>, <span class="string">"cat"</span>, <span class="string">"chair"</span>, <span class="string">"cow"</span>,</span><br><span class="line">    <span class="string">"diningtable"</span>, <span class="string">"dog"</span>, <span class="string">"horse"</span>, <span class="string">"motorbike"</span>, <span class="string">"person"</span>,</span><br><span class="line">    <span class="string">"pottedplant"</span>, <span class="string">"sheep"</span>, <span class="string">"sofa"</span>, <span class="string">"train"</span>, <span class="string">"tvmonitor"</span>)</span><br><span class="line">COLORS = np.random.uniform(<span class="number">0</span>, <span class="number">255</span>, size=(len(CLASSES), <span class="number">3</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># frame dimensions should be sqaure</span></span><br><span class="line">PREPROCESS_DIMS = (<span class="number">300</span>, <span class="number">300</span>)</span><br><span class="line">DISPLAY_DIMS = (<span class="number">900</span>, <span class="number">900</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># calculate the multiplier needed to scale the bounding boxes</span></span><br><span class="line">DISP_MULTIPLIER = DISPLAY_DIMS[<span class="number">0</span>] // PREPROCESS_DIMS[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">ser = serial.Serial(<span class="string">"/dev/ttyUSB0"</span>, <span class="number">115200</span>, timeout = <span class="number">0.5</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_forward</span><span class="params">()</span>:</span></span><br><span class="line">    forwardInput = <span class="string">'ff fe 01 00 00 00 12 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(forwardInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_backward</span><span class="params">()</span>:</span></span><br><span class="line">    backwardInput = <span class="string">'ff fe 01 00 00 00 12 00 00 02'</span></span><br><span class="line">    ser.write(bytes.fromhex(backwardInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stop_car</span><span class="params">()</span>:</span></span><br><span class="line">    stopInput = <span class="string">'ff fe 01 00 00 00 00 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(stopInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_left</span><span class="params">()</span>:</span></span><br><span class="line">    leftInput = <span class="string">'ff fe 01 00 12 00 00 00 00 04'</span></span><br><span class="line">    ser.write(bytes.fromhex(leftInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_right</span><span class="params">()</span>:</span></span><br><span class="line">    rightInput = <span class="string">'ff fe 01 00 12 00 00 00 00 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(rightInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_zpositive</span><span class="params">()</span>:</span></span><br><span class="line">    zpositiveInput = <span class="string">'ff fe 01 00 00 00 00 00 06 00'</span></span><br><span class="line">    ser.write(bytes.fromhex(zpositiveInput))</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">move_znegetive</span><span class="params">()</span>:</span></span><br><span class="line">    znegetiveInput = <span class="string">'ff fe 01 00 00 00 00 00 06 01'</span></span><br><span class="line">    ser.write(bytes.fromhex(znegetiveInput))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">preprocess_image</span><span class="params">(input_image)</span>:</span></span><br><span class="line">    <span class="comment"># preprocess the image</span></span><br><span class="line">    preprocessed = cv2.resize(input_image, PREPROCESS_DIMS)</span><br><span class="line">    preprocessed = preprocessed - <span class="number">127.5</span></span><br><span class="line">    preprocessed = preprocessed * <span class="number">0.007843</span></span><br><span class="line">    preprocessed = preprocessed.astype(np.float16)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># return the image to the calling function</span></span><br><span class="line">    <span class="keyword">return</span> preprocessed</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(image, graph)</span>:</span></span><br><span class="line">    <span class="comment"># preprocess the image</span></span><br><span class="line">    image = preprocess_image(image)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># send the image to the NCS and run a forward pass to grab the</span></span><br><span class="line">    <span class="comment"># network predictions</span></span><br><span class="line">    graph.LoadTensor(image, <span class="literal">None</span>)</span><br><span class="line">    (output, _) = graph.GetResult()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># grab the number of valid object predictions from the output,</span></span><br><span class="line">    <span class="comment"># then initialize the list of predictions</span></span><br><span class="line">    num_valid_boxes = output[<span class="number">0</span>]</span><br><span class="line">    predictions = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># loop over results</span></span><br><span class="line">    <span class="keyword">for</span> box_index <span class="keyword">in</span> range(int(num_valid_boxes)):</span><br><span class="line">        <span class="comment"># calculate the base index into our array so we can extract</span></span><br><span class="line">        <span class="comment"># bounding box information</span></span><br><span class="line">        base_index = <span class="number">7</span> + box_index * <span class="number">7</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># boxes with non-finite (inf, nan, etc) numbers must be ignored</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">not</span> np.isfinite(output[base_index]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">1</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">2</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">3</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">4</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">5</span>]) <span class="keyword">or</span></span><br><span class="line">            <span class="keyword">not</span> np.isfinite(output[base_index + <span class="number">6</span>])):</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># extract the image width and height and clip the boxes to the</span></span><br><span class="line">        <span class="comment"># image size in case network returns boxes outside of the image</span></span><br><span class="line">        <span class="comment"># boundaries</span></span><br><span class="line">        (h, w) = image.shape[:<span class="number">2</span>]</span><br><span class="line">        x1 = max(<span class="number">0</span>, int(output[base_index + <span class="number">3</span>] * w))</span><br><span class="line">        y1 = max(<span class="number">0</span>, int(output[base_index + <span class="number">4</span>] * h))</span><br><span class="line">        x2 = min(w, int(output[base_index + <span class="number">5</span>] * w))</span><br><span class="line">        y2 = min(h, int(output[base_index + <span class="number">6</span>] * h))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># grab the prediction class label, confidence (i.e., probability),</span></span><br><span class="line">        <span class="comment"># and bounding box (x, y)-coordinates</span></span><br><span class="line">        pred_class = int(output[base_index + <span class="number">1</span>])</span><br><span class="line">        pred_conf = output[base_index + <span class="number">2</span>]</span><br><span class="line">        pred_boxpts = ((x1, y1), (x2, y2))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># create prediciton tuple and append the prediction to the</span></span><br><span class="line">        <span class="comment"># predictions list</span></span><br><span class="line">        prediction = (pred_class, pred_conf, pred_boxpts)</span><br><span class="line">        predictions.append(prediction)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># return the list of predictions to the calling function</span></span><br><span class="line">    <span class="keyword">return</span> predictions</span><br><span class="line"></span><br><span class="line"><span class="comment"># construct the argument parser and parse the arguments</span></span><br><span class="line">ap = argparse.ArgumentParser()</span><br><span class="line">ap.add_argument(<span class="string">"-g"</span>, <span class="string">"--graph"</span>, required=<span class="literal">True</span>,</span><br><span class="line">    help=<span class="string">"path to input graph file"</span>)</span><br><span class="line">ap.add_argument(<span class="string">"-c"</span>, <span class="string">"--confidence"</span>, default=<span class="number">.5</span>,</span><br><span class="line">    help=<span class="string">"confidence threshold"</span>)</span><br><span class="line">ap.add_argument(<span class="string">"-d"</span>, <span class="string">"--display"</span>, type=int, default=<span class="number">0</span>,</span><br><span class="line">    help=<span class="string">"switch to display image on screen"</span>)</span><br><span class="line">args = vars(ap.parse_args())</span><br><span class="line"></span><br><span class="line"><span class="comment"># grab a list of all NCS devices plugged in to USB</span></span><br><span class="line">print(<span class="string">"[INFO] finding NCS devices..."</span>)</span><br><span class="line">devices = mvnc.EnumerateDevices()</span><br><span class="line"></span><br><span class="line"><span class="comment"># if no devices found, exit the script</span></span><br><span class="line"><span class="keyword">if</span> len(devices) == <span class="number">0</span>:</span><br><span class="line">    print(<span class="string">"[INFO] No devices found. Please plug in a NCS"</span>)</span><br><span class="line">    quit()</span><br><span class="line"></span><br><span class="line"><span class="comment"># use the first device since this is a simple test script</span></span><br><span class="line"><span class="comment"># (you'll want to modify this is using multiple NCS devices)</span></span><br><span class="line">print(<span class="string">"[INFO] found &#123;&#125; devices. device0 will be used. "</span></span><br><span class="line">    <span class="string">"opening device0..."</span>.format(len(devices)))</span><br><span class="line">device = mvnc.Device(devices[<span class="number">0</span>])</span><br><span class="line">device.OpenDevice()</span><br><span class="line"></span><br><span class="line"><span class="comment"># open the CNN graph file</span></span><br><span class="line">print(<span class="string">"[INFO] loading the graph file into RPi memory..."</span>)</span><br><span class="line"><span class="keyword">with</span> open(args[<span class="string">"graph"</span>], mode=<span class="string">"rb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">    graph_in_memory = f.read()</span><br><span class="line"></span><br><span class="line"><span class="comment"># load the graph into the NCS</span></span><br><span class="line">print(<span class="string">"[INFO] allocating the graph on the NCS..."</span>)</span><br><span class="line">graph = device.AllocateGraph(graph_in_memory)</span><br><span class="line"></span><br><span class="line"><span class="comment"># open a pointer to the video stream thread and allow the buffer to</span></span><br><span class="line"><span class="comment"># start to fill, then start the FPS counter</span></span><br><span class="line">print(<span class="string">"[INFO] starting the video stream and FPS counter..."</span>)</span><br><span class="line">vs = VideoStream(usePiCamera=<span class="literal">False</span>).start()</span><br><span class="line">time.sleep(<span class="number">1</span>)</span><br><span class="line">fps = FPS().start()</span><br><span class="line"></span><br><span class="line"><span class="comment"># loop over frames from the video file stream</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># grab the frame from the threaded video stream</span></span><br><span class="line">        <span class="comment"># make a copy of the frame and resize it for display/video purposes</span></span><br><span class="line">        frame = vs.read()</span><br><span class="line">        image_for_result = frame.copy()</span><br><span class="line">        image_for_result = cv2.resize(image_for_result, DISPLAY_DIMS)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># use the NCS to acquire predictions</span></span><br><span class="line">        predictions = predict(frame, graph)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># loop over our predictions</span></span><br><span class="line">        <span class="keyword">for</span> (i, pred) <span class="keyword">in</span> enumerate(predictions):</span><br><span class="line">            <span class="comment"># extract prediction data for readability</span></span><br><span class="line">            (pred_class, pred_conf, pred_boxpts) = pred</span><br><span class="line"></span><br><span class="line">            <span class="comment"># filter out weak detections by ensuring the `confidence`</span></span><br><span class="line">            <span class="comment"># is greater than the minimum confidence</span></span><br><span class="line">            <span class="comment">#if pred_conf &gt; args["confidence"]:</span></span><br><span class="line">            <span class="keyword">if</span> CLASSES[pred_class] == <span class="string">'person'</span>:</span><br><span class="line">                area = (pred_boxpts[<span class="number">1</span>][<span class="number">0</span>] - pred_boxpts[<span class="number">0</span>][<span class="number">0</span>]) * (pred_boxpts[<span class="number">1</span>][<span class="number">1</span>] - pred_boxpts[<span class="number">0</span>][<span class="number">1</span>])</span><br><span class="line">                <span class="keyword">if</span> ((pred_boxpts[<span class="number">0</span>][<span class="number">0</span>] + pred_boxpts[<span class="number">1</span>][<span class="number">0</span>]) // <span class="number">2</span>) - <span class="number">150</span> &gt; <span class="number">20</span>:</span><br><span class="line">                    move_zpositive()</span><br><span class="line">                <span class="keyword">elif</span> ((pred_boxpts[<span class="number">0</span>][<span class="number">0</span>] + pred_boxpts[<span class="number">1</span>][<span class="number">0</span>]) // <span class="number">2</span>) - <span class="number">150</span> &lt; <span class="number">-20</span>:</span><br><span class="line">                    move_znegetive()</span><br><span class="line">                <span class="keyword">elif</span> area &lt; <span class="number">150</span> * <span class="number">150</span>:</span><br><span class="line">                    move_forward()</span><br><span class="line">                <span class="keyword">elif</span> area &gt; <span class="number">250</span> * <span class="number">250</span>:</span><br><span class="line">                    move_backward()</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    stop_car()</span><br><span class="line">                </span><br><span class="line">                <span class="comment">#print(area)</span></span><br><span class="line">                <span class="comment">#print(((pred_boxpts[0][0] + pred_boxpts[1][0]) // 2) - 150)</span></span><br><span class="line">                <span class="comment"># print prediction to terminal</span></span><br><span class="line">                <span class="comment">#print("[INFO] Prediction #&#123;&#125;: class=&#123;&#125;, confidence=&#123;&#125;, "</span></span><br><span class="line">                    <span class="comment">#"boxpoints=&#123;&#125;".format(i, CLASSES[pred_class], pred_conf,</span></span><br><span class="line">                    <span class="comment">#pred_boxpts))</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># check if we should show the prediction data</span></span><br><span class="line">                <span class="comment"># on the frame</span></span><br><span class="line">                <span class="keyword">if</span> args[<span class="string">"display"</span>] &gt; <span class="number">0</span>:</span><br><span class="line">                    <span class="comment"># build a label consisting of the predicted class and</span></span><br><span class="line">                    <span class="comment"># associated probability</span></span><br><span class="line">                    label = <span class="string">"&#123;&#125;: &#123;:.2f&#125;%"</span>.format(CLASSES[pred_class],</span><br><span class="line">                        pred_conf * <span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">                    <span class="comment"># extract information from the prediction boxpoints</span></span><br><span class="line">                    (ptA, ptB) = (pred_boxpts[<span class="number">0</span>], pred_boxpts[<span class="number">1</span>])</span><br><span class="line">                    ptA = (ptA[<span class="number">0</span>] * DISP_MULTIPLIER, ptA[<span class="number">1</span>] * DISP_MULTIPLIER)</span><br><span class="line">                    ptB = (ptB[<span class="number">0</span>] * DISP_MULTIPLIER, ptB[<span class="number">1</span>] * DISP_MULTIPLIER)</span><br><span class="line">                    (startX, startY) = (ptA[<span class="number">0</span>], ptA[<span class="number">1</span>])</span><br><span class="line">                    y = startY - <span class="number">15</span> <span class="keyword">if</span> startY - <span class="number">15</span> &gt; <span class="number">15</span> <span class="keyword">else</span> startY + <span class="number">15</span></span><br><span class="line"></span><br><span class="line">                    <span class="comment"># display the rectangle and label text</span></span><br><span class="line">                    cv2.rectangle(image_for_result, ptA, ptB,</span><br><span class="line">                        COLORS[pred_class], <span class="number">2</span>)</span><br><span class="line">                    cv2.putText(image_for_result, label, (startX, y),</span><br><span class="line">                        cv2.FONT_HERSHEY_SIMPLEX, <span class="number">1</span>, COLORS[pred_class], <span class="number">3</span>)</span><br><span class="line">            </span><br><span class="line">            </span><br><span class="line">        <span class="comment"># check if we should display the frame on the screen</span></span><br><span class="line">        <span class="comment"># with prediction data (you can achieve faster FPS if you</span></span><br><span class="line">        <span class="comment"># do not output to the screen)</span></span><br><span class="line">        <span class="keyword">if</span> args[<span class="string">"display"</span>] &gt; <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># display the frame to the screen</span></span><br><span class="line">            cv2.imshow(<span class="string">"Output"</span>, image_for_result)</span><br><span class="line">            key = cv2.waitKey(<span class="number">1</span>) &amp; <span class="number">0xFF</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># if the `q` key was pressed, break from the loop</span></span><br><span class="line">            <span class="keyword">if</span> key == ord(<span class="string">"q"</span>):</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># update the FPS counter</span></span><br><span class="line">        fps.update()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># if "ctrl+c" is pressed in the terminal, break from the loop</span></span><br><span class="line">    <span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># if there's a problem reading a frame, break gracefully</span></span><br><span class="line">    <span class="keyword">except</span> AttributeError:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># stop the FPS counter timer</span></span><br><span class="line">fps.stop()</span><br><span class="line"></span><br><span class="line"><span class="comment"># destroy all windows if we are displaying them</span></span><br><span class="line"><span class="keyword">if</span> args[<span class="string">"display"</span>] &gt; <span class="number">0</span>:</span><br><span class="line">    cv2.destroyAllWindows()</span><br><span class="line"></span><br><span class="line"><span class="comment"># stop the video stream</span></span><br><span class="line">vs.stop()</span><br><span class="line"></span><br><span class="line"><span class="comment"># clean up the graph and device</span></span><br><span class="line">graph.DeallocateGraph()</span><br><span class="line">device.CloseDevice()</span><br><span class="line"></span><br><span class="line"><span class="comment"># display FPS information</span></span><br><span class="line">print(<span class="string">"[INFO] elapsed time: &#123;:.2f&#125;"</span>.format(fps.elapsed()))</span><br><span class="line">print(<span class="string">"[INFO] approx. FPS: &#123;:.2f&#125;"</span>.format(fps.fps()))</span><br></pre></td></tr></table></figure></div>
+<p>深度学习算法模型的导入以及调用就不多说了，要达到跟随行人的目的，重点是第186行开始，如果检测到的是类别是 <code>person</code>，那么根据方框 <code>pred_boxpts</code>的相关参数，可以算出水平方向与整个图像中心点的偏差，从而来控制小车的方向；至于前后方向，我们可以根据方框计算其所占的面积大小，如果人体远离摄像头那么整个面积必然会减小，这时前进即可，反之亦然。</p>
+<p>这个方法虽然比较简单，但是实际的效果还是不错的。至于其他部分，注释比较多，就不再细说了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag"># 树莓派</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/22/%E6%A0%91%E8%8E%93%E6%B4%BE4B%E6%90%AD%E5%BB%BATensorflow+Opencv%E8%BF%90%E8%A1%8CYolo-V3+Deep_Sort%E5%85%A8%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95/" rel="prev" title="树莓派4B搭建Tensorflow+Opencv运行Yolo-V3+Deep_Sort全过程记录">
+      <i class="fa fa-chevron-left"></i> 树莓派4B搭建Tensorflow+Opencv运行Yolo-V3+Deep_Sort全过程记录
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-树莓派环境搭建"><span class="nav-number">1.</span> <span class="nav-text">1.树莓派环境搭建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-关于小车"><span class="nav-number">2.</span> <span class="nav-text">2.关于小车</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-小车控制部分代码"><span class="nav-number">3.</span> <span class="nav-text">3.小车控制部分代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-总体代码"><span class="nav-number">4.</span> <span class="nav-text">4.总体代码</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

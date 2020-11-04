@@ -164,6 +164,336 @@ $(window).load(function(){
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/06/leetcode34-%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E4%BD%8D%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/06/leetcode34-%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E4%BD%8D%E7%BD%AE/" class="post-title-link" itemprop="url">leetcode34-在排序数组中查找元素的第一个和最后一个位置</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-04-06 09:56:58 / Modified: 12:46:24" itemprop="dateCreated datePublished" datetime="2020-04-06T09:56:58+08:00">2020-04-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Leetcode%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">Leetcode题解</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>在排序数组中查找元素的第一个和最后一个位置</strong></p>
+<div class="note default"><p>
+    <ul style="background:#F0F0F0"> 
+   <li>给定一个按照升序排列的整数数组 <code>nums</code>，和一个目标值 <code>target</code>。找出给定目标值在数组中的开始位置和结束位置。</li>
+<li>你的算法时间复杂度必须是 <code>O(log n)</code> 级别。</li>
+<li>如果数组中不存在目标值，返回 <code>[-1, -1]</code>。</li>    </ul>
+  </p></div>
+
+<p><strong>示例</strong></p>
+<div class="note default">
+    <p>
+        <ul style="list-style-type:upper-roman;background:#F0F0F0">
+            <li><ul style="list-style-type:disc">
+                <li>输入:<code>nums = [5,7,7,8,8,10]</code>,<code>target = 8</code> </li>
+                <li>输出:<code> [3,4]</code></li>
+                </ul></li>
+            <li><ul style="list-style-type:disc">
+                <li>输入: <code>nums = [5,7,7,8,8,10]</code>,<code> target = 6</code> </li>
+                <li>输出: <code>[-1,-1]</code></li>
+                </ul>
+                </li>
+    </ul>
+    </p>
+</div>
+
+<p><strong>分析</strong></p>
+<div class="note danger">
+    <p>
+      显然应该用二分查找，但是找到后不是立刻返回下标，而是进一步压缩边界，继续寻找。
+    </p>
+</div>
+
+<p><strong>代码</strong></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] searchRange(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        <span class="keyword">int</span>[] result = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">        result[<span class="number">0</span>] = left_bound(nums, target);</span><br><span class="line">        result[<span class="number">1</span>] = right_bound(nums, target);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//寻找左边界</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">left_bound</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>, right = nums.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> mid;</span><br><span class="line">        <span class="comment">//右边界初始为nums.length - 1, 则循环的终止条件为 &lt;=</span></span><br><span class="line">        <span class="comment">//相当于是闭区间搜索，如果没有 = ，最后会少考虑一种情况</span></span><br><span class="line">        <span class="keyword">while</span>(left &lt;= right)&#123;</span><br><span class="line">            <span class="comment">//这样是为了防止大数溢出</span></span><br><span class="line">            mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid] &gt; target)&#123;</span><br><span class="line">                right = mid - <span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &lt; target)&#123;</span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//最后相等时进一步收缩右边界</span></span><br><span class="line">                right = mid - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*假如nums为[1, 2, 3],而target为4，则每次都在右边寻找left最后会</span></span><br><span class="line"><span class="comment">          超过数组边界等于nums.length, 此时显然是没有找到，但是如果</span></span><br><span class="line"><span class="comment">          用nums[left]判断是有问题的，因此需要单独判断。</span></span><br><span class="line"><span class="comment">          而如果target为0，虽然每次也会往左寻找，但是最终是right超过</span></span><br><span class="line"><span class="comment">          数组边界，在下面的判断中不会用到right。*/</span></span><br><span class="line">        <span class="keyword">if</span>(left == nums.length || nums[left] != target)&#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">right_bound</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>, right = nums.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> mid;</span><br><span class="line">        <span class="keyword">while</span>(left &lt;= right)&#123;</span><br><span class="line">            mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid] &gt; target)&#123;</span><br><span class="line">                right = mid - <span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &lt; target)&#123;</span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(right &lt; <span class="number">0</span> || nums[right] != target)&#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/05/leetcode33-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/05/leetcode33-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/" class="post-title-link" itemprop="url">leetcode33-搜索旋转排序数组</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-04-05 11:06:28 / Modified: 15:00:11" itemprop="dateCreated datePublished" datetime="2020-04-05T11:06:28+08:00">2020-04-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Leetcode%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">Leetcode题解</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>搜索旋转排序数组</strong></p>
+<table>
+     <tr>
+         <td style="background-color:#F0F0F0;color:gray">
+             <ul>
+                 <li> 假设按照升序排序的数组在预先未知的某个点上进行了旋转。
+ 例如，数组 <code>[0,1,2,4,5,6,7]</code> 可能变为 <code>[4,5,6,7,0,1,2]</code>。</li>
+                 <li>搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 <code>-1</code> 。</li>
+                 <li>你可以假设数组中不存在重复的元素。你的算法时间复杂度必须是<code>O(log n)</code> 级别。</li>
+             </ul>
+         </td>
+    </tr>
+</table>
+
+
+<p><strong>示例</strong></p>
+<p><table>
+    <tr>
+        <td style="background-color:#F0F0F0;color:gray">
+            <ul style="list-style-type:decimal">
+                <li><ul style="list-style-type:disc">
+                    <li>输入: <code>nums = [4,5,6,7,0,1,2], target = 0</code></li>
+                    <li>输出: <code>4</code></li>
+                    </ul></li>
+                <li><ul style="list-style-type:disc">
+                    <li>输入: <code>nums = [4,5,6,7,0,1,2], target = 3</code></li>
+                    <li>输出: <code>-1</code></li>
+                    </ul></li>
+            </ul>
+        </td>
+    </tr>
+</table></p>
+<div class="note default">
+    <p>
+        <code>O(log n)</code>自然想到的是二分查找,怎么分就很关键了。像<code>[1, 2, 3, 4, 5, 6, 7]</code>大概可以分成两类：<ul>
+    <li><code>[2, 3, 4, 5, 6, 7, 1]</code>这种，<code>nums[start] &le; nums[mid]</code>,此时左边是有序的，如果<code>nums[start] &le; target &lt; nums[mid]</code>,则在前面查找，否则去后面。</li>
+     <li><code>[6, 7, 1, 2, 3, 4, 5]</code>这种，<code>nums[start] &gt; nums[mid]</code>,此时右边是有序的，如果<code>nums[mid] &lt; target &le; nums[end]</code>,则在后面查找，否则去前面。</li>
+    </ul>
+    </p>
+</div>
+
+<p><strong>代码实现</strong></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//nums[start] &lt; nums[mid] 左边是有序的，</span></span><br><span class="line">        <span class="comment">//若nums[start] &lt;= target &lt; nums[mid]则在左边查找</span></span><br><span class="line">        <span class="comment">//nums[start] &gt; nums[mid] 右边是有序的</span></span><br><span class="line">        <span class="comment">//若nums[mid] &lt; target &lt;= nums[end]则在右边查找</span></span><br><span class="line">        <span class="keyword">int</span> start = <span class="number">0</span>, end = nums.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> mid;</span><br><span class="line">        <span class="keyword">while</span>(start &lt;= end)&#123;</span><br><span class="line">            mid = start + (end - start) / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">if</span>(nums[mid] == target)&#123;</span><br><span class="line">                <span class="keyword">return</span> mid;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//注意下面要用 &lt;= ，否则如果漏掉 = 的条件，就会出现错误</span></span><br><span class="line">            <span class="keyword">if</span>(nums[start] &lt;= nums[mid])&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[start] &lt;= target &amp;&amp; nums[mid] &gt; target)&#123;</span><br><span class="line">                    <span class="comment">//由于mid已经不等于target了，所以加1减1</span></span><br><span class="line">                    <span class="comment">//而且由于循环停止条件是 &lt;= ，如果不加1减1最终可能陷入死循环</span></span><br><span class="line">                    end = mid - <span class="number">1</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    start = mid + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(nums[start] &gt;= nums[mid])&#123;</span><br><span class="line">                    <span class="keyword">if</span>(nums[mid] &lt; target &amp;&amp; nums[end] &gt;= target)&#123;</span><br><span class="line">                        start = mid + <span class="number">1</span>;</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        end = mid - <span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/04/leetcode31-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/04/leetcode31-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="post-title-link" itemprop="url">leetcode31-下一个排列</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-04 21:42:28" itemprop="dateCreated datePublished" datetime="2020-04-04T21:42:28+08:00">2020-04-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-05 15:01:13" itemprop="dateModified" datetime="2020-04-05T15:01:13+08:00">2020-04-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Leetcode%E9%A2%98%E8%A7%A3/" itemprop="url" rel="index"><span itemprop="name">Leetcode题解</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>下一个排列</strong></p>
+<table>
+  <tr>
+    <td style="background-color:#F0F0F0;color:gray">
+        <ul>
+        <li> 实现获取下一个排列的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列。 </li>
+        <li> 如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。 </li>
+        <li> 必须原地修改，只允许使用额外常数空间。 </li>
+        </ul>
+    </td>
+  </tr>
+</table>
+
+<p><strong>示例</strong></p>
+<table>
+    <tr>
+        <td style="background-color:#F0F0F0;color:gray>
+            <ul>
+                <li>1,2,3 → 1,3,2</li>
+                <li>3,2,1 → 1,2,3</li>
+                <li>1,1,5 → 1,5,1</li>
+            </ul>
+        </td>
+    </tr>
+</table>
+
+
+<p><strong>推导</strong></p>
+<table>
+    <tr>
+     <td style=" background-color:#f0f0f0;color:gray">
+         <ul style="list-style-type:decimal-leading-zero">
+            <li>类似于整数，希望下一个数比当前的数大，因此需要将后面的<font style="color:red">大数</font>与前面的<font style="color:blue">小数</font>交换。比如<code>123456</code>可以变为<code>123465</code>。</li>
+            <li>要求下一个数增加的幅度尽可能小，需要：<ul style="list-style-type:disc">
+                <li>尽量在靠右的位置进行交换，即从后往前查找。</li>
+                <li>应该将尽可能小的<span style="color:red">大数</span>和前面的<span style="color:blue">小数</span>进行交换，如<code>123465</code>,应该将<code>5</code>和<code>4</code>进行交换而不是<code>6</code>和<code>4</code>。</li>
+                <li>交换后应该将<span style="color:red">大数</span>后面所有的数按升序排列。以<code>123465</code>为例，交换得到<code>123564</code>，需要将<code>5</code>之后的数升序排列得到<code>123546</code>，显然小于<code>123564</code>。</li>
+                </ul></li>
+         </ul>
+     </td>
+    </tr>
+</table>
+
+
+<p><strong>代码实现</strong></p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="JAVA"><figure class="iseeu highlight /java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">nextPermutation</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//从右往左开始寻找</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = nums.length - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="comment">//一旦出现降序的情况，则说明发现了前面的小数</span></span><br><span class="line">            <span class="keyword">if</span>(nums[i] &lt; nums[i + <span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="comment">//这时再从右往左开始寻找较小的大数</span></span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> j = nums.length - <span class="number">1</span>; j &gt; i; j--) &#123;</span><br><span class="line">                    <span class="comment">//找到之后则交换</span></span><br><span class="line">                    <span class="keyword">if</span>(nums[i] &lt; nums[j]) &#123;</span><br><span class="line">                        swap(nums, i, j);</span><br><span class="line">                        <span class="comment">//由于前面出现降序才找到的小数，小数后面的一直是降序，反转一下即可</span></span><br><span class="line">                        reverse(nums, i + <span class="number">1</span>);</span><br><span class="line">                        <span class="comment">//操作完成后退出循环</span></span><br><span class="line">                        j = -<span class="number">1</span>;</span><br><span class="line">                        i = -<span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//如果从右找到了最左边，还没有找到，那么说明本身就是降序的，直接反转</span></span><br><span class="line">            <span class="keyword">if</span>(i == <span class="number">0</span>) &#123;</span><br><span class="line">                reverse(nums, <span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = nums[i];</span><br><span class="line">        nums[i] = nums[j];</span><br><span class="line">        nums[j] = temp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reverse</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> start)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i = start, j = nums.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(i &lt;= j) &#123;</span><br><span class="line">            swap(nums, i, j);</span><br><span class="line">            i++;</span><br><span class="line">            j--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E7%82%B9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1600,240 +1930,6 @@ themes/next/source/css/_common/scaffolding中的tables.styl找到.table-containe
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/14/OSTCB%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/14/OSTCB%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E6%A6%82%E5%BF%B5/" class="post-title-link" itemprop="url">OSTCB中的几个概念</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-03-14 19:58:22" itemprop="dateCreated datePublished" datetime="2020-03-14T19:58:22+08:00">2020-03-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-07 10:25:19" itemprop="dateModified" datetime="2020-04-07T10:25:19+08:00">2020-04-07</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">嵌入式实时操作系统</span></a>
-                </span>
-                  >
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Knowledge/" itemprop="url" rel="index"><span itemprop="name">Knowledge</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="OSTCBX-Y-，-OSTCBBitX-Y-的具体含义"><a href="#OSTCBX-Y-，-OSTCBBitX-Y-的具体含义" class="headerlink" title="$OSTCBX/Y$，$OSTCBBitX/Y$的具体含义"></a>$OSTCBX/Y$，$OSTCBBitX/Y$的具体含义</h4><p>&ensp; &emsp;&nbsp;举个例子，任务优先级$PRIO=30$，写成$8$位二进制为 <code>0001_1110</code>。则$OSRdyGrp=$ <code>1000_1000</code>，$OSRdyTbl\left[3\right]=$ <code>0100_0000</code>。</p>
-<p>&ensp; &emsp;&nbsp;设置的编程实现过程：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ptcb-&gt;OSTCBY = (INT8U)(prio &gt;&gt; <span class="number">3</span>) = <span class="number">3</span>;</span><br><span class="line">ptcb-&gt;OSTCBX = (INT8U)(prio &amp; <span class="number">0x07</span>) = <span class="number">7</span>;</span><br></pre></td></tr></table></figure></div>
-<p>&ensp; &emsp;&nbsp;第一行求$OSRdyGrp$，第二行求<code>OSRdyTbl[ptcb-&gt;OSTCBY]</code>即 <code>OSRdyTbl[3]</code></p>
-<p>但是按位序号不好设定就绪表和就绪组，转换成：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ptcb-&gt;OSTCBBitY = (INT8U)(<span class="number">1</span> &lt;&lt; ptcb-&gt;OSTCBY);</span><br><span class="line">ptcb-&gt;OSTCBBitX = (INT8U)(<span class="number">1</span> &lt;&lt; ptcb-&gt;OSTCBX);</span><br></pre></td></tr></table></figure></div>
-<p>&ensp; &emsp;&nbsp;上述代码是将$1$向左移位，分别移动  <code>3</code> 位和 <code>7</code>位，变成：</p>
-<p><code>ptcb-&gt;OSTCBBitY: 0000_1000</code>和 <code>ptcb-&gt;OSTCBBitX: 0100_0000</code>。</p>
-<p>以后如果要使任务就绪，比如 <code>prio=30</code>的任务，只要使用：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OSRdyGrp |= ptcb-&gt;OSTCBBitY;</span><br><span class="line">OSRdyTbl[ptcb-&gt;OSTCBY] |= ptcb-&gt;OSTCBBitX;</span><br></pre></td></tr></table></figure></div>
-<p>即可实现。</p>
-<h5 id="分析-OSTimeDly-中相关代码"><a href="#分析-OSTimeDly-中相关代码" class="headerlink" title="分析$OSTimeDly$中相关代码"></a>分析$OSTimeDly$中相关代码</h5><div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OSTimeDly</span><span class="params">(INT16U ticks)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_CRITICAL_METHOD == 3</span></span><br><span class="line">    OS_CPU_SR cpu_sr</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="keyword">if</span>(ticks &gt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        OS_ENTER_CRITICAL();</span><br><span class="line">        <span class="keyword">if</span>((OSRdyTbl[OSTCBCur-&gt;OSTCBY] &amp;= ~OSTCBCur-&gt;OSTCBBitX) == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            OSRdyGrp &amp;= ~OSTCBCur-&gt;OSTCBBitY;</span><br><span class="line">        &#125;</span><br><span class="line">        OSTCBCur-&gt;OSTCBDly = ticks;</span><br><span class="line">        OS_EXIT_CRITICAL();</span><br><span class="line">        OS_Sched();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-<p>&ensp; &emsp;&nbsp;第9行，<code>OSTCBCur-&gt;OSTCBBitX</code> 即 <code>OSRdyTbl[OSTCBCur-&gt;OSTCBY]</code>具体的值，比如 <code>`OSRdyTbl[3]=0100_0000</code>。</p>
-<p>而 <code>~</code>则代表按位取反，因此两者再按位与，如果为 <code>0</code>则代表两者相等，不为 <code>0</code>则不等。相等则意味着这个任务是就绪任务，因此下面第 <code>11</code>行就代表取消任务的就绪状态。</p>
-<h4 id="最高优先级就绪任务的查找"><a href="#最高优先级就绪任务的查找" class="headerlink" title="最高优先级就绪任务的查找"></a>最高优先级就绪任务的查找</h4><p>&ensp; &emsp;&nbsp;重点是 <code>OSUnMapTbl[]</code>的理解，这个数组表示的是 <code>一个8bit的数据最低位为1的位置</code>。比如下面两个例子：<code>1000 0000</code> 最低位为<code>1</code>的位置在第<code>7</code>位，那么 <code>OSUnMapTbl[128]=7</code>；<code>1000 0010</code> 最低位为<code>1</code>的位置在第<code>1</code>位，那么 <code>OSUnMapTbl[130]=1</code>。<span class="label default">这样做的道理是优先级别数字越小，优先级越高</span>。</p>
-<p>&ensp; &emsp;&nbsp;然后就可以用以下代码来查找：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">y = OSUnMapTbl[OSRdyGrp];</span><br><span class="line">x = OSUnMapTbl[OSRdyTbl[y]];</span><br><span class="line">prio = (y &lt;&lt; <span class="number">3</span>) + x;</span><br></pre></td></tr></table></figure></div>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/11/%E9%93%BE%E8%A1%A8%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/11/%E9%93%BE%E8%A1%A8%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" class="post-title-link" itemprop="url">链表中的注意事项</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-03-11 22:43:22 / Modified: 23:15:37" itemprop="dateCreated datePublished" datetime="2020-03-11T22:43:22+08:00">2020-03-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h5 id="1-注意判断条件的优先级问题："><a href="#1-注意判断条件的优先级问题：" class="headerlink" title="1.注意判断条件的优先级问题："></a>1.注意判断条件的优先级问题：</h5><p>&ensp; &emsp;&nbsp;<code>while(node.next != null &amp;&amp; node.next.next != null)</code>如果交换两者位置，很可能就会报错，这是因为会先运算 <code>&amp;&amp;</code> 前面的表达式的值。</p>
-<h5 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h5>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/11/%E9%BB%91%E7%99%BD%E5%85%A8%E7%94%B5%E8%A7%86%E4%BF%A1%E5%8F%B7%E7%9A%84%E7%BB%84%E6%88%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/11/%E9%BB%91%E7%99%BD%E5%85%A8%E7%94%B5%E8%A7%86%E4%BF%A1%E5%8F%B7%E7%9A%84%E7%BB%84%E6%88%90/" class="post-title-link" itemprop="url">黑白全电视信号的组成</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-03-11 19:38:22 / Modified: 20:01:26" itemprop="dateCreated datePublished" datetime="2020-03-11T19:38:22+08:00">2020-03-11</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%B5%E8%A7%86%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">电视技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h5 id="1-图像信号"><a href="#1-图像信号" class="headerlink" title="1.图像信号"></a>1.图像信号</h5><p>&ensp; &emsp;&nbsp;图像信号电压的高低反映了实际景物的<span style="color:red">亮度</span>。</p>
-<p>&ensp; &emsp;&nbsp;负极性信号：纯白对应的电平最低，全黑对应的电平最高，即信号电平与图像亮度成反比。</p>
-<h5 id="2-消隐信号"><a href="#2-消隐信号" class="headerlink" title="2.消隐信号"></a>2.消隐信号</h5><p>&ensp; &emsp;&nbsp;分为行消隐信号和场消隐信号，行消隐信号宽度为$12{\mu}s$，场消隐信号宽度为$25T_H+12{\mu}s$。合称复合消隐信号。</p>
-<h5 id="3-同步信号"><a href="#3-同步信号" class="headerlink" title="3.同步信号"></a>3.同步信号</h5><p>&ensp; &emsp;&nbsp;要接收图形，接收机与摄像机的扫描必须<span style="color:red">同步</span>，即扫描的频率和相位要完全相同。</p>
-<p>&ensp; &emsp;&nbsp;摄像机每读出一行图形信号后，送出一个行同步信号，前沿表示上一行结束，下一行开始。脉宽为$4.7{\mu}s$。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1904,7 +2000,7 @@ themes/next/source/css/_common/scaffolding中的tables.styl找到.table-containe
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
