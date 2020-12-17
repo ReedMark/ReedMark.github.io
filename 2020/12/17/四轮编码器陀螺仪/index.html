@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="编码器     原理介绍&amp;ensp;&amp;emsp;编码器在智能车中用于测出当前中断时间内的脉冲数，然后作为速度环的实际值与目标设定值做pid以实现控速作用。通常所说的512线、1024线指的是编码器选择一圈所得到的脉冲数。 &amp;ensp;&amp;emsp;常见的有两种编码器：  AB相正交编码器：    &amp;ensp;&amp;emsp;当A相为上升沿，B相为低电平时，编码器顺时针旋转，脉冲计数累加：当A相">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编码器陀螺仪">
+<meta property="og:url" content="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="编码器     原理介绍&amp;ensp;&amp;emsp;编码器在智能车中用于测出当前中断时间内的脉冲数，然后作为速度环的实际值与目标设定值做pid以实现控速作用。通常所说的512线、1024线指的是编码器选择一圈所得到的脉冲数。 &amp;ensp;&amp;emsp;常见的有两种编码器：  AB相正交编码器：    &amp;ensp;&amp;emsp;当A相为上升沿，B相为低电平时，编码器顺时针旋转，脉冲计数累加：当A相">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/JPqk4VByX8oSW1u.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/xMI8KC7Gf1Jn5Da.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/PokczWUg3DvurHZ.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/ndYSlUiLTugjfIw.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/6xRmaHGNQFnYdM9.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/BV9EsoKYTOZPtgD.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/pRtTlNwbony6G7J.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/mf1IWKjxZVaoH5P.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/Pg4ZJlun9SXFMwi.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/sDFlTCgi5IBNqGz.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/Sqh2Gb9jrBMxDz7.png">
+<meta property="og:image" content="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/Users/Reed%20Mark/AppData/Roaming/Typora/typora-user-images/image-20201129233702580.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/F7E4pK2IAYUaPrM.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/30/vhoTiMyg6B37DPp.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/Sqh2Gb9jrBMxDz7.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/30/bIF96c1YdeTStav.png">
+<meta property="article:published_time" content="2020-12-17T15:46:24.000Z">
+<meta property="article:modified_time" content="2020-12-17T15:58:37.791Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="智能车">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/11/29/JPqk4VByX8oSW1u.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>编码器陀螺仪 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          编码器陀螺仪
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-12-17 23:46:24 / Modified: 23:58:37" itemprop="dateCreated datePublished" datetime="2020-12-17T23:46:24+08:00">2020-12-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%99%BA%E8%83%BD%E8%BD%A6/" itemprop="url" rel="index"><span itemprop="name">智能车</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h5 id="编码器-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#编码器-2" class="headerlink" title="编码器"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">编码器</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+
+<ol>
+<li><h4 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h4><p>&ensp;&emsp;编码器在智能车中用于测出当前中断时间内的脉冲数，然后作为速度环的实际值与目标设定值做<code>pid</code>以实现控速作用。通常所说的512线、1024线指的是编码器选择一圈所得到的脉冲数。</p>
+<p>&ensp;&emsp;常见的有两种编码器：</p>
+<ul>
+<li><p>AB相正交编码器：</p>
+<p> <img src="https://i.loli.net/2020/11/29/JPqk4VByX8oSW1u.png" alt="image-20201129221529225" style="zoom: 67%;"></p>
+<p> &ensp;&emsp;当A相为上升沿，B相为低电平时，编码器顺时针旋转，脉冲计数累加：当A相为上升沿，B相为高电平时，编码器逆时针旋转，脉冲计数减减。</p>
+</li>
+<li><p>增量式编码器：</p>
+<p> <img src="https://i.loli.net/2020/11/29/xMI8KC7Gf1Jn5Da.png" alt="image-20201129221638653" style="zoom:67%;"></p>
+<p> <code>dir</code>为高电平，脉冲数累加；<code>dir</code>为低电平，脉冲数减减。</p>
+</li>
+</ul>
+</li>
+<li><h4 id="配置和使用"><a href="#配置和使用" class="headerlink" title="配置和使用"></a>配置和使用</h4><p><img src="https://i.loli.net/2020/11/29/PokczWUg3DvurHZ.png" alt="image-20201129221958839" style="zoom:67%;"></p>
+<p>&ensp;&emsp;编码器一共就4个引脚与单片机相连，分别是电源、地以及A相和B相。我们要配置的就是A相和B相。在K60中， FTM是一个神奇的模块，能输出PWM，能输入捕获，能输出比较还能正交解码。英文全称是<code>FlexTimer Module</code>，你可以理解为高级定时器模块、易用定时器模块等等。</p>
+<p><strong>正交解码原理</strong>：</p>
+<p>&ensp;&emsp;首先要清楚正交解码是干嘛用的，举个例子：编码器是常用的电机测速传感器，他不仅可以测速，还可以知道电机的正转还是反转，靠的就是他能输出两路正交信号，我们可以通过正交信号的相位差来识别出当前电机的转动方向。因此有了FTM模块，我们就可以将这两路正交信号<code>PhA</code>和<code>PhB</code>输入到FTM的正交输入通道，通过正交解码功能，直接读取脉冲的计数值，这个计数值是有符号的，正数代表正转，负数则代表反转。</p>
+<p>&ensp;&emsp;正交解码功能有两种解码方法可以选择，分别是计数和方向解码模式、AB相解码模式。他们的解码方法如下面两图所示：</p>
+<ul>
+<li><p>计数和方向解码模式</p>
+<p> <img src="https://i.loli.net/2020/11/29/ndYSlUiLTugjfIw.png" alt="image-20201129222241779" style="zoom: 80%;"></p>
+<p> &ensp;&emsp;红框后面的波形是FTM输入通道<code>PhB</code>的波形，它代表计数方向，篮框后面的波形是FTN输入通道<code>PhA</code>的波形，它代表计数个数，这是一种编码方法，当<code>PhB</code>为高电平时，<code>CNT</code>加计数，当<code>PhB</code>低电平时，<code>CNT</code>减计数，计数频率由<code>PhA</code>决定。</p>
+</li>
+<li><p>AB相解码模式</p>
+<p> <img src="https://i.loli.net/2020/11/29/6xRmaHGNQFnYdM9.png" alt="image-20201129222438194" style="zoom:80%;"></p>
+<p> &ensp;&emsp;这个是AB相解码模式，上面的 <code>PhaseA</code>和   <code>PhaseB</code> 也是霍尔编码传感器两路波形输出的方式。从图中可以看到，当<code>PhA</code>和<code>PhB</code>处于特定的电平和边沿时，他们的状态共同决定了<code>CNT</code>是增还是减。具体如下：</p>
+<p> <code>CNT</code>增计数时看到的是：</p>
+<ul>
+<li><p>A上升沿，B逻辑低</p>
+</li>
+<li><p>B上升沿，A逻辑高</p>
+</li>
+<li>B下降沿，A逻辑低</li>
+<li><p>A下降沿，B逻辑高</p>
+<p><code>CNT</code>减计数时看到的是：</p>
+</li>
+<li><p>A下降沿，B逻辑低</p>
+</li>
+<li>B下降沿，A逻辑高</li>
+<li>B上升沿，A逻辑低</li>
+<li><p>A上升沿，B逻辑高</p>
+<p>&emsp;我们可以根据编码器的型号选择相应的解码方式：初始化代码在<code>motor.c</code>中：这里比如说我们选择计数和方向解码模式：</p>
+<p><img src="https://i.loli.net/2020/11/29/BV9EsoKYTOZPtgD.png" alt="image-20201129230832498"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<pre><code>  具体可以参考 `LPLD`库手册：
+
+  ![image-20201129223110402](https://i.loli.net/2020/11/29/u59MSd3BxOXGFvE.png)
+
+  &amp;emsp;如果不知道编码器是哪种型号，我们可以使用示波器打一下A、B相两路的型号，观察它是上面两种中的哪一个，从而就可以选择正确的解码模式了，或者两种模式都去尝试一下，如果测试出来正常那就选择对应的模式。
+
+  &amp;ensp;&amp;emsp;正交解码初始化完毕后，还要初始化定时中断模块，因为我们要在固定的间隔时间内获取计数值才能计算出速度，所以就务必会用到`PIT`模块。PIT的中断函数代码在`GetSpeed`函数中用到：
+
+  &lt;img src=&quot;https://i.loli.net/2020/11/29/miHus3PangDNlRI.png&quot; alt=&quot;image-20201129231317486&quot; style=&quot;zoom:67%;&quot; /&gt;
+
+  &amp;ensp;
+
+  &amp;ensp;&amp;emsp;`LPLD_FTM_GetCounter()`函数可以获取当前`FTM`计数器`CNT`的计数值，当然这个值是有符号的，可以是正也可以是负数。如果是正代表电机在正转，如果是负，代表电机在反转。后面的`LPLD_FTM_ClearCounter()`是为了下次方便计数，清空`CNT`的计数值。
+
+  &amp;ensp;&amp;emsp;这样操作完成后，我们可以试着在`live watch`中观察`Left_count`和`Right_count`的值，当你正着转动车轮时，观察它们的值是否都是正的？如果不是，那么说明逻辑反了，可以在`LPLD_FTM_GetCounter()`前面加上或者去掉负号来改变。
+</code></pre><ol>
+<li><h4 id="调用周期"><a href="#调用周期" class="headerlink" title="调用周期"></a>调用周期</h4><p><img src="https://i.loli.net/2020/11/29/pRtTlNwbony6G7J.png" alt="image-20201129232647804"></p>
+<p>在<code>task.c</code>中可以看到，<code>GetSpeed()</code> 函数是在<code>pit2</code>中断中调用的，那么<code>pit2</code>中断的周期是多少呢？</p>
+<p><img src="https://i.loli.net/2020/11/29/mf1IWKjxZVaoH5P.png" alt="image-20201129232732143" style="zoom: 80%;"></p>
+<p>&ensp;&emsp;在上面的初始化中我们可以发现，<code>PIT2</code>的周期是5ms，也就是说，单片机会在5ms调用一次<code>GetSpeed()</code>函数，从而获取编码器的计数。周期是5ms，也就是说频率是200Hz，所以在<code>motor.h</code>中我们可以看到速度获取频率为200：</p>
+<p><img src="https://i.loli.net/2020/11/29/Pg4ZJlun9SXFMwi.png" alt="image-20201129232855147" style="zoom:80%;"></p>
+</li>
+<li><h4 id="标定"><a href="#标定" class="headerlink" title="标定"></a>标定</h4><p>&ensp;&emsp;测编码器1m的计数值：首先想想，为什么需要测量这个数值？因为我们从编码器直接读取到的只是计数，这是一个非常不直观的数字！所以我们想要把它转化为我们熟悉的单位，也就是m/s。所以1m的计数值就非常重要了。</p>
+<p><img src="https://i.loli.net/2020/11/29/sDFlTCgi5IBNqGz.png" alt="image-20201129233039234"></p>
+<p>&ensp;&emsp;1s内中<code>SPEED_F</code>个中断产生，计数值乘以<code>SPEED_F</code>也就是1s内一共产生的计数值，再除以1m计数值，不就刚好是速度m/s吗？前面的只是增加了滤波的过程，使得数据更加精确一点。</p>
+<p>&ensp;&emsp;那么如何来测量这个1m计数值呢？假设我们现在需要测量左边编码器的1m计数，那么首先要将这句 <code>LPLD_FTM_ClearCounter(FTM2);</code> 注释掉，然后推着车走1m，在 <code>live watch</code>中观察 <code>Left_count</code> 的值。可以多推几次取平均值，这个值就是左边编码器的1m计数值。右边编码器的同理，记得测完之后要取消掉注释。</p>
+</li>
+<li><h4 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h4><p>&ensp;&emsp;最常见的问题就是闭环控制时，速度不受控制。开环的时候不使用编码器，是一个固定的输出，而闭环的时候，需要编码器的值作为反馈，来控制电机的输出。那么这个时候应该怎么办呢？</p>
+<p>&ensp;&emsp;首先在<code>live watch</code>中检查<code>Left_count</code>和<code>Right_count</code>的值，然后转动车轮，正转的时候它们的值都应该是正数，倒转的时候它们的值都应该是负数，静止时它们的值都是0。如果不是这样，那么很可能就是编码器出现了问题，需要仔细检查硬件和软件配置。</p>
+</li>
+</ol>
+<h5 id="陀螺仪-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#陀螺仪-2" class="headerlink" title="陀螺仪"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">陀螺仪</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp;&emsp;陀螺仪使用SPI通信，如果不使用陀螺仪的话，需要注释掉主函数中的初始化<code>spi.SPI_Init();</code> 和<code>task.c</code> 里面中断函数 <code>pit2_isr(void)</code> 中的 <code>spi.Get_Attitude()</code> 。否则程序可能会卡住。在四轮组中使用陀螺仪主要是为了方便处理环岛元素。在直立组中，还需要使用陀螺仪来保持直立姿态。下面首先简单介绍陀螺仪中的几个常识，方便大家理解。</p>
+<p><img src="https://i.loli.net/2020/11/29/Sqh2Gb9jrBMxDz7.png" alt="image-20201129233547691" style="zoom:67%;"></p>
+<p>&ensp;&emsp;先看上边的这张图，<code>Roll</code> 、 <code>Pitch</code> 、和 <code>Yaw</code> 分别代表三种姿态。 <code>Roll</code> 表示俯仰， <code>Patch</code> 表示横滚， <code>Yaw</code> 表示航向。更深入的原理不需要大家了解。</p>
+<p>&ensp;&emsp;如上面提到的，在原理图中就是SPI：</p>
+<p><img src="/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/Users\Reed Mark\AppData\Roaming\Typora\typora-user-images\image-20201129233702580.png" alt="image-20201129233702580"></p>
+<p>引脚的配置在<code>MK60_spi.c</code>中:</p>
+<p><img src="https://i.loli.net/2020/11/29/F7E4pK2IAYUaPrM.png" alt="image-20201129233753413" style="zoom:67%;"></p>
+<p>&ensp;&emsp;具体的配置过程不需要大家深入了解，重点在于使用。使用时需要取消掉主函数<code>spi.SPI_Init();</code> 和<code>task.c</code> 里面中断函数 <code>pit2_isr(void)</code> 中的 <code>spi.Get_Attitude()</code> 的注释。然后它的具体作用就是获取角度，那么下面具体讲一下如何得到 <code>Yaw</code> 上的角度，这个可以使用在环岛当中，因为车子经过环岛一定走过了360度。</p>
+<p>&ensp;&emsp;首先在 <code>gyroscope.c</code> 中有 <code>Get_Attitude()</code> 这个函数，里面的 <code>LPF_1_db()</code> 就是用来读取陀螺仪的值的。</p>
+<p><img src="https://i.loli.net/2020/11/30/vhoTiMyg6B37DPp.png" alt="image-20201130000252824" style="zoom:80%;"></p>
+<p><img src="https://i.loli.net/2020/11/29/Sqh2Gb9jrBMxDz7.png" alt="image-20201129233547691" style="zoom:67%;"></p>
+<p>&ensp;&emsp;<code>LPF_1_db(35, 1000, (float)(Get_Z_Gyro()), &amp;GRYZ);</code> 就代表读取了Z轴的角速度，存在变量<code>GRYZ</code> 中，从上面的图可以看到，Z轴的角速度产生于 <code>Yaw</code> 的过程中，角速度的方向是与同心圆相切的。</p>
+<p>&ensp;&emsp;后面就需要对读到的数据做一些处理了，这个比较复杂，函数 <code>IMUupdate()</code>用到了四元数姿态解算， 需要很多数学原理的支持，最后才能得到真实的角速度 <code>TureYawrate</code> 。然后角度就是角速度的积分，所以当检测到圆环时，开始积分，就能根据得到的积分角度判断车子目前大概在环岛的哪个位置了，在这里的积分其实就是累加的过程，大家读一读程序再理解理解。</p>
+<p><img src="https://i.loli.net/2020/11/30/bIF96c1YdeTStav.png" alt="image-20201130000608804" style="zoom:80%;"></p>
+<p>&ensp;&emsp;需要注意的是，这里积分下来可能并不是刚好为360度，这个没有关系，我们可以乘以一个系数使得车子沿着环岛走一圈下来刚好为360。</p>
+<p>&ensp;&emsp;上面提到了陀螺仪在环岛元素的应用，具体步骤如下：</p>
+<ul>
+<li>检测到环岛时，陀螺仪开启角度积分；</li>
+<li>当角度到了40~60度时，认为车子已经入环；</li>
+<li>当角度快到270度左右时，认为车子即将要出环了；</li>
+<li>当角度到320度左右时，认为车子在出环的临界点，需要调整姿态向前走而不能再入环；</li>
+<li>当角度到360度左右，认为这时已经完全出环，再走一段距离后需要消除关于环岛的所有标志位。</li>
+</ul>
+<p>&ensp;&emsp;具体的角度大家根据实际情况进行把握，每种状态都需要及时对车子进行调整。</p>
+<p>&ensp;&emsp;除了可以辅助判断环岛元素外，陀螺仪还可以用来辅助判断坡道。在坡道上，是<code>Pitch</code>姿态，这时你可以根据读到的角速度或者角速度的积分来判断，其中需要用到卡尔曼滤波使得数据更加准确，大家自己可以去试一试，使用上位机观察陀螺仪的几个角速度变化情况。</p>
+<h5 id="小结-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#小结-2" class="headerlink" title="小结"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">小结</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>目前原理估计一时半会很难搞懂，但是你要明白每个模块的大概功能和框架，能够借着PPT、程序注释、LPLD库手册以及其他资料把程序看懂，理清每个模块之间的关系，然后找到自己能够去修改和添加程序的部分。</p>
+<ol>
+<li><p>首先是把程序看一遍，理清楚，抓住主要点和框架。</p>
+</li>
+<li><p>然后，把引脚给配置好（其他地方的配置，实际上大部分是配好了的，只是在具体的引脚上可能会有一些变化）。</p>
+</li>
+<li><p>接着，如果引脚配置好了，车应该能动起来的。如果动不起来就排查问题，多问学长学姐；车动起来的话，去研究一下PID算法、上位机的使用以及蓝牙，然后就可以着手调调PID参数了，使车子跑的稳定，流畅过弯。</p>
+</li>
+<li><p>再接着，就可以着手添加自己写的程序或者优化原先的程序，解决各个赛道元素的识别和规划。</p>
+</li>
+<li><p>最后，就是提速以及进一步优化。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%99%BA%E8%83%BD%E8%BD%A6/" rel="tag"># 智能车</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%9C%BA/" rel="prev" title="电机">
+      <i class="fa fa-chevron-left"></i> 电机
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%84%9F/" rel="next" title="电感">
+      电感 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#编码器-2"><span class="nav-number">1.</span> <span class="nav-text">
+    编码器 </span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原理介绍"><span class="nav-number"></span> <span class="nav-text">原理介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置和使用"><span class="nav-number"></span> <span class="nav-text">配置和使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调用周期"><span class="nav-number"></span> <span class="nav-text">调用周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标定"><span class="nav-number"></span> <span class="nav-text">标定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常见问题"><span class="nav-number"></span> <span class="nav-text">常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#陀螺仪-2"><span class="nav-number">1.</span> <span class="nav-text">
+    陀螺仪 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#小结-2"><span class="nav-number">2.</span> <span class="nav-text">
+    小结 </span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

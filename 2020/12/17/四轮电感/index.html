@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="电感    基本原理 &amp;ensp; &amp;emsp;&amp;nbsp;实验室的赛道铺有电磁线，信号发生器会产生频率为20kHZ的正弦信号，然后通过整条电磁线，这样就在空间激发了以一定规律传播的电场和磁场。根据毕奥-萨法尔定律，电磁线周围磁场分布是一系列同心圆，圆上的强度相同，且随着半径增加而减小。如下图：    &amp;emsp;&amp;nbsp;小车上装有电感，由于电磁感应原理，可以产生感应电动势，其频率">
+<meta property="og:type" content="article">
+<meta property="og:title" content="电感">
+<meta property="og:url" content="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%84%9F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="电感    基本原理 &amp;ensp; &amp;emsp;&amp;nbsp;实验室的赛道铺有电磁线，信号发生器会产生频率为20kHZ的正弦信号，然后通过整条电磁线，这样就在空间激发了以一定规律传播的电场和磁场。根据毕奥-萨法尔定律，电磁线周围磁场分布是一系列同心圆，圆上的强度相同，且随着半径增加而减小。如下图：    &amp;emsp;&amp;nbsp;小车上装有电感，由于电磁感应原理，可以产生感应电动势，其频率">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/XBdCR3tMvzlmxje.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/JBLWMS2ld39hGp5.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/15roMpku8vW34XB.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/B6IbghOtV14JW9f.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/FkVQmB91YRDWNx5.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/iVR3zqN1eGMhvSB.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/LhYq2GrExP8dKl4.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/rMSvROpqjLsBaFk.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/xS41YiGR5HDhwP9.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/2gvkqmrBuYPjiZK.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/Y6bpMcQUzFTEsiA.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/QhCTjpmoYneRtGF.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/yukTKPZXGcENpJ2.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/JIpC9zTdhtjcVrU.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/y29uemkcAE1OwRL.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/JaE1vdeTVWtrknG.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/kh7K5UbzgSJOInf.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/FYtaec2w4onWqf1.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/PAnpbWLKxvQ4yjt.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/D6ROGbh8UrYZjKX.png">
+<meta property="article:published_time" content="2020-12-17T15:46:24.000Z">
+<meta property="article:modified_time" content="2020-12-17T15:58:17.052Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="智能车">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/11/12/XBdCR3tMvzlmxje.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%84%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>电感 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%84%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          电感
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-12-17 23:46:24 / Modified: 23:58:17" itemprop="dateCreated datePublished" datetime="2020-12-17T23:46:24+08:00">2020-12-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%99%BA%E8%83%BD%E8%BD%A6/" itemprop="url" rel="index"><span itemprop="name">智能车</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h5 id="电感-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#电感-2" class="headerlink" title="电感"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">电感</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<ol>
+<li><h4 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h4><p> &ensp; &emsp;&nbsp;实验室的赛道铺有电磁线，信号发生器会产生频率为20kHZ的正弦信号，然后通过整条电磁线，这样就在空间激发了以一定规律传播的电场和磁场。根据毕奥-萨法尔定律，电磁线周围磁场分布是一系列同心圆，圆上的强度相同，且随着半径增加而减小。如下图：</p>
+<p> <img src="https://i.loli.net/2020/11/12/XBdCR3tMvzlmxje.jpg" alt="电磁01" style="zoom: 25%;"></p>
+<p> &emsp;&nbsp;小车上装有电感，由于电磁感应原理，可以产生感应电动势，其频率 $f = \frac{1}{2\pi\sqrt{LC}}$，上面提到了信号发生器产生的信号频率为20kHZ，那么感应到的电流频率也应该是20kHZ，这样，我们一般考虑10mH的工字电感和6.8nF的电容并联后进行检测，但是一般来说实验室的电感电容的精度都是有一定误差的，所以如果想要获得较好的检测效果，可以选择自己用万用表测量电感和电容，尽量减少误差。</p>
+<p> &ensp; &emsp;&nbsp;然后就是横电感和竖电感的区别，先看下图：</p>
+<p> <img src="https://i.loli.net/2020/11/12/JBLWMS2ld39hGp5.png" alt="image-20201112155754728" style="zoom: 80%;"></p>
+<p> &nbsp;&ensp;&emsp;在直道上，如果是横电感，它的线圈就像图中的那样，这样的话，电磁线产生的磁场穿过线圈的磁通量最大，自然产生的感应电动势也就越大，而如果是竖电感，在直道上是没有磁感线穿过线圈的，所以几乎没有感应电动势。</p>
+<p>  &emsp;&nbsp;根据毕奥-萨法尔定律，每个电感上产生的感应电动势表示为$E=\frac{Kh}{h^2+x^2}$，如果是多个电感就是它们的合成。从这个公式可以大概猜到，位置越高感应的电动势越小。所以我们需要调节运放板上的电位器，使得读到的值在合适的范围。那么多少才比较合适呢？如果我们选择12位采样，所以量化之后的取值是0 ~ 4095.也就是说最大是4095。我们一般取值在最大值的$\frac{1}{3}$到$\frac{2}{3}$左右。不能太大，否则我们会损失很多有用的信息。</p>
+<p> &emsp;&nbsp;在调电位器时，一般中间的电感值比两边的稍微大一些，两边的电感值则要尽量对称，这里的对称体现在两方面：</p>
+<ol>
+<li><p>是车子放在中线上时左右电感值差不多。</p>
+</li>
+<li><p>是车子在左右移动时左右电感的变化趋势差不多。</p>
+</li>
+</ol>
+</li>
+<li><h4 id="配置AD引脚"><a href="#配置AD引脚" class="headerlink" title="配置AD引脚"></a>配置AD引脚</h4><p> &emsp;&nbsp;就K60而言，他的ADC有ADC0和ADC1，每个<code>ADCx</code>又有A和B两组控制通道，因此最多可以实现4组ADC通道的连续自动采集，而且配合DMA和PDB，无需CPU对采集过程进行干预，我们可以直接读取内存中的转换结果！</p>
+<p> &emsp;&nbsp;我们首先需要根据硬件的原理图找到对应的AD引脚，这里我们就举一个例子吧。</p>
+<p> ​        <img src="https://i.loli.net/2020/11/29/15roMpku8vW34XB.png" alt="image-20201129205317360" style="zoom:80%;"></p>
+<p> 这个是运放上面的排座，可以看到这里有5路输出，有一路并没有用到。</p>
+<p> <img src="https://i.loli.net/2020/11/12/B6IbghOtV14JW9f.png" alt="image-20201112162237281" style="zoom: 80%;"></p>
+<p> 这个则是主板上面的AD接口，从电源和地这两根线我们就可以找到它们的对应关系了，即运放中的 <code>OUT1</code>对应主板中的 <code>ADC1</code>。</p>
+<p> <img src="https://i.loli.net/2020/11/29/FkVQmB91YRDWNx5.png" alt="image-20201129210902234" style="zoom:80%;"></p>
+<p> 在运放的原理图中可以看到， <code>OUT1</code>对应的是电位器 <code>R2</code>。也就是说，改变电位器 <code>R2</code>影响的是 <code>ADC1</code>的数值。</p>
+<p> <img src="https://i.loli.net/2020/11/29/iVR3zqN1eGMhvSB.png" alt="image-20201129211106884" style="zoom:80%;"></p>
+<p> 也就是上图运放板右上角的那个电位器。信号也自然是从这个电位器旁边的排插进行输入的。</p>
+<p> <img src="https://i.loli.net/2020/11/12/LhYq2GrExP8dKl4.png" alt="image-20201112162413762" style="zoom:80%;"></p>
+<p> 接着我们可以在主板的原理图上找到<code>ADC1</code>对应的芯片引脚，这里可以看到是<code>PTB0</code>引脚。AD一般都有很多通道，那么这个引脚对应的AD的哪个通道呢？这个就需要我们去芯片手册去查找了：</p>
+<p> <img src="https://i.loli.net/2020/11/12/rMSvROpqjLsBaFk.png" alt="image-20201112162706564" style="zoom:80%;"></p>
+<p> &ensp; &emsp;&nbsp;这里我们在芯片手册最后的Pinout部分发现，<code>PTB0</code>引脚对应的有<code>ADC0_SE8</code>或者<code>ADC1_SE8</code>，也就是8号转换通道，那么在代码中我们应该如何操作呢？</p>
+<p> &ensp; &emsp;&nbsp;AD的配置都在 <code>sensor.c</code> 文件中，首先里面有一个函数是 <code>Sensor_AdcInit()</code> ：</p>
+<p> <img src="https://i.loli.net/2020/11/29/xS41YiGR5HDhwP9.png" alt="image-20201129212345585"></p>
+<p> 在这里我们首先对ADC0进行初始化。具体的可以去 <code>LPLD</code>库函数手册查看：</p>
+<p> <img src="https://i.loli.net/2020/11/29/2gvkqmrBuYPjiZK.png" alt="image-20201129212549949"></p>
+<p> 在库函数手册中同样可以找到：</p>
+<p> <img src="https://i.loli.net/2020/11/29/Y6bpMcQUzFTEsiA.png" alt="image-20201129212913126"></p>
+<p> 所以使用 <code>LPLD_ADC_Chn_Enable(ADC0, AD8)</code>就可以使能<code>ADC0</code>的8号转换通道的AD采集功能了。</p>
+<p> 这个配置好了，那么下一步就是用AD采集数据了，这部分在函数 <code>Sensor_getAdc()</code> 中。</p>
+<p> <img src="https://i.loli.net/2020/11/29/QhCTjpmoYneRtGF.png" alt="image-20201129213940718"></p>
+<p> &ensp; &emsp;为了保证采集的精确，我们每次采集三次然后进行取平均。而前面的1、4、6、0、5那些下标分别代表5个电感，为了方便记忆，我们可以在<code>sensor.h</code>中做如下定义:</p>
+<p> <img src="https://i.loli.net/2020/11/29/yukTKPZXGcENpJ2.png" alt="image-20201129213355612" style="zoom:80%;"></p>
+<p> &ensp; &emsp;这个可以根据自己的喜好去定义，然后你可以将电感的数值显示在<code>OLED</code>上，然后你会发现即便没有电磁信号，它也是有值的，大约会在100左右，这是正常的，就是所谓的零漂，虽然影响不大，但是你也可以选择测出零漂然后进行相应处理。然后我们需要观察这个数值的跳动，一般来说，跳动在几十左右是比较好的，如果太大，很可能是电感出现了问题，如果发现无论怎么调整电位器，值都非常小，那么首先检查引脚是否配置正确，要是正确，那么很可能是电感接线出现了问题，需要从硬件上仔细排查。</p>
+<p> &ensp; &emsp;将电感值显示在 <code>OLED</code>上对于我们调电感值来说是非常方面的。可以在 <code>UI.c</code>文件中找到 <code>UI_Disp()</code>函数：</p>
+<p> <img src="https://i.loli.net/2020/11/29/JIpC9zTdhtjcVrU.png" alt="image-20201129214537623" style="zoom:80%;"></p>
+<p> &ensp; &emsp;直接使用函数 <code>oled.PrintUintValue()</code>就可以显示电感的数值了，为了分清楚具体的某一个电感，我们还要在电感数值前面加上字符说明，也就是 <code>UI_DispUIStrings(UI_AD);</code>这个语句。其中的 <code>UI_AD</code>是一个字符数组，大小定义为8行22列是与屏幕的大小相对应，然后写上对应的说明就可以了。</p>
+<p> <img src="https://i.loli.net/2020/11/29/y29uemkcAE1OwRL.png" alt="image-20201129214902595"></p>
+</li>
+<li><h4 id="基础巡线"><a href="#基础巡线" class="headerlink" title="基础巡线"></a>基础巡线</h4><p> &ensp; &emsp;上面通过AD采集到了电感值，那么怎么利用这些电感值来巡线呢？我们首先需要根据这些电感值得到偏差 <code>Error</code>！</p>
+<p> &ensp; &emsp;由于电感的前瞻在安装时就已经固定好了，所以偏差<code>Error</code>的计算就非常的重要！建议大家多花时间去思考如何得到较好的偏差。</p>
+<p> <img src="https://i.loli.net/2020/11/29/JaE1vdeTVWtrknG.png" alt="image-20201129215258298" style="zoom:50%;"></p>
+<p> 上图是理想的偏差曲线，也就是一个线性的函数。</p>
+<ul>
+<li><p>车子在中线上，偏差应该接近0；</p>
+</li>
+<li><p>车子靠左边，偏差应该正向增大；</p>
+</li>
+<li><p>车字靠右边，偏差应该负向增大。</p>
+<p>这里的正负取决于是右减左还是左减右。</p>
+<p>&ensp; &emsp;理想情况下就应该是偏差随着车子偏离中线的距离呈线性关系！所以关于偏差最重要的就是拟合出一条接近理想偏差的曲线！当然不可能得到是完全线性的。</p>
+<p>&ensp; &emsp;常见的差比和算法：<img src="https://i.loli.net/2020/11/29/kh7K5UbzgSJOInf.png" alt="image-20201129215555537" style="zoom: 50%;"></p>
+<p>&ensp; &emsp;这种方法比较简单，就是使用左右两个横电感的差值除以它们的和值。得到的曲线大概是下图所示的那样：</p>
+<p><img src="https://i.loli.net/2020/11/29/FYtaec2w4onWqf1.png" alt="image-20201129215709900" style="zoom: 67%;"></p>
+<p>&ensp; &emsp;可以看到，得到偏差曲线并非线性的，当偏离中线较远时，得到的偏差反而还减小了，这显然是不太好的。当然这种方法作为最基础的方法，是能够达到控制小车的目的的，大家可以先试试。</p>
+<p>&ensp; &emsp;为了构造出一个接近线性的偏差曲线，一种办法就是在差比和的基础上进行改进，比如说对下面的和值求1.5次幂，看看图像：</p>
+<p><img src="https://i.loli.net/2020/11/29/PAnpbWLKxvQ4yjt.png" alt="image-20201129220011415" style="zoom:67%;"></p>
+<p>&ensp; &emsp;偏差的曲线是不是接近线性了一些呢？不过这种计算引入了求幂，肯定会加大单片机的计算量，需要想办法解决或者去想想更好的办法。</p>
+<p>&ensp; &emsp;另外一种办法就是直接用<code>Matlab</code>或者其他工具对偏差进行多项式拟合。具体做法就是采集不同位置的电感值，这些就是自变量，然后因变量就是偏差，这个偏差你可以根据车子偏离中线的距离来自己给定，当然尽量线性一些，然后就相当于一个函数拟合问题了。</p>
+<p>&ensp; &emsp;此外，根据自己选择电感的方案，还可以有其他不同的改进方法，比如引入中间的横电感对偏差进行加权，引入竖电感来提前感知弯道等等。具体的计算方法还要靠大家自己研究，这里只是抛砖引玉。</p>
+<p>&ensp; &emsp;一般来说在计算偏差时都要使用归一化后的值来计算，这样对于不同赛道的适应性会好一些。归一化其实可以简单理解为百分比。在程序中有相关的操作：</p>
+<p><img src="https://i.loli.net/2020/11/29/D6ROGbh8UrYZjKX.png" alt="image-20201129220433588"></p>
+</li>
+</ul>
+</li>
+<li><h4 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h4><ol>
+<li>电感值左右不对称，这个问题很大程度上是电感安装的位置不对称导致的，在安装电感值，一定要仔细测量，保证左右的对称性，电感安装的对称性非常重要！！</li>
+<li>放在赛道上电感没有数值？前面提到了，在高度较高时，感应到的电动势很小，所以可以先试着调整一下运放板的电位器。</li>
+</ol>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%99%BA%E8%83%BD%E8%BD%A6/" rel="tag"># 智能车</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/" rel="prev" title="编码器陀螺仪">
+      <i class="fa fa-chevron-left"></i> 编码器陀螺仪
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E6%91%84%E5%83%8F%E5%A4%B4/" rel="next" title="摄像头">
+      摄像头 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#电感-2"><span class="nav-number">1.</span> <span class="nav-text">
+    电感 </span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本原理"><span class="nav-number"></span> <span class="nav-text">基本原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置AD引脚"><span class="nav-number"></span> <span class="nav-text">配置AD引脚</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基础巡线"><span class="nav-number"></span> <span class="nav-text">基础巡线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常见问题"><span class="nav-number"></span> <span class="nav-text">常见问题</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

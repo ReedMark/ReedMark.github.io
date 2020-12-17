@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="电磁信号采集  &amp;ensp; &amp;emsp;&amp;nbsp;实验室的赛道铺有电磁线，信号发生器会产生频率为20kHZ的正弦信号，然后通过整条电磁线，这样就在空间激发了以一定规律传播的电场和磁场。根据毕奥-萨法尔定律，电磁线周围磁场分布是一系列同心圆，圆上的强度相同，且随着半径增加而减小。如下图：    &amp;ensp; &amp;emsp;&amp;nbsp;小车上装有电感，由于电磁感应原理，可以产生感应电动势，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="四轮培训">
+<meta property="og:url" content="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E5%9F%B9%E8%AE%AD/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="电磁信号采集  &amp;ensp; &amp;emsp;&amp;nbsp;实验室的赛道铺有电磁线，信号发生器会产生频率为20kHZ的正弦信号，然后通过整条电磁线，这样就在空间激发了以一定规律传播的电场和磁场。根据毕奥-萨法尔定律，电磁线周围磁场分布是一系列同心圆，圆上的强度相同，且随着半径增加而减小。如下图：    &amp;ensp; &amp;emsp;&amp;nbsp;小车上装有电感，由于电磁感应原理，可以产生感应电动势，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/XBdCR3tMvzlmxje.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/JBLWMS2ld39hGp5.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/B6IbghOtV14JW9f.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/LhYq2GrExP8dKl4.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/rMSvROpqjLsBaFk.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/VMuDcrzILynda2i.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/CxdlqzaRbImsXwP.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/x5lj4RQrgDZKWPq.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/12/5SAn9mpKoBhr8Ma.jpg">
+<meta property="article:published_time" content="2020-12-17T15:58:59.750Z">
+<meta property="article:modified_time" content="2020-11-29T06:13:35.093Z">
+<meta property="article:author" content="ReedMark">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/11/12/XBdCR3tMvzlmxje.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E5%9F%B9%E8%AE%AD/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>四轮培训 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E5%9F%B9%E8%AE%AD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          四轮培训
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-12-17 23:58:59" itemprop="dateCreated datePublished" datetime="2020-12-17T23:58:59+08:00">2020-12-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-11-29 14:13:35" itemprop="dateModified" datetime="2020-11-29T14:13:35+08:00">2020-11-29</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h5 id="电磁信号采集-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#电磁信号采集-2" class="headerlink" title="电磁信号采集"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">电磁信号采集</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+&ensp; &emsp;&nbsp;实验室的赛道铺有电磁线，信号发生器会产生频率为20kHZ的正弦信号，然后通过整条电磁线，这样就在空间激发了以一定规律传播的电场和磁场。根据毕奥-萨法尔定律，电磁线周围磁场分布是一系列同心圆，圆上的强度相同，且随着半径增加而减小。如下图：
+
+<img src="https://i.loli.net/2020/11/12/XBdCR3tMvzlmxje.jpg" alt="电磁01" style="zoom: 25%;">
+
+&ensp; &emsp;&nbsp;小车上装有电感，由于电磁感应原理，可以产生感应电动势，其频率 $f = \frac{1}{2\pi\sqrt{LC}}$，上面提到了信号发生器产生的信号频率为20kHZ，那么感应到的电流频率也应该是20kHZ，这样，我们一般考虑10mH的工字电感和6.8nF的电容并联后进行检测，但是一般来说实验室的电感电容的精度都是有一定误差的，所以如果想要获得较好的检测效果，可以选择自己用万用表测量电感和电容，尽量减少误差。
+
+&ensp; &emsp;&nbsp;然后就是横电感和竖电感的区别，先看下图：
+
+<img src="https://i.loli.net/2020/11/12/JBLWMS2ld39hGp5.png" alt="image-20201112155754728" style="zoom: 80%;">
+
+&ensp; &emsp;&nbsp;在直道上，如果是横电感，它的线圈就像图中的那样，这样的话，电磁线产生的磁场穿过线圈的磁通量最大，自然产生的感应电动势也就越大，而如果是竖电感，在直道上是没有磁感线穿过线圈的，所以几乎没有感应电动势。
+
+&ensp; &emsp;&nbsp;根据毕奥-萨法尔定律，每个电感上产生的感应电动势表示为$E=\frac{Kh}{h^2+x^2}$，如果是多个电感就是它们的合成。
+
+&ensp; &emsp;&nbsp;采集到的信号好像不能够直接使用，因为单片机没有办法处理这种模拟的信号，那么有什么办法呢？这就到AD模块大显神通了。简单地说，AD就是将analog转换成为digital，具体的原理我们不需要了解，只要懂得如何使用就可以了。在硬件上只需要用端子线把运放和主板连接在一起应该就可以正常使用了。
+
+&ensp; &emsp;&nbsp;软件上，我们首先需要根据硬件的原理图找到对应的AD，这里我们就举一个例子吧。
+
+
+
+​        <img src="https://i.loli.net/2020/11/12/B6IbghOtV14JW9f.png" alt="image-20201112162237281" style="zoom: 80%;">
+
+&ensp; &emsp;&nbsp;这个就是AD模块的原理图，比如说ADC1吧，我们在单片机那边找到对应的引脚，<img src="https://i.loli.net/2020/11/12/LhYq2GrExP8dKl4.png" alt="image-20201112162413762" style="zoom:80%;">   
+
+&ensp; &emsp;&nbsp;可以看到连接的是单片机的PTB0引脚，AD一般都有很多通道，那么这个引脚对应的AD的哪个通道呢？这个就需要我们去芯片手册去查找了：
+
+<img src="https://i.loli.net/2020/11/12/rMSvROpqjLsBaFk.png" alt="image-20201112162706564" style="zoom:80%;">
+
+&ensp; &emsp;&nbsp;这里我们在芯片手册最后的Pinout部分发现，PTB0引脚对应的有ADC0_SE8或者ADC1_SE8，也就是8通道，那么在代码中我们应该如何操作呢？
+
+&ensp; &emsp;&nbsp;AD的配置都在 `sensor.c`文件中，首先里面有一个函数是 `Sensor_AdcInit()`，在这里我们需要对ADC做一个初始化，比如在上面的例子中我们想使用ADC1的8通道，那么就在初始化函数中加入这句话：
+
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LPLD_ADC_Chn_Enable(ADC1, AD8);</span><br></pre></td></tr></table></figure></div>
+
+其他的配置都不用变，就是ADC的一些基本配置。这个配置好了，那么下一步就是用AD采集数据了，这部分在函数 `Sensor_getAdc()`中。为了保证采集的精确，我们每次采集三次然后进行取平均，每次采集使用：
+
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sensor.advalue.ad_avr_temp[i][<span class="number">4</span>] = LPLD_ADC_Get(ADC1, AD8);</span><br></pre></td></tr></table></figure></div>
+
+&ensp; &emsp;&nbsp;这里我们假设4代表是左边的横电感，就可以得到采集到的左边横电感的数据了，然后处理完的数据是在变量 `sensor.advalue.ad_avr_val`中，一般我们是5个电感，三个横电感和两个竖电感，那么 `sensor.advalue.ad_avr_val[4]`里面存的就是左边横电感的数值了。
+
+&ensp; &emsp;&nbsp; 采集完成后，你可以将电感的数值显示在屏幕上，然后你会发现即便没有电磁信号，它也是有值的，大约会在100左右，这是正常的，就是所谓的零漂，虽然影响不大，但是你也可以选择测出零漂然后处理。然后我们需要观察这个数值的跳动，一般来说，跳动在几十左右是比较好的，如果太大，显然是不好的。
+
+<h5 id="摄像头信号采集-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#摄像头信号采集-2" class="headerlink" title="摄像头信号采集"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">摄像头信号采集</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp; &emsp;&nbsp;摄像头型号为逐飞科技的ov7725，关于如何采集数据不需要大家深入研究，早期主要是学会如何使用摄像头采集到的数据。其中，主要掌握的一些包括前瞻、焦距、摄像头固定以及对摄像头数据的基本处理。</p>
+<p>&ensp; &emsp;&nbsp;首先摄像头采集到的数据放在一个叫做 <code>Image</code>的二维数组中，这个数组的大小是120 * 160。其中120就是行数，160就是列数。</p>
+<p><img src="https://i.loli.net/2020/11/12/VMuDcrzILynda2i.jpg" alt="摄像头" style="zoom: 25%;"></p>
+<p>&ensp; &emsp;&nbsp;如果摄像头是正向安装的话，那么最远处的就是第0行，最近处的是第119行；最左边的是第0列，最右边的是第159列。一般而言，要控制小车，我们不需要所有的行都参与计算，这样没有必要，一般而言我们总是选取其中的几行到十几行左右来计算与中线的偏差，从而控制小车。在程序里面具体就是 <code>searchline.c</code>中的 <code>caculate_err()</code>函数，第二个 <code>for</code>循环。这些用于计算偏差的这几行实际的远近也就是所谓的前瞻。前瞻一般在1~1.8m左右，具体可以根据实际的情况来调整。一般来说，在速度低的时候前瞻近一些，速度高的时候前瞻要远一些。但是要注意，摄像头的前瞻也不能太远，否则会有桶形失真，从而远处的图像不真实。在实际情况下，还可以根据编码器测到的车速来动态调整小车的前瞻。</p>
+<p>&ensp; &emsp;&nbsp;在固定摄像头之前，需要对摄像头进行调焦，使得成像更加清晰，减小噪声的干扰。调焦需要在一张A4纸上写一个大的  <code>米</code>字，然后平放在赛道上，离车的距离大概和前瞻差不多，然后转动摄像头，<strong>使得在屏幕上的米字图像清晰可见</strong>，这就调整好了焦距。</p>
+<p>&ensp; &emsp;&nbsp;至于摄像头的俯仰，如果是20cm高的摄像头，那么可以稍微往下一些，使得前瞻的位置大约在中间的行数。如果是10cm的摄像头，可以使摄像头稍微往上一些，看得更远，保证前瞻足够远。调整好了后，<strong>一定要将摄像头固定，再开始后面的工作</strong>，否则，一旦摄像头的位置变化，很多参数就不再适应。</p>
+<h5 id="电机驱动-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#电机驱动-2" class="headerlink" title="电机驱动"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">电机驱动</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp; &emsp;&nbsp;电机的驱动采用的差分的PWM波，具体的原理图在群里面有。</p>
+<p><img src="https://i.loli.net/2020/11/12/CxdlqzaRbImsXwP.png" alt="image-20201112202737997" style="zoom:80%;"></p>
+<p>&ensp; &emsp;&nbsp;单片机输出的PWM波通过八路总线收发器74LVC245后经过两个半桥驱动IR2104组成的全桥驱动后分别输出 A+、A-和B+、B-。为什么要这么麻烦呢？我们知道单片机输出的信号也就3.3V，电流很小，根本没有办法去驱动电机，所以我们需要进行这么复杂的处理，以驱动电机。</p>
+<p>&ensp; &emsp;&nbsp;那么在程序中我们就只需要控制单片机产生合适的PWM信号就可以了。对于电机来说，我们这里是单独控制左、右的，那么对每个电机来说，就有两种状态：前进和后退。由于是差分PWM控制，那么我们让一路PWM为0，另外一路为正数，就可以使得电机转动起来了，至于正转还是反转，大家可以把PWM输出来观察，如果是反的就换一下即可。当然，这也和驱动与电机的接线是有关的。下面就从程序上面举个例子，如何控制电机开始转动：</p>
+<p>&ensp; &emsp;&nbsp;首先，电机的初始化是在 <code>motor.c</code>文件中的函数 <code>MotorInit()</code>，这里我们不需要修改相关的东西，而在 <code>control.c</code>的函数 <code>MotorControl(float* err)</code>修改即可。在这个函数中有一个左电机速度更新和右电机速度更新，<code>L_SpeedControlOutUpdata</code>就是输出的左电机的相关参数，上面是闭环输出，也就是用了编码器的，这个后面再讲，下面是开环输出。如果要想左电机转动，那么我们可以先注释掉闭环输出的语句，使用开环输出一个值，不要太大，否则电机会疯转，大约2000~3000左右，然后观察电机是正转还是反转，如果是正转，那就没有问题，再试试右边的，如果是反转呢？那么可以通过修改下面的几段：</p>
+<div style="width:100%;border:1px #e3e3e3 solid;">
+    <div style="width:100%;font-family:'Consolas', 'Courier New';font-size:12px;border-bottom:1px solid #e3e3e3;margin-top:5px;color:#000000;">&nbsp;C++ Code&nbsp;</div><table style="width:100%;font-family:'Consolas', 'Courier New';font-size:12px;vertical-align:text-top;line-height:15px;" border="0" cellspacing="0" cellpadding="0"><tr><td style="color:#008284;background-color:#e3e3e3;vertical-align:text-top;"><div style="margin:7px;text-align:right;white-space:nowrap;"><nobr>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br></nobr></div></td><td style="background-color:#008284;padding:1px;"><div style="border:1px #008284 solid;"></div></td><td style="background-color:#efefef;width:100%;vertical-align:text-top;color:#000000;"><div style="margin:7px;"><span style="color:#0000ff;">if</span><span style="color:#000000;">(L_SpeedControlOutUpdata&nbsp;&gt;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">)<BR>
+{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">1</span><span style="color:#000000;">]&nbsp;=&nbsp;(int16)(L_SpeedControlOutUpdata&nbsp;&gt;&nbsp;speed.L_Bigeest&nbsp;?&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed.L_Bigeest&nbsp;:&nbsp;L_SpeedControlOutUpdata);<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">0</span><span style="color:#000000;">]&nbsp;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">;<BR>
+}<BR>
+</BR></BR></span><span style="color:#0000ff;">if</span><span style="color:#000000;">(L_SpeedControlOutUpdata&nbsp;&lt;&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">)<BR>
+{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">1</span><span style="color:#000000;">]&nbsp;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></span><span style="color:#ff0000;">0</span><span style="color:#000000;">]&nbsp;=&nbsp;(int16)(-L_SpeedControlOutUpdata&nbsp;&gt;&nbsp;speed.L_Bigeest&nbsp;?&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed.L_Bigeest&nbsp;:&nbsp;-L_SpeedControlOutUpdata);<BR>
+}</BR></BR></span></div></td></tr></table></div>
+
+
+
+<p><code>L_SpeedControlOutUpdata</code>影响<code>MotorPwm[0]</code>和 <code>MotorPwm[1]</code>，而这两个才是最后单片机的输出值，所以呢，我们只需要调换一下两者的顺序即可：</p>
+<div style="width:100%;border:1px #e3e3e3 solid;">
+    <div style="width:100%;font-family:'Consolas', 'Courier New';font-size:12px;border-bottom:1px solid #e3e3e3;margin-top:5px;color:#000000;">&nbsp;C++ Code&nbsp;</div>
+    <table style="width:100%;font-family:'Consolas', 'Courier New';font-size:12px;vertical-align:text-top;line-height:15px;" border="0" cellspacing="0" cellpadding="0"><tr>
+    <td style="color:#008284;background-color:#e3e3e3;vertical-align:text-top;">
+    <div style="margin:7px;text-align:right;white-space:nowrap;">
+        <nobr>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br></nobr></div></td><td style="background-color:#008284;padding:1px;"><div style="border:1px #008284 solid;"></div></td><td style="background-color:#efefef;width:100%;vertical-align:text-top;color:#000000;"><div style="margin:7px;"><span style="color:#0000ff;">if</span><span style="color:#000000;">(L_SpeedControlOutUpdata&nbsp;&gt;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">)<BR>{<BR>&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">0</span><span style="color:#000000;">]&nbsp;=&nbsp;(int16)(L_SpeedControlOutUpdata&nbsp;&gt;&nbsp;speed.L_Bigeest&nbsp;?&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed.L_Bigeest&nbsp;:&nbsp;L_SpeedControlOutUpdata);<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">1</span><span style="color:#000000;">]&nbsp;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">;<BR>}<BR></BR></BR></span><span style="color:#0000ff;">if</span><span style="color:#000000;">(L_SpeedControlOutUpdata&nbsp;&lt;&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">)<BR>{<BR>&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">0</span><span style="color:#000000;">]&nbsp;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">;<BR>&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></span><span style="color:#ff0000;">1</span><span style="color:#000000;">]&nbsp;=&nbsp;(int16)(-L_SpeedControlOutUpdata&nbsp;&gt;&nbsp;speed.L_Bigeest&nbsp;?&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed.L_Bigeest&nbsp;:&nbsp;-L_SpeedControlOutUpdata);<BR>
+}</BR></BR></span></div></td></tr></table></div>
+
+
+
+
+
+
+
+<p>这样就可以了。可以试试看是不是正常了。我们要做的就是让<code>L_SpeedControlOutUpdata</code>和<code>R_SpeedControlOutUpdata</code>输出正值的时候电机是向前的，反之则是向后的，这样，即便使用开环，我们的车也能够跑起来了。</p>
+<h5 id="舵机驱动-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#舵机驱动-2" class="headerlink" title="舵机驱动"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">舵机驱动</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp; &emsp;&nbsp;舵机的初始化一般不需要我们关心，拿到车后我们需要做的就是调整舵机的中值，所谓中值，就是偏差为0时舵机的数值。显而易见，这个时候舵机应该打在正中间，这样车才能够向正前方走。中值这个变量就是在 <code>control.c</code>中的 <code>pout0</code>。那么如何来调整这个值使得舵机打在中间呢？</p>
+<p>&ensp; &emsp;&nbsp;而舵机最终的输出变量是 <code>pout</code>，这样我们就可以首先在IAR的 live watch中观察 <code>pout</code>的值，然后在赛道上左右移动小车观察小车的舵机转动情况，先大概使得舵机打在中间，记下这个值，然后赋给 <code>pout0</code>。当然这样得到的值不是很精确，还需要我们进行微调，微调的时候我们可以让车打在中值上，具体做法就是在函数<code>ServControl(float* err)</code>中，修改 <code>motor.SetServ((uint16)pout);</code>为 <code>motor.SetServ((uint16)pout0);</code>，这样小车就会一直打在中值上，然后可以放在长直道上面，推着车走一段，看看车是否沿着中线走，如果不是沿着中线，那么就继续微调，使得小车尽量贴着中线，最后记录下这个值赋给 <code>pout0</code>，记得最后要把这个函数修改回来。</p>
+<h5 id="编码器数据采集-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#编码器数据采集-2" class="headerlink" title="编码器数据采集"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">编码器数据采集</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp; &emsp;&nbsp;编码器具体的原理大家可以去网上学习一下，在智能车上它的主要作用就是测得速度，进行闭环控制。其中最重要的一步就是测出编码器1m的计数值，这两个值的定义在 <code>motor.h</code>中，是以宏定义的方式定义的。那么怎么测这个值呢？首先，需要在 <code>motor.c</code>中找到函数 <code>GetSpeed(void)</code>，假设我们现在需要测量左边编码器的1m计数，那么首先要将这句 <code>LPLD_FTM_ClearCounter(FTM2);</code>注释掉，然后推着车走1m，在 live watch中观察 <code>Left_count</code>的值。可以多推几次取平均值，这个值就是左边编码器的1m计数值。右边编码器的同理，记得测完之后要取消掉注释。</p>
+<p></p><h5 id="陀螺仪数据采集-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#陀螺仪数据采集-2" class="headerlink" title="陀螺仪数据采集"></a><br>    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">陀螺仪数据采集</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5><br>&ensp; &emsp;&nbsp;陀螺仪使用SPI通信，如果不使用陀螺仪的话，需要注释掉主函数中的初始化 <code>spi.SPI_Init();</code>和 <code>task.c</code>里面中断函数 <code>pit2_isr(void)</code>中的 <code>spi.Get_Attitude()</code>。否则程序可能会卡住。在四轮组中使用陀螺仪主要是为了方便处理环岛元素。在直立组中，还需要使用陀螺仪来保持直立姿态。下面首先简单介绍陀螺仪中的几个常识，方便大家理解。<p></p>
+<p>&ensp; &emsp;&nbsp;首先看下面一张图：</p>
+<p><img src="https://i.loli.net/2020/11/12/x5lj4RQrgDZKWPq.png" alt="Aircraft principal axes - Wikipedia" style="zoom:50%;"><img src="https://i.loli.net/2020/11/12/5SAn9mpKoBhr8Ma.jpg" alt="陀螺仪" style="zoom:25%;"></p>
+<p><code>Roll</code>、<code>Pitch</code>、和 <code>Yaw</code>分别代表三种姿态。<code>Roll</code>表示俯仰， <code>Patch</code>表示横滚， <code>Yaw</code>表示航向。 </p>
+<p>下面具体讲一下如何得到 <code>Yaw</code>上的角度，这个可以使用在环岛当中，因为车子经过环岛一定走过了360度。</p>
+<p>&ensp; &emsp;&nbsp;首先在  <code>gyroscope.c</code>中有 <code>Get_Attitude()</code>的函数，函数 <code>LPF_1_db()</code>就是用来读取陀螺仪的值的，那么举个例子：</p>
+<p><code>LPF_1_db(35, 1000, (float)(Get_Z_Gyro()), &amp;GRYZ);</code>就代表读取了Z轴的角速度，存在变量 <code>GRYZ</code>中，从上面的图可以看到，Z轴的角速度产生于 <code>Yaw</code>的过程中，角速度的方向是与同心圆相切的。后面就需要对读到的数据做一些处理了，这个比较复杂，需要很多数学原理的支持，最后才能得到真实的角速度 <code>TureYawrate</code>。然后角度就是角速度的积分，所以当检测到圆环时，开始积分，就能根据得到的积分角度判断车子目前大概在环岛的哪个位置了，在这里的积分其实就是累加的过程，大家读一读程序再理解理解。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E6%91%84%E5%83%8F%E5%A4%B4/" rel="prev" title="摄像头">
+      <i class="fa fa-chevron-left"></i> 摄像头
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#电磁信号采集-2"><span class="nav-number">1.</span> <span class="nav-text">
+    电磁信号采集 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#摄像头信号采集-2"><span class="nav-number">2.</span> <span class="nav-text">
+    摄像头信号采集 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#电机驱动-2"><span class="nav-number">3.</span> <span class="nav-text">
+    电机驱动 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#舵机驱动-2"><span class="nav-number">4.</span> <span class="nav-text">
+    舵机驱动 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编码器数据采集-2"><span class="nav-number">5.</span> <span class="nav-text">
+    编码器数据采集 </span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#陀螺仪数据采集-2"><span class="nav-number">6.</span> <span class="nav-text">
+    陀螺仪数据采集 </span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>

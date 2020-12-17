@@ -164,6 +164,1038 @@ $(window).load(function(){
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E5%9F%B9%E8%AE%AD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E5%9F%B9%E8%AE%AD/" class="post-title-link" itemprop="url">四轮培训</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-12-17 23:58:59" itemprop="dateCreated datePublished" datetime="2020-12-17T23:58:59+08:00">2020-12-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-11-29 14:13:35" itemprop="dateModified" datetime="2020-11-29T14:13:35+08:00">2020-11-29</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h5 id="电磁信号采集-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#电磁信号采集-2" class="headerlink" title="电磁信号采集"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">电磁信号采集</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+&ensp; &emsp;&nbsp;实验室的赛道铺有电磁线，信号发生器会产生频率为20kHZ的正弦信号，然后通过整条电磁线，这样就在空间激发了以一定规律传播的电场和磁场。根据毕奥-萨法尔定律，电磁线周围磁场分布是一系列同心圆，圆上的强度相同，且随着半径增加而减小。如下图：
+
+<img src="https://i.loli.net/2020/11/12/XBdCR3tMvzlmxje.jpg" alt="电磁01" style="zoom: 25%;">
+
+&ensp; &emsp;&nbsp;小车上装有电感，由于电磁感应原理，可以产生感应电动势，其频率 $f = \frac{1}{2\pi\sqrt{LC}}$，上面提到了信号发生器产生的信号频率为20kHZ，那么感应到的电流频率也应该是20kHZ，这样，我们一般考虑10mH的工字电感和6.8nF的电容并联后进行检测，但是一般来说实验室的电感电容的精度都是有一定误差的，所以如果想要获得较好的检测效果，可以选择自己用万用表测量电感和电容，尽量减少误差。
+
+&ensp; &emsp;&nbsp;然后就是横电感和竖电感的区别，先看下图：
+
+<img src="https://i.loli.net/2020/11/12/JBLWMS2ld39hGp5.png" alt="image-20201112155754728" style="zoom: 80%;">
+
+&ensp; &emsp;&nbsp;在直道上，如果是横电感，它的线圈就像图中的那样，这样的话，电磁线产生的磁场穿过线圈的磁通量最大，自然产生的感应电动势也就越大，而如果是竖电感，在直道上是没有磁感线穿过线圈的，所以几乎没有感应电动势。
+
+&ensp; &emsp;&nbsp;根据毕奥-萨法尔定律，每个电感上产生的感应电动势表示为$E=\frac{Kh}{h^2+x^2}$，如果是多个电感就是它们的合成。
+
+&ensp; &emsp;&nbsp;采集到的信号好像不能够直接使用，因为单片机没有办法处理这种模拟的信号，那么有什么办法呢？这就到AD模块大显神通了。简单地说，AD就是将analog转换成为digital，具体的原理我们不需要了解，只要懂得如何使用就可以了。在硬件上只需要用端子线把运放和主板连接在一起应该就可以正常使用了。
+
+&ensp; &emsp;&nbsp;软件上，我们首先需要根据硬件的原理图找到对应的AD，这里我们就举一个例子吧。
+
+
+
+​        <img src="https://i.loli.net/2020/11/12/B6IbghOtV14JW9f.png" alt="image-20201112162237281" style="zoom: 80%;">
+
+&ensp; &emsp;&nbsp;这个就是AD模块的原理图，比如说ADC1吧，我们在单片机那边找到对应的引脚，<img src="https://i.loli.net/2020/11/12/LhYq2GrExP8dKl4.png" alt="image-20201112162413762" style="zoom:80%;">   
+
+&ensp; &emsp;&nbsp;可以看到连接的是单片机的PTB0引脚，AD一般都有很多通道，那么这个引脚对应的AD的哪个通道呢？这个就需要我们去芯片手册去查找了：
+
+<img src="https://i.loli.net/2020/11/12/rMSvROpqjLsBaFk.png" alt="image-20201112162706564" style="zoom:80%;">
+
+&ensp; &emsp;&nbsp;这里我们在芯片手册最后的Pinout部分发现，PTB0引脚对应的有ADC0_SE8或者ADC1_SE8，也就是8通道，那么在代码中我们应该如何操作呢？
+
+&ensp; &emsp;&nbsp;AD的配置都在 `sensor.c`文件中，首先里面有一个函数是 `Sensor_AdcInit()`，在这里我们需要对ADC做一个初始化，比如在上面的例子中我们想使用ADC1的8通道，那么就在初始化函数中加入这句话：
+
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LPLD_ADC_Chn_Enable(ADC1, AD8);</span><br></pre></td></tr></table></figure></div>
+
+其他的配置都不用变，就是ADC的一些基本配置。这个配置好了，那么下一步就是用AD采集数据了，这部分在函数 `Sensor_getAdc()`中。为了保证采集的精确，我们每次采集三次然后进行取平均，每次采集使用：
+
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sensor.advalue.ad_avr_temp[i][<span class="number">4</span>] = LPLD_ADC_Get(ADC1, AD8);</span><br></pre></td></tr></table></figure></div>
+
+&ensp; &emsp;&nbsp;这里我们假设4代表是左边的横电感，就可以得到采集到的左边横电感的数据了，然后处理完的数据是在变量 `sensor.advalue.ad_avr_val`中，一般我们是5个电感，三个横电感和两个竖电感，那么 `sensor.advalue.ad_avr_val[4]`里面存的就是左边横电感的数值了。
+
+&ensp; &emsp;&nbsp; 采集完成后，你可以将电感的数值显示在屏幕上，然后你会发现即便没有电磁信号，它也是有值的，大约会在100左右，这是正常的，就是所谓的零漂，虽然影响不大，但是你也可以选择测出零漂然后处理。然后我们需要观察这个数值的跳动，一般来说，跳动在几十左右是比较好的，如果太大，显然是不好的。
+
+<h5 id="摄像头信号采集-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#摄像头信号采集-2" class="headerlink" title="摄像头信号采集"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">摄像头信号采集</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp; &emsp;&nbsp;摄像头型号为逐飞科技的ov7725，关于如何采集数据不需要大家深入研究，早期主要是学会如何使用摄像头采集到的数据。其中，主要掌握的一些包括前瞻、焦距、摄像头固定以及对摄像头数据的基本处理。</p>
+<p>&ensp; &emsp;&nbsp;首先摄像头采集到的数据放在一个叫做 <code>Image</code>的二维数组中，这个数组的大小是120 * 160。其中120就是行数，160就是列数。</p>
+<p><img src="https://i.loli.net/2020/11/12/VMuDcrzILynda2i.jpg" alt="摄像头" style="zoom: 25%;"></p>
+<p>&ensp; &emsp;&nbsp;如果摄像头是正向安装的话，那么最远处的就是第0行，最近处的是第119行；最左边的是第0列，最右边的是第159列。一般而言，要控制小车，我们不需要所有的行都参与计算，这样没有必要，一般而言我们总是选取其中的几行到十几行左右来计算与中线的偏差，从而控制小车。在程序里面具体就是 <code>searchline.c</code>中的 <code>caculate_err()</code>函数，第二个 <code>for</code>循环。这些用于计算偏差的这几行实际的远近也就是所谓的前瞻。前瞻一般在1~1.8m左右，具体可以根据实际的情况来调整。一般来说，在速度低的时候前瞻近一些，速度高的时候前瞻要远一些。但是要注意，摄像头的前瞻也不能太远，否则会有桶形失真，从而远处的图像不真实。在实际情况下，还可以根据编码器测到的车速来动态调整小车的前瞻。</p>
+<p>&ensp; &emsp;&nbsp;在固定摄像头之前，需要对摄像头进行调焦，使得成像更加清晰，减小噪声的干扰。调焦需要在一张A4纸上写一个大的  <code>米</code>字，然后平放在赛道上，离车的距离大概和前瞻差不多，然后转动摄像头，<strong>使得在屏幕上的米字图像清晰可见</strong>，这就调整好了焦距。</p>
+<p>&ensp; &emsp;&nbsp;至于摄像头的俯仰，如果是20cm高的摄像头，那么可以稍微往下一些，使得前瞻的位置大约在中间的行数。如果是10cm的摄像头，可以使摄像头稍微往上一些，看得更远，保证前瞻足够远。调整好了后，<strong>一定要将摄像头固定，再开始后面的工作</strong>，否则，一旦摄像头的位置变化，很多参数就不再适应。</p>
+<h5 id="电机驱动-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#电机驱动-2" class="headerlink" title="电机驱动"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">电机驱动</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp; &emsp;&nbsp;电机的驱动采用的差分的PWM波，具体的原理图在群里面有。</p>
+<p><img src="https://i.loli.net/2020/11/12/CxdlqzaRbImsXwP.png" alt="image-20201112202737997" style="zoom:80%;"></p>
+<p>&ensp; &emsp;&nbsp;单片机输出的PWM波通过八路总线收发器74LVC245后经过两个半桥驱动IR2104组成的全桥驱动后分别输出 A+、A-和B+、B-。为什么要这么麻烦呢？我们知道单片机输出的信号也就3.3V，电流很小，根本没有办法去驱动电机，所以我们需要进行这么复杂的处理，以驱动电机。</p>
+<p>&ensp; &emsp;&nbsp;那么在程序中我们就只需要控制单片机产生合适的PWM信号就可以了。对于电机来说，我们这里是单独控制左、右的，那么对每个电机来说，就有两种状态：前进和后退。由于是差分PWM控制，那么我们让一路PWM为0，另外一路为正数，就可以使得电机转动起来了，至于正转还是反转，大家可以把PWM输出来观察，如果是反的就换一下即可。当然，这也和驱动与电机的接线是有关的。下面就从程序上面举个例子，如何控制电机开始转动：</p>
+<p>&ensp; &emsp;&nbsp;首先，电机的初始化是在 <code>motor.c</code>文件中的函数 <code>MotorInit()</code>，这里我们不需要修改相关的东西，而在 <code>control.c</code>的函数 <code>MotorControl(float* err)</code>修改即可。在这个函数中有一个左电机速度更新和右电机速度更新，<code>L_SpeedControlOutUpdata</code>就是输出的左电机的相关参数，上面是闭环输出，也就是用了编码器的，这个后面再讲，下面是开环输出。如果要想左电机转动，那么我们可以先注释掉闭环输出的语句，使用开环输出一个值，不要太大，否则电机会疯转，大约2000~3000左右，然后观察电机是正转还是反转，如果是正转，那就没有问题，再试试右边的，如果是反转呢？那么可以通过修改下面的几段：</p>
+<div style="width:100%;border:1px #e3e3e3 solid;">
+    <div style="width:100%;font-family:'Consolas', 'Courier New';font-size:12px;border-bottom:1px solid #e3e3e3;margin-top:5px;color:#000000;">&nbsp;C++ Code&nbsp;</div><table style="width:100%;font-family:'Consolas', 'Courier New';font-size:12px;vertical-align:text-top;line-height:15px;" border="0" cellspacing="0" cellpadding="0"><tr><td style="color:#008284;background-color:#e3e3e3;vertical-align:text-top;"><div style="margin:7px;text-align:right;white-space:nowrap;"><nobr>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br></nobr></div></td><td style="background-color:#008284;padding:1px;"><div style="border:1px #008284 solid;"></div></td><td style="background-color:#efefef;width:100%;vertical-align:text-top;color:#000000;"><div style="margin:7px;"><span style="color:#0000ff;">if</span><span style="color:#000000;">(L_SpeedControlOutUpdata&nbsp;&gt;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">)<BR>
+{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">1</span><span style="color:#000000;">]&nbsp;=&nbsp;(int16)(L_SpeedControlOutUpdata&nbsp;&gt;&nbsp;speed.L_Bigeest&nbsp;?&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed.L_Bigeest&nbsp;:&nbsp;L_SpeedControlOutUpdata);<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">0</span><span style="color:#000000;">]&nbsp;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">;<BR>
+}<BR>
+</BR></BR></span><span style="color:#0000ff;">if</span><span style="color:#000000;">(L_SpeedControlOutUpdata&nbsp;&lt;&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">)<BR>
+{<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">1</span><span style="color:#000000;">]&nbsp;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></span><span style="color:#ff0000;">0</span><span style="color:#000000;">]&nbsp;=&nbsp;(int16)(-L_SpeedControlOutUpdata&nbsp;&gt;&nbsp;speed.L_Bigeest&nbsp;?&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed.L_Bigeest&nbsp;:&nbsp;-L_SpeedControlOutUpdata);<BR>
+}</BR></BR></span></div></td></tr></table></div>
+
+
+
+<p><code>L_SpeedControlOutUpdata</code>影响<code>MotorPwm[0]</code>和 <code>MotorPwm[1]</code>，而这两个才是最后单片机的输出值，所以呢，我们只需要调换一下两者的顺序即可：</p>
+<div style="width:100%;border:1px #e3e3e3 solid;">
+    <div style="width:100%;font-family:'Consolas', 'Courier New';font-size:12px;border-bottom:1px solid #e3e3e3;margin-top:5px;color:#000000;">&nbsp;C++ Code&nbsp;</div>
+    <table style="width:100%;font-family:'Consolas', 'Courier New';font-size:12px;vertical-align:text-top;line-height:15px;" border="0" cellspacing="0" cellpadding="0"><tr>
+    <td style="color:#008284;background-color:#e3e3e3;vertical-align:text-top;">
+    <div style="margin:7px;text-align:right;white-space:nowrap;">
+        <nobr>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br></nobr></div></td><td style="background-color:#008284;padding:1px;"><div style="border:1px #008284 solid;"></div></td><td style="background-color:#efefef;width:100%;vertical-align:text-top;color:#000000;"><div style="margin:7px;"><span style="color:#0000ff;">if</span><span style="color:#000000;">(L_SpeedControlOutUpdata&nbsp;&gt;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">)<BR>{<BR>&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">0</span><span style="color:#000000;">]&nbsp;=&nbsp;(int16)(L_SpeedControlOutUpdata&nbsp;&gt;&nbsp;speed.L_Bigeest&nbsp;?&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed.L_Bigeest&nbsp;:&nbsp;L_SpeedControlOutUpdata);<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">1</span><span style="color:#000000;">]&nbsp;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">;<BR>}<BR></BR></BR></span><span style="color:#0000ff;">if</span><span style="color:#000000;">(L_SpeedControlOutUpdata&nbsp;&lt;&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">)<BR>{<BR>&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></BR></span><span style="color:#ff0000;">0</span><span style="color:#000000;">]&nbsp;=&nbsp;</span><span style="color:#ff0000;">0</span><span style="color:#000000;">;<BR>&nbsp;&nbsp;&nbsp;&nbsp;MotorPwm[</BR></span><span style="color:#ff0000;">1</span><span style="color:#000000;">]&nbsp;=&nbsp;(int16)(-L_SpeedControlOutUpdata&nbsp;&gt;&nbsp;speed.L_Bigeest&nbsp;?&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed.L_Bigeest&nbsp;:&nbsp;-L_SpeedControlOutUpdata);<BR>
+}</BR></BR></span></div></td></tr></table></div>
+
+
+
+
+
+
+
+<p>这样就可以了。可以试试看是不是正常了。我们要做的就是让<code>L_SpeedControlOutUpdata</code>和<code>R_SpeedControlOutUpdata</code>输出正值的时候电机是向前的，反之则是向后的，这样，即便使用开环，我们的车也能够跑起来了。</p>
+<h5 id="舵机驱动-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#舵机驱动-2" class="headerlink" title="舵机驱动"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">舵机驱动</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp; &emsp;&nbsp;舵机的初始化一般不需要我们关心，拿到车后我们需要做的就是调整舵机的中值，所谓中值，就是偏差为0时舵机的数值。显而易见，这个时候舵机应该打在正中间，这样车才能够向正前方走。中值这个变量就是在 <code>control.c</code>中的 <code>pout0</code>。那么如何来调整这个值使得舵机打在中间呢？</p>
+<p>&ensp; &emsp;&nbsp;而舵机最终的输出变量是 <code>pout</code>，这样我们就可以首先在IAR的 live watch中观察 <code>pout</code>的值，然后在赛道上左右移动小车观察小车的舵机转动情况，先大概使得舵机打在中间，记下这个值，然后赋给 <code>pout0</code>。当然这样得到的值不是很精确，还需要我们进行微调，微调的时候我们可以让车打在中值上，具体做法就是在函数<code>ServControl(float* err)</code>中，修改 <code>motor.SetServ((uint16)pout);</code>为 <code>motor.SetServ((uint16)pout0);</code>，这样小车就会一直打在中值上，然后可以放在长直道上面，推着车走一段，看看车是否沿着中线走，如果不是沿着中线，那么就继续微调，使得小车尽量贴着中线，最后记录下这个值赋给 <code>pout0</code>，记得最后要把这个函数修改回来。</p>
+<h5 id="编码器数据采集-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#编码器数据采集-2" class="headerlink" title="编码器数据采集"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">编码器数据采集</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp; &emsp;&nbsp;编码器具体的原理大家可以去网上学习一下，在智能车上它的主要作用就是测得速度，进行闭环控制。其中最重要的一步就是测出编码器1m的计数值，这两个值的定义在 <code>motor.h</code>中，是以宏定义的方式定义的。那么怎么测这个值呢？首先，需要在 <code>motor.c</code>中找到函数 <code>GetSpeed(void)</code>，假设我们现在需要测量左边编码器的1m计数，那么首先要将这句 <code>LPLD_FTM_ClearCounter(FTM2);</code>注释掉，然后推着车走1m，在 live watch中观察 <code>Left_count</code>的值。可以多推几次取平均值，这个值就是左边编码器的1m计数值。右边编码器的同理，记得测完之后要取消掉注释。</p>
+<p></p><h5 id="陀螺仪数据采集-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#陀螺仪数据采集-2" class="headerlink" title="陀螺仪数据采集"></a><br>    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">陀螺仪数据采集</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5><br>&ensp; &emsp;&nbsp;陀螺仪使用SPI通信，如果不使用陀螺仪的话，需要注释掉主函数中的初始化 <code>spi.SPI_Init();</code>和 <code>task.c</code>里面中断函数 <code>pit2_isr(void)</code>中的 <code>spi.Get_Attitude()</code>。否则程序可能会卡住。在四轮组中使用陀螺仪主要是为了方便处理环岛元素。在直立组中，还需要使用陀螺仪来保持直立姿态。下面首先简单介绍陀螺仪中的几个常识，方便大家理解。<p></p>
+<p>&ensp; &emsp;&nbsp;首先看下面一张图：</p>
+<p><img src="https://i.loli.net/2020/11/12/x5lj4RQrgDZKWPq.png" alt="Aircraft principal axes - Wikipedia" style="zoom:50%;"><img src="https://i.loli.net/2020/11/12/5SAn9mpKoBhr8Ma.jpg" alt="陀螺仪" style="zoom:25%;"></p>
+<p><code>Roll</code>、<code>Pitch</code>、和 <code>Yaw</code>分别代表三种姿态。<code>Roll</code>表示俯仰， <code>Patch</code>表示横滚， <code>Yaw</code>表示航向。 </p>
+<p>下面具体讲一下如何得到 <code>Yaw</code>上的角度，这个可以使用在环岛当中，因为车子经过环岛一定走过了360度。</p>
+<p>&ensp; &emsp;&nbsp;首先在  <code>gyroscope.c</code>中有 <code>Get_Attitude()</code>的函数，函数 <code>LPF_1_db()</code>就是用来读取陀螺仪的值的，那么举个例子：</p>
+<p><code>LPF_1_db(35, 1000, (float)(Get_Z_Gyro()), &amp;GRYZ);</code>就代表读取了Z轴的角速度，存在变量 <code>GRYZ</code>中，从上面的图可以看到，Z轴的角速度产生于 <code>Yaw</code>的过程中，角速度的方向是与同心圆相切的。后面就需要对读到的数据做一些处理了，这个比较复杂，需要很多数学原理的支持，最后才能得到真实的角速度 <code>TureYawrate</code>。然后角度就是角速度的积分，所以当检测到圆环时，开始积分，就能根据得到的积分角度判断车子目前大概在环岛的哪个位置了，在这里的积分其实就是累加的过程，大家读一读程序再理解理解。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E6%91%84%E5%83%8F%E5%A4%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E6%91%84%E5%83%8F%E5%A4%B4/" class="post-title-link" itemprop="url">摄像头</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-12-17 23:46:24 / Modified: 23:57:25" itemprop="dateCreated datePublished" datetime="2020-12-17T23:46:24+08:00">2020-12-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%99%BA%E8%83%BD%E8%BD%A6/" itemprop="url" rel="index"><span itemprop="name">智能车</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h5 id="摄像头-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#摄像头-2" class="headerlink" title="摄像头"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">摄像头</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+
+<ol>
+<li><h4 id="感性认识。"><a href="#感性认识。" class="headerlink" title="感性认识。"></a>感性认识。</h4><p> <img src="https://i.loli.net/2020/11/29/k9A1szBx7eiTJSX.png" alt="image-20201129141657907" style="zoom:80%;"></p>
+<p> 上图是摄像头采集的数据在 <code>OLED</code>屏幕上显示的效果。它是由 120$\times$160个像素点构成。</p>
+<p> 像素：就是在由一个数字序列表示的图像中的一个最小单位。</p>
+<ul>
+<li><p>单色：一个像素只占1位，因此只能存储黑白信息；</p>
+</li>
+<li><p>16色位图：一个像素占4位，有16种颜色可选<br>  ；</p>
+</li>
+<li>256色位图：一个像素占8     位即1个字节，有256种颜色可选；</li>
+<li><p>24位位图：RGB图像，一个像素占24位即3个字节，每个分量占8位，有2^24种颜色可选</p>
+<p>这里我们使用的硬件二值化摄像头，像素是单色的。</p>
+</li>
+</ul>
+</li>
+<li><h4 id="采样原理。"><a href="#采样原理。" class="headerlink" title="采样原理。"></a>采样原理。</h4><p> &ensp;&emsp;一次传输8个像素，一个位就表示一个像素（因为通过了硬件二值化），这样一来，一个字节就表示8个像素点，一次采集就相当于采了8个像素点。而对于非硬件二值化的，一次采集8位构成了一个字节，这一个字节表示一个像素点，对比之下，硬件二值化的采集速度是它的8倍。硬件二值化由此也带来了一个问题，对于每一个像素点的访问比较麻烦，因为像素是和位对应起来的，因此就需要解压函数对其格式进行修改，把每一位都单独取出来，重新放到数组中以方便访问，这也就是后面解压函数的作用。</p>
+<p> <img src="https://i.loli.net/2020/11/29/Vu5jUbQ8ga4JM9Y.png" alt="image-20201129144859363" style="zoom:50%;"></p>
+<p> &ensp;&emsp;普通表示：一个字节表示一个像素点，为0-255，因此可以有256个灰度级别，但现在我们只需要黑白两色即可，并不需要灰色，分成256个灰度级别也是浪费。例如：00000101表示的是灰度为5的一个灰色像素点。</p>
+<p> <img src="https://i.loli.net/2020/11/29/jR7Akrq2K6fVliD.png" alt="image-20201129145143958" style="zoom:50%;"></p>
+<p> &ensp;&emsp;比赛用的摄像头：一个字节表示8个像素点，即每个位表示一个像素点，为0或1即只有白或黑两个灰度级别。例如：01000100表示连续排列的“白黑白白白黑白白”这样8个黑白像素点。</p>
+<p> &ensp;&emsp;再看下面的一幅图：</p>
+<p> <img src="https://i.loli.net/2020/11/29/196SLU2WDythERY.png" alt="image-20201129145337948" style="zoom: 67%;"></p>
+<p> 0x80代表的含义： </p>
+<p> &ensp;&emsp;首先要明白一点：所有的数据都会被计算机转成二进制。 0x表示这是16进制，8和0都是16进制下表示的，那么把它们转成二进制：1000和0000，因此，表面是写成的是十六进制的80（用十六进制表示只是因为方便），实际上想用的是：1000 0000，共8位，代表是一个字节。结合刚才说的一个字节表示8个像素点，那么0x80表示的像素是：黑白白白白白白白。后面也是类似的道理。</p>
+</li>
+<li><h4 id="DMA简介与配合使用。"><a href="#DMA简介与配合使用。" class="headerlink" title="DMA简介与配合使用。"></a>DMA简介与配合使用。</h4><p> &ensp;&emsp;DMA 传输将数据从一个地址空间复制到另外一个地址空间。当CPU 初始化这个传输动作，传输动作本身是由 DMA 控制器来实行和完成。</p>
+<p> <img src="https://i.loli.net/2020/11/29/W7RGo6UY8Dyc4vQ.png" alt="image-20201129145935989" style="zoom:80%;"></p>
+<p> &ensp;&emsp;DMA的特点：不必经过CPU进行传输数据而是硬件完成，因此可以减轻CPU的负担，并且传输速度相对更快。我们图像数据量相对较大，因此采用DMA传输方式，后面配置DMA模块再细讲。</p>
+</li>
+<li><h4 id="配置和使用。"><a href="#配置和使用。" class="headerlink" title="配置和使用。"></a>配置和使用。</h4><ul>
+<li><h5 id="引脚配置"><a href="#引脚配置" class="headerlink" title="引脚配置"></a>引脚配置</h5><p>  一般步骤：明白引脚功能，原理图找引脚，LPLD库手册找对应的结构体和库函数，有时需要根据芯片手册看懂寄存器。</p>
+<p>  <img src="https://i.loli.net/2020/11/29/AjdhQGmxTElra61.png" alt="image-20201129150153678" style="zoom:80%;"></p>
+<p>  &ensp;&emsp;摄像头有时钟线、场中断线、行中断线、数据线、以及SCCB控制线，其中数据线对应有8个引脚，SCCB有2个引脚，其余的只有1个引脚。</p>
+<p>  <img src="https://i.loli.net/2020/11/29/1sfXejxPdy5DMpY.png" alt="image-20201129150348976" style="zoom:80%;"></p>
+<p>  &ensp;&emsp;然后到原理图上，可以找到这些线对应的具体端口，例如：数据线的8个引脚是PTC8-PTC15，SCCB的两个引脚是PTC16和PTC17，时钟线是PTC18，场中断线是PTC19。</p>
+<ol>
+<li>场中断信号：采集图像不是一行挨着一行采集的，而是分奇偶两场采集的——奇数场：只采集奇数行的像素点； 偶数场：只采集偶数行的像素点；然后把两场组合到一起就形成了一副完整的图像，每当一场采集完毕后就会通过这个场中断引脚发送一个信号通知CPU完成了一场的采集。不过，这里可以不用场中断，可以一行挨着一行的采集，采集完所有行上的像素点后场中断引脚会产生一个信号通知CPU——这时相当于告诉CPU完成了一帧（副）图的采集了。因此，场中断很有用，在原理图上有对应的引脚。</li>
+<li>行中断信号：顾名思义：采集完一行上的所有像素点后会通过行中断引脚向CPU发送一个信号。</li>
+<li>时钟线信号：控制采集像素点的节奏。</li>
+<li><p>数据线信号：8个引脚恰好表示的是一个字节的值，而一个字节表示8个像素，所以说数据线就是用来传递表示像素的数据值（像素即数据）。</p>
+<p><img src="https://i.loli.net/2020/11/29/3dBN8FiLQWPCHwr.png" alt="image-20201129152140520"></p>
+<p><img src="https://i.loli.net/2020/11/29/n4KLyA9Oeat1sB6.png" alt="image-20201129152204854"></p>
+<p>我们采用的是第三种方法，因此不需要行中断。</p>
+<p><img src="https://i.loli.net/2020/11/29/BtKRx3nb4SJfQIV.png" alt="image-20201129152413119" style="zoom:80%;"></p>
+<p>上图是引脚的配置。先是数据线引脚、时钟线引脚和场中断线引脚—— GPIO口模块。</p>
+<p>配置模块时的一般流程：</p>
+</li>
+<li><p>声明对应模块的配置结构体 </p>
+</li>
+<li><p>对结构体的成员变量进行配置（包括中断）  </p>
+</li>
+<li><p>通过函数对此结构体进行初始化或者使能</p>
+</li>
+<li><p>后续通过库函数读取相关值或者中断函数执行其他操作</p>
+<p><img src="https://i.loli.net/2020/11/29/i9SQBaFTZwIloOU.png" alt="image-20201129152549171" style="zoom:80%;"></p>
+<p>场中断函数，一场结束即一帧采集完成了，需要更换DMA存储地址——和后面的照应。</p>
+<p>&ensp;&emsp;注意： <code>p=(uint8*)Image_Buf2</code>和 <code>p=(uint8*)Image_Buf</code>  会影响是否能读取到正确的图像数据，需结合自己的硬件对这两个地址进行+1或-1或+0 —— 自己试着来即可，找到适合的。比如说出现下图这样的情况：</p>
+<p><img src="https://i.loli.net/2020/11/29/Yoa8Xjd1HOVAZSm.png" alt="image-20201129152915019" style="zoom:80%;"></p>
+<p>我们发现图像左下角出现了一些错位，我们可以试着把上面两条语句改为：</p>
+<p><code>p=(uint8*)Image_Buf2-1</code>和 <code>p=(uint8*)Image_Buf2-1</code>就变正常了，当然也有可能是+1，具体可以根据实际情况试一试。</p>
+<p><img src="https://i.loli.net/2020/11/29/HvfYPqwMQ1ub2ex.png" alt="image-20201129153222334" style="zoom:80%;"></p>
+<p><img src="/2020/12/17/%E5%9B%9B%E8%BD%AE%E6%91%84%E5%83%8F%E5%A4%B4/Users\Reed Mark\AppData\Roaming\Typora\typora-user-images\image-20201129153520835.png" alt="image-20201129153520835" style="zoom:80%;"></p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<pre><code>    &amp;ensp;&amp;emsp;然后是SCCB引脚：在底层库`DEV_SCCB.h`文件中可以找到SCCB的引脚配置，只需对照原理图修改SCL、SDA对应的引脚即可。此外，`DEV_SCCB.c`文件中的`LPLD_SCCB_Init()`函数也需要修改引脚。
+
+    &amp;ensp;&amp;emsp;至此完成了摄像头引脚的配置。
+
+- ##### DMA配置
+
+    &lt;img src=&quot;https://i.loli.net/2020/11/29/31wBlRtjahcdWGY.png&quot; alt=&quot;image-20201129153711938&quot; style=&quot;zoom:80%;&quot; /&gt;
+
+    `PORTC`：源地址
+
+    `Image_Buf`：目标地址
+
+    &amp;ensp;&amp;emsp;DMA将数据从源地址复制到目标地址。可以从`PORTC`接收传输请求，然后去读取`PRTC0 - 7`端口的数据值，次循环每次读一个字节恰好对应8个端口的8位数据即1个字节，按照这样的读法读取(120 x 160 / 8)次，就算完成了一次的传输，触发DMA中断。另外，传输的数据存放在数组`Image_Buf[][]`中，其数组元素为8位的一个字节，地址每次偏移1字节就相当于移动到下一个数组元素。
+
+    &lt;img src=&quot;https://i.loli.net/2020/11/29/1OguFKHojAf8LZS.png&quot; alt=&quot;image-20201129154137555&quot; style=&quot;zoom:80%;&quot; /&gt;
+
+    DMA的中断函数——触发中断也意味着一帧图采集完毕了，修改相应的标志位——配合完成DMA和CPU对应的数组的交换
+
+- ##### 缓冲区
+
+    &lt;img src=&quot;https://i.loli.net/2020/11/29/aYS1xEKXLPVmRwt.png&quot; alt=&quot;image-20201129154324306&quot; style=&quot;zoom:80%;&quot; /&gt;
+
+    &amp;ensp;&amp;emsp;两个存储图像数据的数组`Image_buf1`和`Image_buf2`。当一个用于接收来自DMA传输的数据 ——意味着这一帧图还没采集完毕，不适合交给CPU去读取和解析。CPU适合读取那种已经采集完毕的图像。因此要随着采集和读取过程不断的交换`Image_buf1`和`Image_buf2`。
+
+- ##### 解压图像
+
+    &amp;ensp;&amp;emsp;前面提到过：一个位就表示一个像素点，一个字节就是8个像素点，而数组中一个数组元素就是一个字节即8个像素点，那么怎么访问单独的一个像素点？解压图像就是为了解决这个问题——把不便于访问的位格式转成便于访问的字节格式。位格式是因为硬件要求和采集速度的要求，而字节格式是为了访问和处理图像时方便，两者互不干扰。
+
+    &lt;img src=&quot;https://i.loli.net/2020/11/29/oUtH5ap4jA2XI1b.png&quot; alt=&quot;image-20201129154530529&quot; style=&quot;zoom:80%;&quot; /&gt;
+
+    主要就是移位操作(`&lt;&lt;`、`&gt;&gt;`、`&amp;`)：通过**移位**和**位与**运算取出一个字节的每一个位。
+
+    &amp;ensp;&amp;emsp;例如：假设`Image_buf[0][0]=0x05` —— 用二进制表示就是 0000 0101，表示“白白白白 白黑白黑“这八个像素点，现在需要把每一个位给取出来。例如，取出最高位（左边为高，右边为低），那么 `0000 0101 &gt;&gt; 7` 即向右移动七位：0000 000`0`，最高位移到了最低位，空出来的位置用0填补即可 。然后再与0x01按位与（只有同为1时运算结果才是1）运算，就得到了要取的那一位的值。最后得到的就是 `0&amp;1=0`，也就是白色。
+
+    &amp;ensp;&amp;emsp;取出每一位后得到的是一连串的01，如果直接把他们存在一个120$\times$160的数组中也可以——0表示白，1表示黑。但是考虑到要显示在 `OLED`上，一般是灰度图像，黑色依然是0，而白色则一般是255，当然你选择白色为254或者253都没有问题，但是要记住你选择的灰度值。
+
+    &lt;img src=&quot;https://i.loli.net/2020/11/29/3Gciq2BpHbXF5ox.png&quot; alt=&quot;image-20201129155327347&quot; style=&quot;zoom:80%;&quot; /&gt;
+
+    &amp;ensp;&amp;emsp;这样，把0和1作为数组的下标，假如说取到的是0那么 `color[0]=255`，刚好是白色；如果说取到是1那么 `color[1]=0`刚好是黑色，然后把这个值放在我们的数组 `Image[][]`中，就方便我们进行显示在 `OLED`上了。
+
+    **注意**：`Image_buf`是$\frac{120}{8}\times160$个字节——他的一个元素表示8个像素点;`Image`是$120\times160$个字节——他的一个元素表示1个像素点——是解压后所得结果。
+
+- ##### 前瞻
+
+    前瞻：用作计算偏差`error`值的那几行——具体是哪几行可以自己定
+
+    作用：如果车的速度比较快，那么为了能够及时反应过来，车要“看得远一点”——看得远近就由前瞻决定。
+
+    &amp;ensp;&amp;emsp;硬件固定时可以决定摄像头看得远近——越平（即俯仰角越小）看得越远，但图像质量不够好；软件就是通过前瞻来再次控制看得远近。采集到的$120\times160$的黑白图像点（我们此后都用解压后的这个`Image`[][]进行处理图像，因此就用$120\times160$的这种说法来表示图像），除了在分析赛道元素和特征的时候需要分析所有像素点，在根据中线计算偏差`error`时只需选几行作为计算依据即可。前瞻还会在摄像头的寻迹算法中详细介绍，这里先简单提一下。
+
+- ##### 图像分析以及基础寻迹
+
+    &lt;img src=&quot;https://i.loli.net/2020/11/29/VaGKydgPFeBuUR7.png&quot; alt=&quot;image-20201129160643856&quot; style=&quot;zoom:50%;&quot; /&gt;
+
+    &amp;ensp;&amp;emsp;这是直道上的图像，我们主要的任务就是找到这些正确的蓝色虚线：左右边界线和中线。我们这里采用的是——左右边线值相加除以2得到中线，中线则作为PID控制的最初数据来源。而绿色线所在的行则是前瞻的位置。
+
+    &amp;ensp;&amp;emsp;先介绍一下三个线之间的关系：建立了类似于直角坐标系，方便访问每一个像素的位置，例如：假设前瞻行是第60行，这一行上的左边界是60行50列（在程序中可以记作`leftline[60]=50`,数组索引是行数，数组值是列数），右边界是60行110列(在程序中则可以记作`rightline[60]=110`)，这样的话此行的中线点就是60行$\frac{50+110}{2}$列，即60行80列——一共是160列，那么80列表示此时车在正中间位置。
+
+    &amp;ensp;&amp;emsp;基础寻线中怎么找到左右边界？还以此行为例：从左往右看，先是一直黑色像素点，然后突然变成了白色像素点——称之为“由黑向白跳变”，这个跳变处就是边界处。然后继续往右边走，则会遇到“由白向黑跳变点”，这个就是右边界点。而在程序中，我们采用的是从中间往两边找，而不是从最左边往最右边找，是为了排除干扰而找的更准确。例如：第119行，我们从`[119][80]`这个点开始向两侧寻找左右边界。如果没有跳变点，那么左边边界记作`[119][0]`，右边边界记作`[119][159]`，中线则是`[119][80]`；接下来找第118行的边界，我们则从`[119-1][80]`（是基于上一行即第119行的中点算出来的：列数不变，行数递减）这个点开始往左右两侧找边界点。
+
+    &amp;ensp;&amp;emsp;找到中线后干什么？确定`error`值：`error` = 中线点的列坐标 – 80。至于根据哪一行或者哪几行来计算这个error值，则属于确定前瞻的事情了——通常要和车的速度匹配。前期采用静态前瞻就行。计算出的`error`值用于PID控制电机和舵机。
+
+    &amp;ensp;&amp;emsp;其他赛道元素怎么办？在速度不是特别高的时候（&lt;2.5m时）并且前瞻和PID参数都调整的比较合适时，普通直道和弯道以及直十字路口基本都能通过，但是在一些弯十字、Q圈、U型弯等地方需要进行适当减速才行。如果速度再高的话，弯道有时候可能也会出一些小问题。这个时候一方面要磨轮胎，一方面就是优化寻线算法了。目前，则暂时不考虑这些，需要做的是：一方面用基础寻线慢速跑完（需要调整参数等等），一方面是尝试写一点改进的寻线程序，比如弯道减速、直道加速、丢线停车，甚至可以挑战把环赛道识别出来以及进出环，可以添加任何你想添加的程序。
+
+- ##### 调用周期
+
+    调用周期：程序中用的是每20ms调用一次解压图像和寻线程序，与舵机调用周期一致。
+
+- ##### 摄像头寄存器、子函数等底层
+
+    &amp;ensp;&amp;emsp;在`camera.h`文件中，可以看到很多配置摄像头的寄存器以及相关函数：通过把摄像头各个寄存器配置成想要的值从而实现不同的帧率、亮度、对比度等以满足不同的需求，这也就是摄像头寄存器初始化的主要内容。需要修改的寄存器有，PCLK速率，帧率、图像亮度、对比度、色饱和度等。
+
+    &lt;img src=&quot;https://i.loli.net/2020/11/29/LAjPOBSbc3mundw.png&quot; alt=&quot;image-20201129162008865&quot; style=&quot;zoom:80%;&quot; /&gt;
+
+    这些主要就是配置摄像头的寄存器的，实际上不影响我们的使用，因为都配置好了，后期需要调整的话再去调整。
+</code></pre><ol>
+<li><h4 id="固定"><a href="#固定" class="headerlink" title="固定"></a>固定</h4><p> &ensp;&emsp;一些需要了解的点：</p>
+<ul>
+<li>是否带有广角：不带广角的是90度，带广角的一般是120度，广角看到的范围更广，信息更多更好处理些，但是有时候容易出现图像畸变。综合来看还是广角的要好一点，不过在前期，这个影响不大。</li>
+<li>调焦距：转动镜头调焦距。</li>
+<li><p>调俯仰角：调整俯仰角到视野最合适的地方，保证有足够的视野。</p>
+<p>步骤：</p>
+</li>
+</ul>
+<ol>
+<li>将车放到直道正中间。</li>
+<li>固定底座。</li>
+<li>调整俯仰。</li>
+<li>利用 <code>live watch</code>观察 结构体 <code>Findline</code> 中的<code>leftstartpoint</code>、<code>rightstartpoint</code>以及 <code>midline</code>等的值，左右微调摄像头使得<code>leftstartpoint</code>、<code>rightstartpoint</code>差不多相同，大约在100多行左右，<code>midline</code>中的数值大部分在80附近。</li>
+<li>使用热熔胶固定，要固定得非常牢固。</li>
+<li>在车前放置一个 <code>米</code>字图案，调整焦距使得视野中得图案清晰可见。</li>
+<li>固定焦距。</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li><h4 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h4><ul>
+<li>缓冲区地址：前面提到过的+1或-1或+0的问题。</li>
+<li>不走中线：摄像头标定的问题；如果还解决不了就人为修正error值，使车走中间。</li>
+<li>地面反光的干扰：地面反光是导致摄像头不稳定的原因之一，适当增大俯视角，可以一定程度上避免，但是如果赛场环境比较差、要是还不遮光的话，可能就有风险出现地面反射光——使得黑色区域变成了白色。通过软件，暂时没有解决的办法。</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%84%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%84%9F/" class="post-title-link" itemprop="url">电感</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-12-17 23:46:24 / Modified: 23:58:17" itemprop="dateCreated datePublished" datetime="2020-12-17T23:46:24+08:00">2020-12-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%99%BA%E8%83%BD%E8%BD%A6/" itemprop="url" rel="index"><span itemprop="name">智能车</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h5 id="电感-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#电感-2" class="headerlink" title="电感"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">电感</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<ol>
+<li><h4 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h4><p> &ensp; &emsp;&nbsp;实验室的赛道铺有电磁线，信号发生器会产生频率为20kHZ的正弦信号，然后通过整条电磁线，这样就在空间激发了以一定规律传播的电场和磁场。根据毕奥-萨法尔定律，电磁线周围磁场分布是一系列同心圆，圆上的强度相同，且随着半径增加而减小。如下图：</p>
+<p> <img src="https://i.loli.net/2020/11/12/XBdCR3tMvzlmxje.jpg" alt="电磁01" style="zoom: 25%;"></p>
+<p> &emsp;&nbsp;小车上装有电感，由于电磁感应原理，可以产生感应电动势，其频率 $f = \frac{1}{2\pi\sqrt{LC}}$，上面提到了信号发生器产生的信号频率为20kHZ，那么感应到的电流频率也应该是20kHZ，这样，我们一般考虑10mH的工字电感和6.8nF的电容并联后进行检测，但是一般来说实验室的电感电容的精度都是有一定误差的，所以如果想要获得较好的检测效果，可以选择自己用万用表测量电感和电容，尽量减少误差。</p>
+<p> &ensp; &emsp;&nbsp;然后就是横电感和竖电感的区别，先看下图：</p>
+<p> <img src="https://i.loli.net/2020/11/12/JBLWMS2ld39hGp5.png" alt="image-20201112155754728" style="zoom: 80%;"></p>
+<p> &nbsp;&ensp;&emsp;在直道上，如果是横电感，它的线圈就像图中的那样，这样的话，电磁线产生的磁场穿过线圈的磁通量最大，自然产生的感应电动势也就越大，而如果是竖电感，在直道上是没有磁感线穿过线圈的，所以几乎没有感应电动势。</p>
+<p>  &emsp;&nbsp;根据毕奥-萨法尔定律，每个电感上产生的感应电动势表示为$E=\frac{Kh}{h^2+x^2}$，如果是多个电感就是它们的合成。从这个公式可以大概猜到，位置越高感应的电动势越小。所以我们需要调节运放板上的电位器，使得读到的值在合适的范围。那么多少才比较合适呢？如果我们选择12位采样，所以量化之后的取值是0 ~ 4095.也就是说最大是4095。我们一般取值在最大值的$\frac{1}{3}$到$\frac{2}{3}$左右。不能太大，否则我们会损失很多有用的信息。</p>
+<p> &emsp;&nbsp;在调电位器时，一般中间的电感值比两边的稍微大一些，两边的电感值则要尽量对称，这里的对称体现在两方面：</p>
+<ol>
+<li><p>是车子放在中线上时左右电感值差不多。</p>
+</li>
+<li><p>是车子在左右移动时左右电感的变化趋势差不多。</p>
+</li>
+</ol>
+</li>
+<li><h4 id="配置AD引脚"><a href="#配置AD引脚" class="headerlink" title="配置AD引脚"></a>配置AD引脚</h4><p> &emsp;&nbsp;就K60而言，他的ADC有ADC0和ADC1，每个<code>ADCx</code>又有A和B两组控制通道，因此最多可以实现4组ADC通道的连续自动采集，而且配合DMA和PDB，无需CPU对采集过程进行干预，我们可以直接读取内存中的转换结果！</p>
+<p> &emsp;&nbsp;我们首先需要根据硬件的原理图找到对应的AD引脚，这里我们就举一个例子吧。</p>
+<p> ​        <img src="https://i.loli.net/2020/11/29/15roMpku8vW34XB.png" alt="image-20201129205317360" style="zoom:80%;"></p>
+<p> 这个是运放上面的排座，可以看到这里有5路输出，有一路并没有用到。</p>
+<p> <img src="https://i.loli.net/2020/11/12/B6IbghOtV14JW9f.png" alt="image-20201112162237281" style="zoom: 80%;"></p>
+<p> 这个则是主板上面的AD接口，从电源和地这两根线我们就可以找到它们的对应关系了，即运放中的 <code>OUT1</code>对应主板中的 <code>ADC1</code>。</p>
+<p> <img src="https://i.loli.net/2020/11/29/FkVQmB91YRDWNx5.png" alt="image-20201129210902234" style="zoom:80%;"></p>
+<p> 在运放的原理图中可以看到， <code>OUT1</code>对应的是电位器 <code>R2</code>。也就是说，改变电位器 <code>R2</code>影响的是 <code>ADC1</code>的数值。</p>
+<p> <img src="https://i.loli.net/2020/11/29/iVR3zqN1eGMhvSB.png" alt="image-20201129211106884" style="zoom:80%;"></p>
+<p> 也就是上图运放板右上角的那个电位器。信号也自然是从这个电位器旁边的排插进行输入的。</p>
+<p> <img src="https://i.loli.net/2020/11/12/LhYq2GrExP8dKl4.png" alt="image-20201112162413762" style="zoom:80%;"></p>
+<p> 接着我们可以在主板的原理图上找到<code>ADC1</code>对应的芯片引脚，这里可以看到是<code>PTB0</code>引脚。AD一般都有很多通道，那么这个引脚对应的AD的哪个通道呢？这个就需要我们去芯片手册去查找了：</p>
+<p> <img src="https://i.loli.net/2020/11/12/rMSvROpqjLsBaFk.png" alt="image-20201112162706564" style="zoom:80%;"></p>
+<p> &ensp; &emsp;&nbsp;这里我们在芯片手册最后的Pinout部分发现，<code>PTB0</code>引脚对应的有<code>ADC0_SE8</code>或者<code>ADC1_SE8</code>，也就是8号转换通道，那么在代码中我们应该如何操作呢？</p>
+<p> &ensp; &emsp;&nbsp;AD的配置都在 <code>sensor.c</code> 文件中，首先里面有一个函数是 <code>Sensor_AdcInit()</code> ：</p>
+<p> <img src="https://i.loli.net/2020/11/29/xS41YiGR5HDhwP9.png" alt="image-20201129212345585"></p>
+<p> 在这里我们首先对ADC0进行初始化。具体的可以去 <code>LPLD</code>库函数手册查看：</p>
+<p> <img src="https://i.loli.net/2020/11/29/2gvkqmrBuYPjiZK.png" alt="image-20201129212549949"></p>
+<p> 在库函数手册中同样可以找到：</p>
+<p> <img src="https://i.loli.net/2020/11/29/Y6bpMcQUzFTEsiA.png" alt="image-20201129212913126"></p>
+<p> 所以使用 <code>LPLD_ADC_Chn_Enable(ADC0, AD8)</code>就可以使能<code>ADC0</code>的8号转换通道的AD采集功能了。</p>
+<p> 这个配置好了，那么下一步就是用AD采集数据了，这部分在函数 <code>Sensor_getAdc()</code> 中。</p>
+<p> <img src="https://i.loli.net/2020/11/29/QhCTjpmoYneRtGF.png" alt="image-20201129213940718"></p>
+<p> &ensp; &emsp;为了保证采集的精确，我们每次采集三次然后进行取平均。而前面的1、4、6、0、5那些下标分别代表5个电感，为了方便记忆，我们可以在<code>sensor.h</code>中做如下定义:</p>
+<p> <img src="https://i.loli.net/2020/11/29/yukTKPZXGcENpJ2.png" alt="image-20201129213355612" style="zoom:80%;"></p>
+<p> &ensp; &emsp;这个可以根据自己的喜好去定义，然后你可以将电感的数值显示在<code>OLED</code>上，然后你会发现即便没有电磁信号，它也是有值的，大约会在100左右，这是正常的，就是所谓的零漂，虽然影响不大，但是你也可以选择测出零漂然后进行相应处理。然后我们需要观察这个数值的跳动，一般来说，跳动在几十左右是比较好的，如果太大，很可能是电感出现了问题，如果发现无论怎么调整电位器，值都非常小，那么首先检查引脚是否配置正确，要是正确，那么很可能是电感接线出现了问题，需要从硬件上仔细排查。</p>
+<p> &ensp; &emsp;将电感值显示在 <code>OLED</code>上对于我们调电感值来说是非常方面的。可以在 <code>UI.c</code>文件中找到 <code>UI_Disp()</code>函数：</p>
+<p> <img src="https://i.loli.net/2020/11/29/JIpC9zTdhtjcVrU.png" alt="image-20201129214537623" style="zoom:80%;"></p>
+<p> &ensp; &emsp;直接使用函数 <code>oled.PrintUintValue()</code>就可以显示电感的数值了，为了分清楚具体的某一个电感，我们还要在电感数值前面加上字符说明，也就是 <code>UI_DispUIStrings(UI_AD);</code>这个语句。其中的 <code>UI_AD</code>是一个字符数组，大小定义为8行22列是与屏幕的大小相对应，然后写上对应的说明就可以了。</p>
+<p> <img src="https://i.loli.net/2020/11/29/y29uemkcAE1OwRL.png" alt="image-20201129214902595"></p>
+</li>
+<li><h4 id="基础巡线"><a href="#基础巡线" class="headerlink" title="基础巡线"></a>基础巡线</h4><p> &ensp; &emsp;上面通过AD采集到了电感值，那么怎么利用这些电感值来巡线呢？我们首先需要根据这些电感值得到偏差 <code>Error</code>！</p>
+<p> &ensp; &emsp;由于电感的前瞻在安装时就已经固定好了，所以偏差<code>Error</code>的计算就非常的重要！建议大家多花时间去思考如何得到较好的偏差。</p>
+<p> <img src="https://i.loli.net/2020/11/29/JaE1vdeTVWtrknG.png" alt="image-20201129215258298" style="zoom:50%;"></p>
+<p> 上图是理想的偏差曲线，也就是一个线性的函数。</p>
+<ul>
+<li><p>车子在中线上，偏差应该接近0；</p>
+</li>
+<li><p>车子靠左边，偏差应该正向增大；</p>
+</li>
+<li><p>车字靠右边，偏差应该负向增大。</p>
+<p>这里的正负取决于是右减左还是左减右。</p>
+<p>&ensp; &emsp;理想情况下就应该是偏差随着车子偏离中线的距离呈线性关系！所以关于偏差最重要的就是拟合出一条接近理想偏差的曲线！当然不可能得到是完全线性的。</p>
+<p>&ensp; &emsp;常见的差比和算法：<img src="https://i.loli.net/2020/11/29/kh7K5UbzgSJOInf.png" alt="image-20201129215555537" style="zoom: 50%;"></p>
+<p>&ensp; &emsp;这种方法比较简单，就是使用左右两个横电感的差值除以它们的和值。得到的曲线大概是下图所示的那样：</p>
+<p><img src="https://i.loli.net/2020/11/29/FYtaec2w4onWqf1.png" alt="image-20201129215709900" style="zoom: 67%;"></p>
+<p>&ensp; &emsp;可以看到，得到偏差曲线并非线性的，当偏离中线较远时，得到的偏差反而还减小了，这显然是不太好的。当然这种方法作为最基础的方法，是能够达到控制小车的目的的，大家可以先试试。</p>
+<p>&ensp; &emsp;为了构造出一个接近线性的偏差曲线，一种办法就是在差比和的基础上进行改进，比如说对下面的和值求1.5次幂，看看图像：</p>
+<p><img src="https://i.loli.net/2020/11/29/PAnpbWLKxvQ4yjt.png" alt="image-20201129220011415" style="zoom:67%;"></p>
+<p>&ensp; &emsp;偏差的曲线是不是接近线性了一些呢？不过这种计算引入了求幂，肯定会加大单片机的计算量，需要想办法解决或者去想想更好的办法。</p>
+<p>&ensp; &emsp;另外一种办法就是直接用<code>Matlab</code>或者其他工具对偏差进行多项式拟合。具体做法就是采集不同位置的电感值，这些就是自变量，然后因变量就是偏差，这个偏差你可以根据车子偏离中线的距离来自己给定，当然尽量线性一些，然后就相当于一个函数拟合问题了。</p>
+<p>&ensp; &emsp;此外，根据自己选择电感的方案，还可以有其他不同的改进方法，比如引入中间的横电感对偏差进行加权，引入竖电感来提前感知弯道等等。具体的计算方法还要靠大家自己研究，这里只是抛砖引玉。</p>
+<p>&ensp; &emsp;一般来说在计算偏差时都要使用归一化后的值来计算，这样对于不同赛道的适应性会好一些。归一化其实可以简单理解为百分比。在程序中有相关的操作：</p>
+<p><img src="https://i.loli.net/2020/11/29/D6ROGbh8UrYZjKX.png" alt="image-20201129220433588"></p>
+</li>
+</ul>
+</li>
+<li><h4 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h4><ol>
+<li>电感值左右不对称，这个问题很大程度上是电感安装的位置不对称导致的，在安装电感值，一定要仔细测量，保证左右的对称性，电感安装的对称性非常重要！！</li>
+<li>放在赛道上电感没有数值？前面提到了，在高度较高时，感应到的电动势很小，所以可以先试着调整一下运放板的电位器。</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/" class="post-title-link" itemprop="url">编码器陀螺仪</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-12-17 23:46:24 / Modified: 23:58:37" itemprop="dateCreated datePublished" datetime="2020-12-17T23:46:24+08:00">2020-12-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%99%BA%E8%83%BD%E8%BD%A6/" itemprop="url" rel="index"><span itemprop="name">智能车</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h5 id="编码器-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#编码器-2" class="headerlink" title="编码器"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">编码器</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+
+<ol>
+<li><h4 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h4><p>&ensp;&emsp;编码器在智能车中用于测出当前中断时间内的脉冲数，然后作为速度环的实际值与目标设定值做<code>pid</code>以实现控速作用。通常所说的512线、1024线指的是编码器选择一圈所得到的脉冲数。</p>
+<p>&ensp;&emsp;常见的有两种编码器：</p>
+<ul>
+<li><p>AB相正交编码器：</p>
+<p> <img src="https://i.loli.net/2020/11/29/JPqk4VByX8oSW1u.png" alt="image-20201129221529225" style="zoom: 67%;"></p>
+<p> &ensp;&emsp;当A相为上升沿，B相为低电平时，编码器顺时针旋转，脉冲计数累加：当A相为上升沿，B相为高电平时，编码器逆时针旋转，脉冲计数减减。</p>
+</li>
+<li><p>增量式编码器：</p>
+<p> <img src="https://i.loli.net/2020/11/29/xMI8KC7Gf1Jn5Da.png" alt="image-20201129221638653" style="zoom:67%;"></p>
+<p> <code>dir</code>为高电平，脉冲数累加；<code>dir</code>为低电平，脉冲数减减。</p>
+</li>
+</ul>
+</li>
+<li><h4 id="配置和使用"><a href="#配置和使用" class="headerlink" title="配置和使用"></a>配置和使用</h4><p><img src="https://i.loli.net/2020/11/29/PokczWUg3DvurHZ.png" alt="image-20201129221958839" style="zoom:67%;"></p>
+<p>&ensp;&emsp;编码器一共就4个引脚与单片机相连，分别是电源、地以及A相和B相。我们要配置的就是A相和B相。在K60中， FTM是一个神奇的模块，能输出PWM，能输入捕获，能输出比较还能正交解码。英文全称是<code>FlexTimer Module</code>，你可以理解为高级定时器模块、易用定时器模块等等。</p>
+<p><strong>正交解码原理</strong>：</p>
+<p>&ensp;&emsp;首先要清楚正交解码是干嘛用的，举个例子：编码器是常用的电机测速传感器，他不仅可以测速，还可以知道电机的正转还是反转，靠的就是他能输出两路正交信号，我们可以通过正交信号的相位差来识别出当前电机的转动方向。因此有了FTM模块，我们就可以将这两路正交信号<code>PhA</code>和<code>PhB</code>输入到FTM的正交输入通道，通过正交解码功能，直接读取脉冲的计数值，这个计数值是有符号的，正数代表正转，负数则代表反转。</p>
+<p>&ensp;&emsp;正交解码功能有两种解码方法可以选择，分别是计数和方向解码模式、AB相解码模式。他们的解码方法如下面两图所示：</p>
+<ul>
+<li><p>计数和方向解码模式</p>
+<p> <img src="https://i.loli.net/2020/11/29/ndYSlUiLTugjfIw.png" alt="image-20201129222241779" style="zoom: 80%;"></p>
+<p> &ensp;&emsp;红框后面的波形是FTM输入通道<code>PhB</code>的波形，它代表计数方向，篮框后面的波形是FTN输入通道<code>PhA</code>的波形，它代表计数个数，这是一种编码方法，当<code>PhB</code>为高电平时，<code>CNT</code>加计数，当<code>PhB</code>低电平时，<code>CNT</code>减计数，计数频率由<code>PhA</code>决定。</p>
+</li>
+<li><p>AB相解码模式</p>
+<p> <img src="https://i.loli.net/2020/11/29/6xRmaHGNQFnYdM9.png" alt="image-20201129222438194" style="zoom:80%;"></p>
+<p> &ensp;&emsp;这个是AB相解码模式，上面的 <code>PhaseA</code>和   <code>PhaseB</code> 也是霍尔编码传感器两路波形输出的方式。从图中可以看到，当<code>PhA</code>和<code>PhB</code>处于特定的电平和边沿时，他们的状态共同决定了<code>CNT</code>是增还是减。具体如下：</p>
+<p> <code>CNT</code>增计数时看到的是：</p>
+<ul>
+<li><p>A上升沿，B逻辑低</p>
+</li>
+<li><p>B上升沿，A逻辑高</p>
+</li>
+<li>B下降沿，A逻辑低</li>
+<li><p>A下降沿，B逻辑高</p>
+<p><code>CNT</code>减计数时看到的是：</p>
+</li>
+<li><p>A下降沿，B逻辑低</p>
+</li>
+<li>B下降沿，A逻辑高</li>
+<li>B上升沿，A逻辑低</li>
+<li><p>A上升沿，B逻辑高</p>
+<p>&emsp;我们可以根据编码器的型号选择相应的解码方式：初始化代码在<code>motor.c</code>中：这里比如说我们选择计数和方向解码模式：</p>
+<p><img src="https://i.loli.net/2020/11/29/BV9EsoKYTOZPtgD.png" alt="image-20201129230832498"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<pre><code>  具体可以参考 `LPLD`库手册：
+
+  ![image-20201129223110402](https://i.loli.net/2020/11/29/u59MSd3BxOXGFvE.png)
+
+  &amp;emsp;如果不知道编码器是哪种型号，我们可以使用示波器打一下A、B相两路的型号，观察它是上面两种中的哪一个，从而就可以选择正确的解码模式了，或者两种模式都去尝试一下，如果测试出来正常那就选择对应的模式。
+
+  &amp;ensp;&amp;emsp;正交解码初始化完毕后，还要初始化定时中断模块，因为我们要在固定的间隔时间内获取计数值才能计算出速度，所以就务必会用到`PIT`模块。PIT的中断函数代码在`GetSpeed`函数中用到：
+
+  &lt;img src=&quot;https://i.loli.net/2020/11/29/miHus3PangDNlRI.png&quot; alt=&quot;image-20201129231317486&quot; style=&quot;zoom:67%;&quot; /&gt;
+
+  &amp;ensp;
+
+  &amp;ensp;&amp;emsp;`LPLD_FTM_GetCounter()`函数可以获取当前`FTM`计数器`CNT`的计数值，当然这个值是有符号的，可以是正也可以是负数。如果是正代表电机在正转，如果是负，代表电机在反转。后面的`LPLD_FTM_ClearCounter()`是为了下次方便计数，清空`CNT`的计数值。
+
+  &amp;ensp;&amp;emsp;这样操作完成后，我们可以试着在`live watch`中观察`Left_count`和`Right_count`的值，当你正着转动车轮时，观察它们的值是否都是正的？如果不是，那么说明逻辑反了，可以在`LPLD_FTM_GetCounter()`前面加上或者去掉负号来改变。
+</code></pre><ol>
+<li><h4 id="调用周期"><a href="#调用周期" class="headerlink" title="调用周期"></a>调用周期</h4><p><img src="https://i.loli.net/2020/11/29/pRtTlNwbony6G7J.png" alt="image-20201129232647804"></p>
+<p>在<code>task.c</code>中可以看到，<code>GetSpeed()</code> 函数是在<code>pit2</code>中断中调用的，那么<code>pit2</code>中断的周期是多少呢？</p>
+<p><img src="https://i.loli.net/2020/11/29/mf1IWKjxZVaoH5P.png" alt="image-20201129232732143" style="zoom: 80%;"></p>
+<p>&ensp;&emsp;在上面的初始化中我们可以发现，<code>PIT2</code>的周期是5ms，也就是说，单片机会在5ms调用一次<code>GetSpeed()</code>函数，从而获取编码器的计数。周期是5ms，也就是说频率是200Hz，所以在<code>motor.h</code>中我们可以看到速度获取频率为200：</p>
+<p><img src="https://i.loli.net/2020/11/29/Pg4ZJlun9SXFMwi.png" alt="image-20201129232855147" style="zoom:80%;"></p>
+</li>
+<li><h4 id="标定"><a href="#标定" class="headerlink" title="标定"></a>标定</h4><p>&ensp;&emsp;测编码器1m的计数值：首先想想，为什么需要测量这个数值？因为我们从编码器直接读取到的只是计数，这是一个非常不直观的数字！所以我们想要把它转化为我们熟悉的单位，也就是m/s。所以1m的计数值就非常重要了。</p>
+<p><img src="https://i.loli.net/2020/11/29/sDFlTCgi5IBNqGz.png" alt="image-20201129233039234"></p>
+<p>&ensp;&emsp;1s内中<code>SPEED_F</code>个中断产生，计数值乘以<code>SPEED_F</code>也就是1s内一共产生的计数值，再除以1m计数值，不就刚好是速度m/s吗？前面的只是增加了滤波的过程，使得数据更加精确一点。</p>
+<p>&ensp;&emsp;那么如何来测量这个1m计数值呢？假设我们现在需要测量左边编码器的1m计数，那么首先要将这句 <code>LPLD_FTM_ClearCounter(FTM2);</code> 注释掉，然后推着车走1m，在 <code>live watch</code>中观察 <code>Left_count</code> 的值。可以多推几次取平均值，这个值就是左边编码器的1m计数值。右边编码器的同理，记得测完之后要取消掉注释。</p>
+</li>
+<li><h4 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h4><p>&ensp;&emsp;最常见的问题就是闭环控制时，速度不受控制。开环的时候不使用编码器，是一个固定的输出，而闭环的时候，需要编码器的值作为反馈，来控制电机的输出。那么这个时候应该怎么办呢？</p>
+<p>&ensp;&emsp;首先在<code>live watch</code>中检查<code>Left_count</code>和<code>Right_count</code>的值，然后转动车轮，正转的时候它们的值都应该是正数，倒转的时候它们的值都应该是负数，静止时它们的值都是0。如果不是这样，那么很可能就是编码器出现了问题，需要仔细检查硬件和软件配置。</p>
+</li>
+</ol>
+<h5 id="陀螺仪-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#陀螺仪-2" class="headerlink" title="陀螺仪"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">陀螺仪</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>&ensp;&emsp;陀螺仪使用SPI通信，如果不使用陀螺仪的话，需要注释掉主函数中的初始化<code>spi.SPI_Init();</code> 和<code>task.c</code> 里面中断函数 <code>pit2_isr(void)</code> 中的 <code>spi.Get_Attitude()</code> 。否则程序可能会卡住。在四轮组中使用陀螺仪主要是为了方便处理环岛元素。在直立组中，还需要使用陀螺仪来保持直立姿态。下面首先简单介绍陀螺仪中的几个常识，方便大家理解。</p>
+<p><img src="https://i.loli.net/2020/11/29/Sqh2Gb9jrBMxDz7.png" alt="image-20201129233547691" style="zoom:67%;"></p>
+<p>&ensp;&emsp;先看上边的这张图，<code>Roll</code> 、 <code>Pitch</code> 、和 <code>Yaw</code> 分别代表三种姿态。 <code>Roll</code> 表示俯仰， <code>Patch</code> 表示横滚， <code>Yaw</code> 表示航向。更深入的原理不需要大家了解。</p>
+<p>&ensp;&emsp;如上面提到的，在原理图中就是SPI：</p>
+<p><img src="/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/Users\Reed Mark\AppData\Roaming\Typora\typora-user-images\image-20201129233702580.png" alt="image-20201129233702580"></p>
+<p>引脚的配置在<code>MK60_spi.c</code>中:</p>
+<p><img src="https://i.loli.net/2020/11/29/F7E4pK2IAYUaPrM.png" alt="image-20201129233753413" style="zoom:67%;"></p>
+<p>&ensp;&emsp;具体的配置过程不需要大家深入了解，重点在于使用。使用时需要取消掉主函数<code>spi.SPI_Init();</code> 和<code>task.c</code> 里面中断函数 <code>pit2_isr(void)</code> 中的 <code>spi.Get_Attitude()</code> 的注释。然后它的具体作用就是获取角度，那么下面具体讲一下如何得到 <code>Yaw</code> 上的角度，这个可以使用在环岛当中，因为车子经过环岛一定走过了360度。</p>
+<p>&ensp;&emsp;首先在 <code>gyroscope.c</code> 中有 <code>Get_Attitude()</code> 这个函数，里面的 <code>LPF_1_db()</code> 就是用来读取陀螺仪的值的。</p>
+<p><img src="https://i.loli.net/2020/11/30/vhoTiMyg6B37DPp.png" alt="image-20201130000252824" style="zoom:80%;"></p>
+<p><img src="https://i.loli.net/2020/11/29/Sqh2Gb9jrBMxDz7.png" alt="image-20201129233547691" style="zoom:67%;"></p>
+<p>&ensp;&emsp;<code>LPF_1_db(35, 1000, (float)(Get_Z_Gyro()), &amp;GRYZ);</code> 就代表读取了Z轴的角速度，存在变量<code>GRYZ</code> 中，从上面的图可以看到，Z轴的角速度产生于 <code>Yaw</code> 的过程中，角速度的方向是与同心圆相切的。</p>
+<p>&ensp;&emsp;后面就需要对读到的数据做一些处理了，这个比较复杂，函数 <code>IMUupdate()</code>用到了四元数姿态解算， 需要很多数学原理的支持，最后才能得到真实的角速度 <code>TureYawrate</code> 。然后角度就是角速度的积分，所以当检测到圆环时，开始积分，就能根据得到的积分角度判断车子目前大概在环岛的哪个位置了，在这里的积分其实就是累加的过程，大家读一读程序再理解理解。</p>
+<p><img src="https://i.loli.net/2020/11/30/bIF96c1YdeTStav.png" alt="image-20201130000608804" style="zoom:80%;"></p>
+<p>&ensp;&emsp;需要注意的是，这里积分下来可能并不是刚好为360度，这个没有关系，我们可以乘以一个系数使得车子沿着环岛走一圈下来刚好为360。</p>
+<p>&ensp;&emsp;上面提到了陀螺仪在环岛元素的应用，具体步骤如下：</p>
+<ul>
+<li>检测到环岛时，陀螺仪开启角度积分；</li>
+<li>当角度到了40~60度时，认为车子已经入环；</li>
+<li>当角度快到270度左右时，认为车子即将要出环了；</li>
+<li>当角度到320度左右时，认为车子在出环的临界点，需要调整姿态向前走而不能再入环；</li>
+<li>当角度到360度左右，认为这时已经完全出环，再走一段距离后需要消除关于环岛的所有标志位。</li>
+</ul>
+<p>&ensp;&emsp;具体的角度大家根据实际情况进行把握，每种状态都需要及时对车子进行调整。</p>
+<p>&ensp;&emsp;除了可以辅助判断环岛元素外，陀螺仪还可以用来辅助判断坡道。在坡道上，是<code>Pitch</code>姿态，这时你可以根据读到的角速度或者角速度的积分来判断，其中需要用到卡尔曼滤波使得数据更加准确，大家自己可以去试一试，使用上位机观察陀螺仪的几个角速度变化情况。</p>
+<h5 id="小结-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#小结-2" class="headerlink" title="小结"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">小结</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<p>目前原理估计一时半会很难搞懂，但是你要明白每个模块的大概功能和框架，能够借着PPT、程序注释、LPLD库手册以及其他资料把程序看懂，理清每个模块之间的关系，然后找到自己能够去修改和添加程序的部分。</p>
+<ol>
+<li><p>首先是把程序看一遍，理清楚，抓住主要点和框架。</p>
+</li>
+<li><p>然后，把引脚给配置好（其他地方的配置，实际上大部分是配好了的，只是在具体的引脚上可能会有一些变化）。</p>
+</li>
+<li><p>接着，如果引脚配置好了，车应该能动起来的。如果动不起来就排查问题，多问学长学姐；车动起来的话，去研究一下PID算法、上位机的使用以及蓝牙，然后就可以着手调调PID参数了，使车子跑的稳定，流畅过弯。</p>
+</li>
+<li><p>再接着，就可以着手添加自己写的程序或者优化原先的程序，解决各个赛道元素的识别和规划。</p>
+</li>
+<li><p>最后，就是提速以及进一步优化。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%9C%BA/" class="post-title-link" itemprop="url">电机</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-12-17 23:46:24 / Modified: 23:57:47" itemprop="dateCreated datePublished" datetime="2020-12-17T23:46:24+08:00">2020-12-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%99%BA%E8%83%BD%E8%BD%A6/" itemprop="url" rel="index"><span itemprop="name">智能车</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h5 id="电机-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#电机-2" class="headerlink" title="电机"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">电机</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<ol>
+<li><h4 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h4><p> <img src="https://i.loli.net/2020/11/29/cT7P4oVhr6GOzxU.png" alt="image-20201129164634576" style="zoom:80%;"></p>
+<ul>
+<li>PWM波即矩形波，电机的转速由PWM波的占空比决定。</li>
+<li>一个电机需要两路PWM波，一路控制其正转，一路控制其反转，两路不能同时导通 。</li>
+</ul>
+</li>
+<li><h4 id="配置和使用（FTM模块）"><a href="#配置和使用（FTM模块）" class="headerlink" title="配置和使用（FTM模块）"></a>配置和使用（FTM模块）</h4><p> <img src="https://i.loli.net/2020/11/29/cyLGQiWl2UEzO7v.png" alt="image-20201129164838219" style="zoom:80%;"></p>
+<p> &ensp;&emsp;FTM模块既可以用于PWM模式来产生PWM波控制电机和舵机，也可以用于正交解码模式用于读取编码器的脉冲数，从而实现测速。对于有两个电机的智能车，两个电机需要4路PWM波即对应着4个FTM通道（根据底层库文档：FTM0有8个通道，而FTM1、FTM2都只有2个通道），两个编码器也需要4路通道来解码（用掉了FTM1和FTM2），电机则用FTM0。</p>
+<p> &ensp;&emsp;观察上图，一旦你选定FTM模块号（FTM0、1、2）和对应的通道号，那么引脚也就确定下来了。或者，即使你仍旧还是配置了对应的GPIO口，那么这些GPIO口必须与用到的这些FTM通道对应的引脚一致。只需配置对应的FTM模块即可，在画原理图时电机需要接和FTM通道所对应的的那几个引脚。</p>
+<p> <img src="https://i.loli.net/2020/11/29/Ud2t3TWVNZM7DrP.png" alt="image-20201129165340628">和在配置摄像头类似的</p>
+<ol>
+<li><p>声明对应模块的配置结构体 </p>
+</li>
+<li><p>对结构体的成员变量进行配置（包括中断）  </p>
+</li>
+<li><p>通过函数对此结构体进行初始化或者使能</p>
+</li>
+<li><p>后续通过库函数读取相关值或者中断函数执行其他操作</p>
+<p><img src="https://i.loli.net/2020/11/29/X9rDnm4IHxaeZh2.png" alt="image-20201129170256820" style="zoom:200%;"></p>
+</li>
+</ol>
+</li>
+<li><h4 id="PID调节和输出控制"><a href="#PID调节和输出控制" class="headerlink" title="PID调节和输出控制"></a>PID调节和输出控制</h4><p> <img src="https://i.loli.net/2020/11/29/dNpOiVc4WGlAZr8.png" alt="image-20201129170447106" style="zoom:80%;"></p>
+<p> &ensp;&emsp;电机转速由PWM波的占空比决定，通过PID和error以及设定的目标速度值可以计算出电机所需的占空比。电机可以只用PI调节就行。</p>
+<p> <img src="https://i.loli.net/2020/11/29/BGxqCvadMXQNHfV.png" alt="image-20201129170720920" style="zoom:80%;"></p>
+<p> &ensp;&emsp;如何修改PWM的占空比从而控制电机转速？通过FTM模块下的库函数即可，如上所示。</p>
+<p> <img src="https://i.loli.net/2020/11/29/ihH6copXuzAJyZI.png" alt="image-20201129170857982" style="zoom:80%;"></p>
+</li>
+<li><h4 id="开环与闭环控制"><a href="#开环与闭环控制" class="headerlink" title="开环与闭环控制"></a>开环与闭环控制</h4><p> 开环：不使用编码器的反馈值，固定PWM输出来控制电机转速。</p>
+<p> &ensp;&emsp;&ensp;&emsp;(具体在 <code>control.c</code>中的 <code>MotorControl(float *err)</code>函数中)</p>
+<p> <img src="https://i.loli.net/2020/11/29/84nrNZgfOkaACUu.png" alt="image-20201129171818250"></p>
+<p> 闭环：使用编码器的反馈值，结合PID来控制电机转速。</p>
+<p> <img src="https://i.loli.net/2020/11/29/XaLtBMvI2bPiUWH.png" alt="image-20201129171734612"></p>
+</li>
+<li><h4 id="如何调试"><a href="#如何调试" class="headerlink" title="如何调试"></a>如何调试</h4><ol>
+<li>在程序中使用开环控制，给左右电机固定的PWM输出。</li>
+<li>打开驱动开关，观察电机是否正常转动，以及转动的方向。</li>
+<li>如果电机反转，可以改变电机的接线，或者在程序中修改PWM通道的顺序。</li>
+<li>如果电机正常转动，改为闭环控制，观察电机是否正常转动。</li>
+<li>如果电机发生疯转，很可能是编码器出现问题，在编码器部分会讲如何检查。</li>
+</ol>
+</li>
+<li><h4 id="调用周期"><a href="#调用周期" class="headerlink" title="调用周期"></a>调用周期</h4><p> 调用周期：电机每5ms输出一次即每5ms修改一次电机PWM的占空比</p>
+</li>
+<li><h4 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h4><ul>
+<li>电机不转：引脚配置错误； 设置的目标转速一直是0； 程序没跑通；</li>
+<li>电机的转向与控制输入的不一致或者疯转：编码器读取的脉冲值的正负号可能不对；电机PID算出来的值不正确；</li>
+</ul>
+</li>
+</ol>
+<h5 id="舵机-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#舵机-2" class="headerlink" title="舵机"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">舵机</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<ol>
+<li><h4 id="原理介绍-1"><a href="#原理介绍-1" class="headerlink" title="原理介绍"></a>原理介绍</h4><p> &ensp;&emsp;舵机的控制信号周期为20ms的脉宽调制信号（PWM），其中脉宽从0.5ms-2.5ms，相应的舵盘位置从0-180度，呈线型变化。也就是说，给舵机提供一定的脉宽，他的输出轴就会保持一定的对应角度，无论外接转矩怎么改变，知道给他提供另外一个脉冲信号，他才会改变输出角度到新的对应的位置上。舵机内部有一个基准电路，产生周期为20MS，宽度为1.5MS的脉冲信号，有一个比较器，将外加信号与基准信号相比较，判断出方向和大小，从而产生电机的转动信号。舵机是一种位置伺服驱动器，转动范围不能超过180度，适用于那些需要不断变化并可以保持的驱动器中，比如说机器人的关节、飞机的多面等。</p>
+<p> <img src="https://i.loli.net/2020/11/29/bThDuZOz7N8aH5U.png" alt="image-20201129172939427" style="zoom:80%;"></p>
+<p> &ensp;&emsp;舵机是由PWM波控制转角，只需一路PWM波即可，输出不同的占空比就可以控制不同的转角——但是，FTM模块已经被用完了，所以舵机这个PWM波只能用两个PIT定时器进行模拟了。</p>
+<p> <img src="https://i.loli.net/2020/11/29/yHArvhe3gTdGbBw.png" alt="image-20201129173043008" style="zoom:80%;"></p>
+<p> &ensp;&emsp;两个定时器PIT：其中一个只负责每隔20ms就把电平拉高——即负责每20ms就调用一次舵机输出的那个定时器另一个定时器则负责装载值，从而控制这个周期内高电平的持续时间，从而决定占空比，决定转角。</p>
+</li>
+<li><h4 id="选舵机中值"><a href="#选舵机中值" class="headerlink" title="选舵机中值"></a>选舵机中值</h4><p> 舵机中值：当舵机不打角时所对应输出的占空比。</p>
+<p> 作用：</p>
+<ul>
+<li><p>保证在直道上即<code>error=0</code>时车能走直；</p>
+</li>
+<li><p>相当于基准值，当舵机需要向左或向右打角时，只需在此基础上进行加减即可。</p>
+<p>&ensp;&emsp;从上面的图中可以看到，当占空比1.5ms时，舵机处于理论的中值状态。此时，舵机向两边所能打的角度是对称的。那么1.5ms对应的PIT定时时间，即LVDAL的计数值是多少呢？</p>
+<p><img src="https://i.loli.net/2020/11/29/CVempsTHjBrg78k.png" alt="image-20201129194338712"></p>
+<p>在底层库中，我们可以知道，溢出计数等于总线频率$\times$时间，而总线频率我们可以在 <code>K60_card.h</code>中找到如下定义：</p>
+<p><img src="https://i.loli.net/2020/11/29/zr5VcNpPl4f6kC1.png" alt="image-20201129194829682" style="zoom:80%;"></p>
+<p>对于我们的单片机型号，期望的总线频率是50MHz，也就是说 <code>g_bus_clock=50MHz</code> 所以可以计算出1.5ms对应的计数： </p>
+<p><code>LVDAL</code>=$1.5ms \times50MHz-1=74999$。</p>
+<p><img src="https://i.loli.net/2020/11/29/tSYy9cV85wEpLMC.png" alt="image-20201129195220604" style="zoom:80%;"></p>
+<p>&ensp;&emsp;上面的 <code>PIT-&gt;CHANNEL[1].LDVAL</code>就是对应的计数值，而 <code>angleset</code>传进来的参数。根据上面的式子，我们得到1.5ms时对应的 <code>angleset</code>为：$\frac{74999+1}{50}=1500$。</p>
+<p><img src="https://i.loli.net/2020/11/29/hSy2MeTPui71XpQ.png" alt="image-20201129195927483" style="zoom:80%;"></p>
+<p>&ensp;&emsp;在 <code>control.c</code>中，我们有变量 <code>pout0</code>，也就是中值变量。如果说你在安装舵机之前，用程序首先输出理论上的中值，再进行安装，那么如果不出现大的误差，安装好舵机后基本就在中间位置，只需微调一下即可。而如果你随意安装的舵机，那么就需要自己去试出来中间位置所对应的 <code>pout0</code>的值。</p>
+<p><strong>注意</strong>：刚拿到车时一定要调整好舵机中值。步骤如下：</p>
+</li>
+</ul>
+<ol>
+<li>先不要安装舵机，可以只跟主板接好线。</li>
+<li>在 <code>control.c</code>中使得 <code>pout0=1500</code>， 找到函数 <code>ServControl(float *err)</code>，修改<code>motor.SetServ((uint16)pout0);</code>为 <code>motor.SetServ((uint16)pout0);</code>，也就是理论上的舵机中值。</li>
+<li>运行程序，此时理论上舵机会打在中间。</li>
+<li>如果没有打在中间，我们可以把舵机那个白色的铁块拆下来重新安装，让铁块位于中间的位置。</li>
+<li>然后进行舵机的安装，左右尽量对称。</li>
+<li>安装完成后检查前轮是否向着正前方，如果偏了对舵机与轮胎的连接棒长度进行调整，使两个轮胎尽量向正前方。</li>
+<li>将车放在直道的中线上，轻轻推着车走，观察车子是否能够走在正中间。</li>
+<li>如果偏离中线比较大，再次进行调整。此时，可以对程序的中值 <code>pout0</code>进行微调，，直到让车沿着中间走。</li>
+<li>一切没有问题后，将<code>motor.SetServ((uint16)pout0);</code>改回<code>motor.SetServ((uint16)pout0);</code>。</li>
+</ol>
+</li>
+<li><h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ol>
+<li><p>对舵机一定要进行限幅，因为当舵机打角超过一定角度时，就会由于轮胎与底盘的接触而卡死，舵机会产生很大的阻力，从而产生很大的电流，非常容易烧掉板子或者损坏舵机。而且，当舵机打在最大角度时，你要轻轻转动前面的轮胎，观察其是否有阻力。如果阻力太大，转不了几圈就停了，那么要么修改车的结构，要么就增大限幅的程度。限幅在 <code>control.c</code>中的函数 <code>ServControl(float *err)</code>里面：</p>
+<p> <img src="https://i.loli.net/2020/11/29/X6gIx9Tyw8QkcSH.png" alt="image-20201129202024428" style="zoom:80%;"></p>
+<p> 如果要增大限幅，那么将170适当减小即可。</p>
+</li>
+<li><p>尽量避免让舵机处于抖动状态，尤其是拿离赛道时，由于图像混乱，容易导致舵机不停地抖动，这样容易磨损内部齿轮，造成损坏。</p>
+</li>
+<li><p>舵机坏了，不仅影响进度，还费钱，让人心态爆炸，所以要爱护舵机。</p>
+</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E9%80%90%E9%A3%9E%20ov7725%E6%96%B0%E7%89%88%E7%A7%BB%E6%A4%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/17/%E9%80%90%E9%A3%9E%20ov7725%E6%96%B0%E7%89%88%E7%A7%BB%E6%A4%8D/" class="post-title-link" itemprop="url">逐飞ov7725新版移植</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-12-17 23:46:24 / Modified: 23:56:31" itemprop="dateCreated datePublished" datetime="2020-12-17T23:46:24+08:00">2020-12-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%99%BA%E8%83%BD%E8%BD%A6/" itemprop="url" rel="index"><span itemprop="name">智能车</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="逐飞-ov7725新版移植："><a href="#逐飞-ov7725新版移植：" class="headerlink" title="逐飞 ov7725新版移植："></a>逐飞 <code>ov7725</code>新版移植：</h4><ol>
+<li><p>场中断引脚修改：<code>SEEKFREE_7725.h</code>中 <code>OV7725_VSYNC</code>修改为对应引脚，比如 <code>PTB23</code>就改为 <code>B23</code>。<code>VSYNC_CHANNEL</code>同时改为对应的引脚号，<code>PTB23</code>就改为 <code>23</code> .</p>
+</li>
+<li><p>像素中断引脚修改:<code>SEEKFREE_7725.h</code>中 <code>OV7725_PCLK</code>修改为对应引脚，比如 <code>PTB22</code>就改为 <code>B22</code>。<code>PCLK_CHANNEL</code>同时改为对应的引脚号，<code>PTB22</code>就改为 <code>22</code> .</p>
+</li>
+<li><p>修改 <code>PLCK_PORT</code>为对应端口，比如 <code>PTB23</code>对应的就为 <code>PORTB</code>。中断编号 <code>INTERRUPT_NUNBERS</code>和中断标志位 <code>INTERRUPT_ISFR</code>同样修改为对应端口。</p>
+</li>
+<li><p>数据口 <code>OV7725_DATAPORT</code>按照对应规则修改：摄像头数据接口 <code>C_IN_DATA(1)</code> 第一个字母<code>C</code>代表着使用<code>C</code>口，可以选择<code>A、B、C、D、E.</code>分别对应<code>A_IN_DATA，B_IN_DATA，C_IN_DATA，D_IN_DATA，E_IN_DATA</code>。第二个括号里面的参数 <code>1</code> 代表着使用的是<code>C8 - C15</code>口,<br>  可以选择<code>0、1、2、3</code>，分别对应的是该端口的<code>X0-X7，X8-X15，X16-X23，X24-X31</code>(这里<code>x</code>代表的是第一个字母，比如现在的就是<code>C8-C15</code>。</p>
+</li>
+<li><p>修改 <code>SEEKFREE_IIC.h</code>中 <code>SCL</code>引脚 <code>SEEKFREE_SCL</code>为对应端口，比如 <code>PTB16</code>就为 <code>B16</code>。修改 <code>SDA</code>引脚 <code>SEEKFREE_SDA</code>为对应端口，比如 <code>PTB17</code>就为 <code>B17</code>。</p>
+</li>
+<li><p>修改 <code>SEEKFREE_7725_UART.h</code>的 <code>OV7725_COF_UART</code>为对应串口， 这里串口引脚和 <code>IIC</code>引脚复用，对应的串口 <code>uart0</code>。</p>
+</li>
+<li><p>修改 <code>SEEKFREE_7725_UART.h</code>中的 <code>OV7725_UART_PCLK</code>、<code>OV7725_UART_VSYNC</code>、<code>OV7725_UART_INTERRUPT</code>、<code>OV7725_UART_PLCK_PORT</code>、<code>OV7725_UART_DATAPORT</code>与上面的像素中断、场中断、数据口相对应。</p>
+</li>
+<li><p>在 <code>MK60_port_cfg.h</code>中修改 <code>UART</code>通道为对应的端口，比如这里为 <code>B16</code>、<code>B17</code>，那么需要将 <code>UART0_RX_PIN</code>对应的值修改为 <code>B16</code>，<code>UART0_TX_PIN</code>对应的值修改为 <code>B17</code>。</p>
+</li>
+<li><p>在 <code>isr.h</code>中修改为对应的串口中断，比如这里是 <code>uart0</code>，那么需要添加对应的串口0中断执行函数：</p>
+ <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">UART0_RX_TX_IRQHandler</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(UART0-&gt;S1 &amp; UART_S1_RDRF_MASK)                                     <span class="comment">//接收数据寄存器满</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//用户需要处理接收数据</span></span><br><span class="line">        ov7725_cof_uart_interrupt(); <span class="comment">//V2.0 版本小钻风串口通讯函数</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(UART0-&gt;S1 &amp; UART_S1_TDRE_MASK )                                    <span class="comment">//发送数据寄存器空</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//用户需要处理发送数据</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>在 <code>isr.h</code>中添加像素中断对应端口的中断执行函数，比如上面像素中断是 <code>PTB22</code>，那么就需要添加 <code>PORTB</code>中断执行函数：</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PORTB_IRQHandler</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     <span class="comment">//清除中断标志第一种方法直接操作寄存器，每一位对应一个引脚</span></span><br><span class="line">	PORTB-&gt;ISFR = <span class="number">0xffffffff</span>;</span><br><span class="line">	<span class="comment">//使用我们编写的宏定义清除发生中断的引脚</span></span><br><span class="line">	<span class="comment">//PORTC_FLAG_CLR(C1);</span></span><br><span class="line">     <span class="comment">//VSYNC();</span></span><br><span class="line">	<span class="comment">//此中断的标志位在ov7725_vsync中清除，因此不需要再这里清除</span></span><br><span class="line">	ov7725_uart_vsync();<span class="comment">//V2.0 版本小钻风</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+</li>
+<li><p>最后，在主函数中需要调用 `</p>
+<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ov7725_uart_init();</span><br><span class="line">ov7725_init();</span><br></pre></td></tr></table></figure></div>
+<p>完成初始化。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/18/leetcode1-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -526,488 +1558,11 @@ $(window).load(function(){
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/15/%E6%A0%91%E8%8E%93%E6%B4%BE%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/15/%E6%A0%91%E8%8E%93%E6%B4%BE%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">树莓派快速搭建</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-10-15 20:08:22 / Modified: 20:10:12" itemprop="dateCreated datePublished" datetime="2020-10-15T20:08:22+08:00">2020-10-15</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/" itemprop="url" rel="index"><span itemprop="name">树莓派</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="树莓派快速搭建"><a href="#树莓派快速搭建" class="headerlink" title="树莓派快速搭建"></a>树莓派快速搭建</h4><ol>
-<li><p>下载raspberry系统，使用Etcher安装到SD卡中。</p>
-</li>
-<li><p>新建文件，文件名为<code>wpa_supplicant.conf</code>，写入</p>
- <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">country=CN</span><br><span class="line">ctrl_interface=DIR=/var/<span class="built_in">run</span>/wpa_supplicant GROUP=netdev</span><br><span class="line">update_config=<span class="number">1</span></span><br><span class="line">network=&#123;</span><br><span class="line">ssid=<span class="string">""</span></span><br><span class="line">psk=<span class="string">""</span></span><br><span class="line">key_mgmt=WPA-PSK</span><br><span class="line">priority=<span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-<p> <code>ssid</code>为 <code>wifi名称</code>,<code>psk</code>为 <code>wifi密码</code>。</p>
-</li>
-<li><p>创建一个名字是<code>ssh</code>的文本文档，什么内容都不写。</p>
-</li>
-<li><p>将SD卡插入树莓派中，会自动连接 <code>wifi</code>。</p>
-</li>
-<li><p>在手机上下载 <code>Android Terminal</code>，使用 <code>ip neigh</code>查找树莓派的IP地址。</p>
-</li>
-<li><p>使用 <code>putty</code>输入IP进行连接， 用户名： <code>pi</code>，初始密码  <code>raspberry</code>。</p>
-</li>
-<li><p>使用命令 <code>sudo raspi-config</code>，开启 VNC， 并改变分辨率(除了第一个默认的)。</p>
-</li>
-<li><p>使用VNC进行连接。</p>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/27/ucos-ii%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/27/ucos-ii%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">ucos-ii内存管理</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-05-27 15:58:58 / Modified: 16:04:59" itemprop="dateCreated datePublished" datetime="2020-05-27T15:58:58+08:00">2020-05-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">嵌入式实时操作系统</span></a>
-                </span>
-                  >
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B9%A0%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">习题</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>在内存空间开辟了一片区域，供4个任务共享读写。1个任务在写内存时，其它任务不能读写。多个任务可以同时读该内存区域数据。</li>
-<li>键盘按键1-4分别是 task1、task2、task3、task4的写控制键，键盘按键5-8分别是task1<br>  task2、task3、task4的读控制键。</li>
-<li>每按下一次写控制键，在共享区域的数据加1，超过99变为0，显示“写倒计时”在屏幕上。</li>
-<li>按下读控制键时，对应的读任务读取共享区域的数据并显示数据。一个任务的写控制键按下且“写倒计时”未结束时，其它任务的写控制键不能写，同时所有的读控制键也不能读，如果此时有读写动作（按下相应的按键），屏幕应显示报警。</li>
-<li>采用消息邮箱机制完成此实验。一次读或写在务持续时间5秒</li>
-</ul>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"includes.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TASK_STK_SIZE 512</span></span><br><span class="line">OS_STK TaskStk[<span class="number">4</span>][TASK_STK_SIZE];</span><br><span class="line">OS_STK StartTaskStk[TASK_STK_SIZE];</span><br><span class="line">OS_STK KeyTaskStk[TASK_STK_SIZE];</span><br><span class="line">INT8U TaskID[<span class="number">4</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line">INT16S key;</span><br><span class="line">INT16S keyID[<span class="number">9</span>] =</span><br><span class="line">&#123;</span><br><span class="line">    <span class="number">0x1B</span>, <span class="number">0x31</span>, <span class="number">0x32</span>, <span class="number">0x33</span>,</span><br><span class="line">    <span class="number">0x34</span>, <span class="number">0x35</span>, <span class="number">0x36</span>, <span class="number">0x37</span>, <span class="number">0x38</span></span><br><span class="line">&#125;;</span><br><span class="line">BOOLEAN keyFlag;</span><br><span class="line"></span><br><span class="line">OS_EVENT *Str_Box;</span><br><span class="line">OS_MEM *IntBuffer;</span><br><span class="line">INT8S IntPart[<span class="number">2</span>][<span class="number">10</span>];</span><br><span class="line">INT8S *IntBlkPtr;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Task</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">StartTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">KeyTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    INT8U err;</span><br><span class="line">    <span class="keyword">char</span> *s = <span class="string">"Buffer create successfully"</span>;</span><br><span class="line">    OSInit();</span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    PC_DOSSaveReturn();</span><br><span class="line">    PC_VectSet(uCOS, OSCtxSw);</span><br><span class="line">    OS_EXIT_CRITICAL();</span><br><span class="line">    IntBuffer = OSMemCreate(IntPart, <span class="number">2</span>, <span class="number">10</span>, &amp;err);</span><br><span class="line">	IntBlkPtr = OSMemGet(IntBuffer, &amp;err);</span><br><span class="line">	*IntBlkPtr = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(err == OS_NO_ERR)</span><br><span class="line">    &#123;</span><br><span class="line">        PC_DispStr(<span class="number">35</span>, <span class="number">19</span>,</span><br><span class="line">                   s, DISP_FGND_WHITE + DISP_BGND_BLACK );</span><br><span class="line">    &#125;</span><br><span class="line">    Str_Box = OSMboxCreate((<span class="keyword">void</span> *)<span class="number">0</span>);</span><br><span class="line">    OSTaskCreate(StartTask, (<span class="keyword">void</span> *)<span class="number">0</span>,</span><br><span class="line">                 &amp;StartTaskStk[TASK_STK_SIZE - <span class="number">1</span>], <span class="number">0</span>);</span><br><span class="line">    OSStart();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">StartTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    INT8U i, err;</span><br><span class="line">    <span class="keyword">char</span> temp[<span class="number">50</span>];</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_CRITICAL_METHOD == 3</span></span><br><span class="line">    OS_CPU_SR cpu_sr</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    pdata = pdata;</span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    PC_VectSet(<span class="number">0x08</span>, OSTickISR);</span><br><span class="line">    PC_SetTickRate(OS_TICKS_PER_SEC);</span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    OSStatInit();</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        err = OSTaskCreate( <span class="built_in">Task</span>, (<span class="keyword">void</span> *)&amp;TaskID[i],</span><br><span class="line">                            &amp;TaskStk[i][TASK_STK_SIZE - <span class="number">1</span>], i + <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">if</span>(err == OS_NO_ERR)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">sprintf</span>(temp, <span class="string">"task %d create successfully"</span>, i + <span class="number">1</span>);</span><br><span class="line">            PC_DispStr(<span class="number">35</span>, <span class="number">20</span> + i, temp,</span><br><span class="line">                       DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    OSTaskCreate(KeyTask, (<span class="keyword">void</span> *)<span class="number">0</span>,</span><br><span class="line">                 &amp;KeyTaskStk[TASK_STK_SIZE - <span class="number">1</span>], <span class="number">1</span>);</span><br><span class="line">    OSTaskSuspend(OS_PRIO_SELF);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">KeyTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    pdata = pdata;</span><br><span class="line">    <span class="keyword">for</span>(;;)</span><br><span class="line">    &#123;</span><br><span class="line">        keyFlag = PC_GetKey(&amp;key);</span><br><span class="line">        <span class="keyword">if</span>(keyFlag)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(key == keyID[<span class="number">0</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                PC_DOSReturn();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        OSTimeDly(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Task</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> temp[<span class="number">50</span>];</span><br><span class="line">    INT8U ID = *(INT8U *)pdata;</span><br><span class="line">    INT8U err, i;</span><br><span class="line">    <span class="keyword">char</span> *s;</span><br><span class="line">    <span class="keyword">char</span> *clean = <span class="string">"                                                                        "</span>;</span><br><span class="line">    pdata = pdata;</span><br><span class="line">    <span class="keyword">for</span>(;;)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(keyFlag &amp;&amp; key == keyID[ID])</span><br><span class="line">        &#123;</span><br><span class="line">            err = OSMboxPost(Str_Box, <span class="string">"1"</span>);</span><br><span class="line">            <span class="keyword">if</span>(err == OS_NO_ERR)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//IntBlkPtr = OSMemGet(IntBuffer, &amp;err);  /*只用申请一次，如果这里再申请，相当于申请了新的内存块                                                            而且每个Task都会申请一次*/</span></span><br><span class="line">                (*IntBlkPtr)++;</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"Task %d is writing :  %d,  the value: %d"</span>, ID, <span class="number">5</span> - i, *IntBlkPtr);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID, temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    <span class="keyword">if</span>(i == <span class="number">5</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        OSMboxPend(Str_Box, <span class="number">1</span>, &amp;err);</span><br><span class="line">                    &#125;</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"warning:task %d reply writing failed"</span>, ID);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                               temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(*IntBlkPtr &gt; <span class="number">99</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                *IntBlkPtr = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(keyFlag &amp;&amp; key == keyID[ID + <span class="number">4</span>])</span><br><span class="line">        &#123;</span><br><span class="line">            s = OSMboxPend(Str_Box, <span class="number">1</span>, &amp;err);</span><br><span class="line">            <span class="keyword">if</span>(s == <span class="literal">NULL</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"task %d is reading Blk: %d , time left: %d"</span>, ID, *IntBlkPtr, <span class="number">5</span> - i);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                               temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                OSMboxPost(Str_Box, <span class="string">"1"</span>);</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"warning:task %d reply reading failed"</span>, ID);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                               temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                       clean, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">        &#125;</span><br><span class="line">        OSTimeDly(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/27/ucos-ii%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E2%80%9C/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/27/ucos-ii%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E2%80%9C/" class="post-title-link" itemprop="url">ucos-ii内存管理</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-05-27 15:58:58 / Modified: 16:04:52" itemprop="dateCreated datePublished" datetime="2020-05-27T15:58:58+08:00">2020-05-27</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" itemprop="url" rel="index"><span itemprop="name">嵌入式实时操作系统</span></a>
-                </span>
-                  >
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E4%B9%A0%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">习题</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>在内存空间开辟了一片区域，供4个任务共享读写。1个任务在写内存时，其它任务不能读写。多个任务可以同时读该内存区域数据。</li>
-<li>键盘按键1-4分别是 task1、task2、task3、task4的写控制键，键盘按键5-8分别是task1<br>  task2、task3、task4的读控制键。</li>
-<li>每按下一次写控制键，在共享区域的数据加1，超过99变为0，显示“写倒计时”在屏幕上。</li>
-<li>按下读控制键时，对应的读任务读取共享区域的数据并显示数据。一个任务的写控制键按下且“写倒计时”未结束时，其它任务的写控制键不能写，同时所有的读控制键也不能读，如果此时有读写动作（按下相应的按键），屏幕应显示报警。</li>
-<li>采用消息邮箱机制完成此实验。一次读或写在务持续时间5秒</li>
-</ul>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"includes.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TASK_STK_SIZE 512</span></span><br><span class="line">OS_STK TaskStk[<span class="number">4</span>][TASK_STK_SIZE];</span><br><span class="line">OS_STK StartTaskStk[TASK_STK_SIZE];</span><br><span class="line">OS_STK KeyTaskStk[TASK_STK_SIZE];</span><br><span class="line">INT8U TaskID[<span class="number">4</span>] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;;</span><br><span class="line">INT16S key;</span><br><span class="line">INT16S keyID[<span class="number">9</span>] =</span><br><span class="line">&#123;</span><br><span class="line">    <span class="number">0x1B</span>, <span class="number">0x31</span>, <span class="number">0x32</span>, <span class="number">0x33</span>,</span><br><span class="line">    <span class="number">0x34</span>, <span class="number">0x35</span>, <span class="number">0x36</span>, <span class="number">0x37</span>, <span class="number">0x38</span></span><br><span class="line">&#125;;</span><br><span class="line">BOOLEAN keyFlag;</span><br><span class="line"></span><br><span class="line">OS_EVENT *Str_Box;</span><br><span class="line">OS_MEM *IntBuffer;</span><br><span class="line">INT8S IntPart[<span class="number">2</span>][<span class="number">10</span>];</span><br><span class="line">INT8S *IntBlkPtr;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Task</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">StartTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">KeyTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    INT8U err;</span><br><span class="line">    <span class="keyword">char</span> *s = <span class="string">"Buffer create successfully"</span>;</span><br><span class="line">    OSInit();</span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    PC_DOSSaveReturn();</span><br><span class="line">    PC_VectSet(uCOS, OSCtxSw);</span><br><span class="line">    OS_EXIT_CRITICAL();</span><br><span class="line">    IntBuffer = OSMemCreate(IntPart, <span class="number">2</span>, <span class="number">10</span>, &amp;err);</span><br><span class="line">	IntBlkPtr = OSMemGet(IntBuffer, &amp;err);</span><br><span class="line">	*IntBlkPtr = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(err == OS_NO_ERR)</span><br><span class="line">    &#123;</span><br><span class="line">        PC_DispStr(<span class="number">35</span>, <span class="number">19</span>,</span><br><span class="line">                   s, DISP_FGND_WHITE + DISP_BGND_BLACK );</span><br><span class="line">    &#125;</span><br><span class="line">    Str_Box = OSMboxCreate((<span class="keyword">void</span> *)<span class="number">0</span>);</span><br><span class="line">    OSTaskCreate(StartTask, (<span class="keyword">void</span> *)<span class="number">0</span>,</span><br><span class="line">                 &amp;StartTaskStk[TASK_STK_SIZE - <span class="number">1</span>], <span class="number">0</span>);</span><br><span class="line">    OSStart();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">StartTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    INT8U i, err;</span><br><span class="line">    <span class="keyword">char</span> temp[<span class="number">50</span>];</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_CRITICAL_METHOD == 3</span></span><br><span class="line">    OS_CPU_SR cpu_sr</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    pdata = pdata;</span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    PC_VectSet(<span class="number">0x08</span>, OSTickISR);</span><br><span class="line">    PC_SetTickRate(OS_TICKS_PER_SEC);</span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    OSStatInit();</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        err = OSTaskCreate( <span class="built_in">Task</span>, (<span class="keyword">void</span> *)&amp;TaskID[i],</span><br><span class="line">                            &amp;TaskStk[i][TASK_STK_SIZE - <span class="number">1</span>], i + <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">if</span>(err == OS_NO_ERR)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">sprintf</span>(temp, <span class="string">"task %d create successfully"</span>, i + <span class="number">1</span>);</span><br><span class="line">            PC_DispStr(<span class="number">35</span>, <span class="number">20</span> + i, temp,</span><br><span class="line">                       DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    OSTaskCreate(KeyTask, (<span class="keyword">void</span> *)<span class="number">0</span>,</span><br><span class="line">                 &amp;KeyTaskStk[TASK_STK_SIZE - <span class="number">1</span>], <span class="number">1</span>);</span><br><span class="line">    OSTaskSuspend(OS_PRIO_SELF);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">KeyTask</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    pdata = pdata;</span><br><span class="line">    <span class="keyword">for</span>(;;)</span><br><span class="line">    &#123;</span><br><span class="line">        keyFlag = PC_GetKey(&amp;key);</span><br><span class="line">        <span class="keyword">if</span>(keyFlag)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(key == keyID[<span class="number">0</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                PC_DOSReturn();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        OSTimeDly(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Task</span><span class="params">(<span class="keyword">void</span> *pdata)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> temp[<span class="number">50</span>];</span><br><span class="line">    INT8U ID = *(INT8U *)pdata;</span><br><span class="line">    INT8U err, i;</span><br><span class="line">    <span class="keyword">char</span> *s;</span><br><span class="line">    <span class="keyword">char</span> *clean = <span class="string">"                                                                        "</span>;</span><br><span class="line">    pdata = pdata;</span><br><span class="line">    <span class="keyword">for</span>(;;)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(keyFlag &amp;&amp; key == keyID[ID])</span><br><span class="line">        &#123;</span><br><span class="line">            err = OSMboxPost(Str_Box, <span class="string">"1"</span>);</span><br><span class="line">            <span class="keyword">if</span>(err == OS_NO_ERR)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//IntBlkPtr = OSMemGet(IntBuffer, &amp;err);  /*只用申请一次，如果这里再申请，相当于申请了新的内存块                                                            而且每个Task都会申请一次*/</span></span><br><span class="line">                (*IntBlkPtr)++;</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"Task %d is writing :  %d,  the value: %d"</span>, ID, <span class="number">5</span> - i, *IntBlkPtr);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID, temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    <span class="keyword">if</span>(i == <span class="number">5</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        OSMboxPend(Str_Box, <span class="number">1</span>, &amp;err);</span><br><span class="line">                    &#125;</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"warning:task %d reply writing failed"</span>, ID);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                               temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(*IntBlkPtr &gt; <span class="number">99</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                *IntBlkPtr = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(keyFlag &amp;&amp; key == keyID[ID + <span class="number">4</span>])</span><br><span class="line">        &#123;</span><br><span class="line">            s = OSMboxPend(Str_Box, <span class="number">1</span>, &amp;err);</span><br><span class="line">            <span class="keyword">if</span>(s == <span class="literal">NULL</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"task %d is reading Blk: %d , time left: %d"</span>, ID, *IntBlkPtr, <span class="number">5</span> - i);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                               temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                OSMboxPost(Str_Box, <span class="string">"1"</span>);</span><br><span class="line">                <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="built_in">sprintf</span>(temp, <span class="string">"warning:task %d reply reading failed"</span>, ID);</span><br><span class="line">                    PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                               temp, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">                    OSTimeDlyHMSM(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            PC_DispStr(<span class="number">0</span>, ID,</span><br><span class="line">                       clean, DISP_FGND_WHITE + DISP_BGND_BLACK);</span><br><span class="line">        &#125;</span><br><span class="line">        OSTimeDly(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/20/%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/20/%E6%8A%A5%E9%94%99%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">报错问题</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-05-20 21:08:32" itemprop="dateCreated datePublished" datetime="2020-05-20T21:08:32+08:00">2020-05-20</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">报错annot convert parameter 1 from 'char *' to 'LPCTSTR' </span><br><span class="line">多字节和来UNICODE的问题。VS默认是自UNICODE。在项目中，常规-&gt;字符集中改为“使用多字节”。</span><br></pre></td></tr></table></figure></div>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/24/c-language-problem/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/24/c-language-problem/" class="post-title-link" itemprop="url">c language problem</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-04-24 09:22:10" itemprop="dateCreated datePublished" datetime="2020-04-24T09:22:10+08:00">2020-04-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-20 21:06:21" itemprop="dateModified" datetime="2020-05-20T21:06:21+08:00">2020-05-20</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/c/" itemprop="url" rel="index"><span itemprop="name">c</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h5 id="参数传递" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#参数传递" class="headerlink" title="参数传递"></a>
-    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">参数传递</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
-
-<p><code>int</code>型数组转为二进制的函数 <code>void toBin(int *key, int *keyin)</code>，具体如下：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">toBin</span><span class="params">(<span class="keyword">int</span> *key, <span class="keyword">int</span> *keyin)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, k, n;</span><br><span class="line">    n = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> trans[<span class="number">8</span>];</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(keyin[i] != <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            trans[j] = keyin[i] % <span class="number">2</span>;</span><br><span class="line">            keyin[i] = keyin[i] / <span class="number">2</span>;</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(; j &lt; <span class="number">8</span>; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            trans[j] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(k = <span class="number">0</span>; k &lt; <span class="number">8</span>; k++)</span><br><span class="line">        &#123;</span><br><span class="line">            key[n] = trans[<span class="number">7</span> - k];</span><br><span class="line">            n++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> data[<span class="number">64</span>];</span><br><span class="line">    <span class="keyword">int</span> data2[<span class="number">64</span>];</span><br><span class="line">    <span class="keyword">int</span> plaintext[] = &#123;<span class="number">128</span>, <span class="number">32</span>, <span class="number">5</span>, <span class="number">78</span>, <span class="number">120</span>, <span class="number">10</span>, <span class="number">140</span>, <span class="number">200</span>&#125;;</span><br><span class="line">    toBin(data, plaintext);</span><br><span class="line">    toBin(data2, plaintext);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-<p>进行两次调用，结果第二次输出全部为 0。</p>
-<p>问题出在 <code>toBin</code>函数中，传递进去的是两个指针，第一次传入的 <code>plaintext</code>存放的数，被每次 <code>/2</code>直到全部为0了，所以要么重新传递进去一个 <code>plaintext</code>，要么在 <code>toBin</code>中不直接用 <code>keyin</code>操作，而是先将 <code>keyin</code>转移到另一个数组再进行操作。</p>
-<h5 id="字符数组" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#字符数组" class="headerlink" title="字符数组"></a>
-    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">字符数组</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
-
-<p><strong>创建字符数组</strong>：<code>char* s = &quot;This is a test&quot;</code>，如果要对每8位进行操作，则可以使用如下操作：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; s[i]; i += <span class="number">8</span>)</span><br><span class="line">&#123;</span><br><span class="line">	function(s + i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-<p>两个需要注意的点：</p>
-<ul>
-<li>字符数组以 <code>‘\0’</code>为结束标志，<code>ASCII</code>码为0，所以在for循环中可以直接用 <code>s[i]</code>作为结束标志。</li>
-<li><code>s + i</code>不是表示增加<code>ASCII</code>码，<code>char* s</code>是一个指针，指针加上一个数表示将指针移动相应的位置，比如 <code>i = 8</code>时，<code>s</code>的位置就移动到了 <code>a</code>的位置。</li>
-</ul>
-<p><strong>字符转二进制</strong>：</p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CharToBit</span><span class="params">(<span class="keyword">char</span> *<span class="built_in">bit</span>, <span class="keyword">char</span> *src, <span class="keyword">int</span> length)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j;</span><br><span class="line">    <span class="keyword">char</span> t;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; length; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">8</span>, t = src[i]; j &gt; <span class="number">0</span>; j--)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">bit</span>[(i &lt;&lt; <span class="number">3</span>) + j] = t &amp; <span class="number">1</span>;   <span class="comment">// 取字符末位</span></span><br><span class="line">            t &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-<p><code>src</code>是要转换的字符数组，比如 <code>src = “romantic”</code>，长度 <code>length = 8</code>，<code>bit</code>是存放转换结果的字符数组。依次取出字符，比如现在  <code>t = ‘r’</code>，而 <code>‘r&#39;</code>的 <code>ASCII</code>码为 <code>114</code>，二进制表示为 <code>01110010</code>。那么 <code>t &amp; 1</code>就取出了末位的 <code>0</code>，然后 <code>t &gt;&gt;= 1</code>，就得到的倒数第二位的 <code>1</code>，依次就能全部变为二进制。存放在 <code>bit</code>应该是连续的，<code>i &lt;&lt; 3 + j</code>刚好就使得下标得以连续，相当于 <code>i * 8 + j</code>。</p>
-<p><strong>二进制转字符：</strong></p>
-<div class="highlight-wrap"autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contenteditable="true"data-rel="C"><figure class="iseeu highlight /c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BitToChar</span><span class="params">(<span class="keyword">char</span> *str, <span class="keyword">char</span> *bin, <span class="keyword">int</span> length)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; length &lt;&lt; <span class="number">3</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        str[i &gt;&gt; <span class="number">3</span>] &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">        str[i &gt;&gt; <span class="number">3</span>] |= bin[i + <span class="number">1</span>];   <span class="comment">// 添加到末位</span></span><br><span class="line">    &#125;</span><br><span class="line">    str[length] = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
-<p>&ensp; &emsp;&nbsp;跟上面的想对应，长度为8的字符数组对应64位二进制数。所以这里循环次数是 <code>length &lt;&lt; 3</code>，扩大8倍，每8个二进制数对应一个字符，因此 <code>str</code>下标为 <code>i &gt;&gt; 3</code>，首先将 <code>str[i &gt;&gt; 3] &lt;&lt;= 1</code>左移1位，那么无论本来末位是0还是1，都会变成0，再与 <code>bin[i + 1]</code>相或就成功添加到了末位，然后再左移，重复这个过程。 至于为什么是 <code>bin[i + 1]</code>,是因为上面字符转二进制时，<code>j = 8; j &gt; 0</code>，所以下标是从1开始的。</p>
-<p><strong>参数传递问题</strong></p>
-<p>&ensp; &emsp;&nbsp;在传递参数时，函数本来应该是 <code>char* offset</code>，但是却传进去一个 <code>int</code>型的数组，这样在对 <code>offset</code>遍历时会出现一个什么问题呢？</p>
-<ul>
-<li>除了 <code>offset[0]</code>是对的以外，其余的 <code>offset[i]</code>都是 <code>0(&#39;\0&#39;的ASCII码)</code>。应该是转换成 <code>char*</code>的时候，自动在第一个元素后面补了一个结束标志，即 <code>&#39;\0&#39;</code>。</li>
-<li>所以说参数的类型一定要搞清楚。</li>
-</ul>
-<p></p><h5 id="uCOS-II的一个小问题" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#uCOS-II的一个小问题" class="headerlink" title="uCOS-II的一个小问题"></a><br>    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">uCOS-II的一个小问题</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5><br>&ensp; &emsp;&nbsp;如果使用了 <code>StartTask</code>来创建任务，那么在最后一定要使用 <code>OSTaskSuspend(OS_PRIO_SELF)</code>来挂起该任务或者也给它相应的延时，否则运行时会出错。<p></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/15/leetcode%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="ReedMark">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/04/15/leetcode%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">leetcode笔记</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-04-15 17:18:55 / Modified: 17:31:20" itemprop="dateCreated datePublished" datetime="2020-04-15T17:18:55+08:00">2020-04-15</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Leetcode%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">Leetcode笔记</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h4><h6 id="substring"><a href="#substring" class="headerlink" title="substring"></a>substring</h6><p>返回字符串的字串，语法：</p>
-<p><code>s.substring(int beginIndex)</code>或者 <code>s.substring(int beginIndex, int endIndex)</code>。</p>
-<p>注意：<code>beginIndex,endIndex</code>是左闭右开的。</p>
-<p>比如 <code>s=“012345”</code>，则 <code>s.substring(0,2)=“01”</code>。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1073,20 +1628,20 @@ $(window).load(function(){
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

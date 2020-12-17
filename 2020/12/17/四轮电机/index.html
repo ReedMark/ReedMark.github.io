@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Muse","version":"7.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+  <meta name="description" content="电机    原理介绍   PWM波即矩形波，电机的转速由PWM波的占空比决定。 一个电机需要两路PWM波，一路控制其正转，一路控制其反转，两路不能同时导通 。   配置和使用（FTM模块）   &amp;ensp;&amp;emsp;FTM模块既可以用于PWM模式来产生PWM波控制电机和舵机，也可以用于正交解码模式用于读取编码器的脉冲数，从而实现测速。对于有两个电机的智能车，两个电机需要4路PWM波即对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="电机">
+<meta property="og:url" content="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%9C%BA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="电机    原理介绍   PWM波即矩形波，电机的转速由PWM波的占空比决定。 一个电机需要两路PWM波，一路控制其正转，一路控制其反转，两路不能同时导通 。   配置和使用（FTM模块）   &amp;ensp;&amp;emsp;FTM模块既可以用于PWM模式来产生PWM波控制电机和舵机，也可以用于正交解码模式用于读取编码器的脉冲数，从而实现测速。对于有两个电机的智能车，两个电机需要4路PWM波即对">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/cT7P4oVhr6GOzxU.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/cyLGQiWl2UEzO7v.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/Ud2t3TWVNZM7DrP.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/X9rDnm4IHxaeZh2.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/dNpOiVc4WGlAZr8.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/BGxqCvadMXQNHfV.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/ihH6copXuzAJyZI.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/84nrNZgfOkaACUu.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/XaLtBMvI2bPiUWH.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/bThDuZOz7N8aH5U.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/yHArvhe3gTdGbBw.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/CVempsTHjBrg78k.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/zr5VcNpPl4f6kC1.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/tSYy9cV85wEpLMC.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/hSy2MeTPui71XpQ.png">
+<meta property="og:image" content="https://i.loli.net/2020/11/29/X6gIx9Tyw8QkcSH.png">
+<meta property="article:published_time" content="2020-12-17T15:46:24.000Z">
+<meta property="article:modified_time" content="2020-12-17T15:57:47.921Z">
+<meta property="article:author" content="ReedMark">
+<meta property="article:tag" content="智能车">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/11/29/cT7P4oVhr6GOzxU.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%9C%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>电机 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+<script type="text/javascript" src="/js/google-code-prettify/prettify.js"></script>
+<script type="text/javascript">
+$(window).load(function(){
+   $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })    
+</script>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%94%B5%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ReedMark">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          电机
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-12-17 23:46:24 / Modified: 23:57:47" itemprop="dateCreated datePublished" datetime="2020-12-17T23:46:24+08:00">2020-12-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%99%BA%E8%83%BD%E8%BD%A6/" itemprop="url" rel="index"><span itemprop="name">智能车</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h5 id="电机-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#电机-2" class="headerlink" title="电机"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">电机</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<ol>
+<li><h4 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h4><p> <img src="https://i.loli.net/2020/11/29/cT7P4oVhr6GOzxU.png" alt="image-20201129164634576" style="zoom:80%;"></p>
+<ul>
+<li>PWM波即矩形波，电机的转速由PWM波的占空比决定。</li>
+<li>一个电机需要两路PWM波，一路控制其正转，一路控制其反转，两路不能同时导通 。</li>
+</ul>
+</li>
+<li><h4 id="配置和使用（FTM模块）"><a href="#配置和使用（FTM模块）" class="headerlink" title="配置和使用（FTM模块）"></a>配置和使用（FTM模块）</h4><p> <img src="https://i.loli.net/2020/11/29/cyLGQiWl2UEzO7v.png" alt="image-20201129164838219" style="zoom:80%;"></p>
+<p> &ensp;&emsp;FTM模块既可以用于PWM模式来产生PWM波控制电机和舵机，也可以用于正交解码模式用于读取编码器的脉冲数，从而实现测速。对于有两个电机的智能车，两个电机需要4路PWM波即对应着4个FTM通道（根据底层库文档：FTM0有8个通道，而FTM1、FTM2都只有2个通道），两个编码器也需要4路通道来解码（用掉了FTM1和FTM2），电机则用FTM0。</p>
+<p> &ensp;&emsp;观察上图，一旦你选定FTM模块号（FTM0、1、2）和对应的通道号，那么引脚也就确定下来了。或者，即使你仍旧还是配置了对应的GPIO口，那么这些GPIO口必须与用到的这些FTM通道对应的引脚一致。只需配置对应的FTM模块即可，在画原理图时电机需要接和FTM通道所对应的的那几个引脚。</p>
+<p> <img src="https://i.loli.net/2020/11/29/Ud2t3TWVNZM7DrP.png" alt="image-20201129165340628">和在配置摄像头类似的</p>
+<ol>
+<li><p>声明对应模块的配置结构体 </p>
+</li>
+<li><p>对结构体的成员变量进行配置（包括中断）  </p>
+</li>
+<li><p>通过函数对此结构体进行初始化或者使能</p>
+</li>
+<li><p>后续通过库函数读取相关值或者中断函数执行其他操作</p>
+<p><img src="https://i.loli.net/2020/11/29/X9rDnm4IHxaeZh2.png" alt="image-20201129170256820" style="zoom:200%;"></p>
+</li>
+</ol>
+</li>
+<li><h4 id="PID调节和输出控制"><a href="#PID调节和输出控制" class="headerlink" title="PID调节和输出控制"></a>PID调节和输出控制</h4><p> <img src="https://i.loli.net/2020/11/29/dNpOiVc4WGlAZr8.png" alt="image-20201129170447106" style="zoom:80%;"></p>
+<p> &ensp;&emsp;电机转速由PWM波的占空比决定，通过PID和error以及设定的目标速度值可以计算出电机所需的占空比。电机可以只用PI调节就行。</p>
+<p> <img src="https://i.loli.net/2020/11/29/BGxqCvadMXQNHfV.png" alt="image-20201129170720920" style="zoom:80%;"></p>
+<p> &ensp;&emsp;如何修改PWM的占空比从而控制电机转速？通过FTM模块下的库函数即可，如上所示。</p>
+<p> <img src="https://i.loli.net/2020/11/29/ihH6copXuzAJyZI.png" alt="image-20201129170857982" style="zoom:80%;"></p>
+</li>
+<li><h4 id="开环与闭环控制"><a href="#开环与闭环控制" class="headerlink" title="开环与闭环控制"></a>开环与闭环控制</h4><p> 开环：不使用编码器的反馈值，固定PWM输出来控制电机转速。</p>
+<p> &ensp;&emsp;&ensp;&emsp;(具体在 <code>control.c</code>中的 <code>MotorControl(float *err)</code>函数中)</p>
+<p> <img src="https://i.loli.net/2020/11/29/84nrNZgfOkaACUu.png" alt="image-20201129171818250"></p>
+<p> 闭环：使用编码器的反馈值，结合PID来控制电机转速。</p>
+<p> <img src="https://i.loli.net/2020/11/29/XaLtBMvI2bPiUWH.png" alt="image-20201129171734612"></p>
+</li>
+<li><h4 id="如何调试"><a href="#如何调试" class="headerlink" title="如何调试"></a>如何调试</h4><ol>
+<li>在程序中使用开环控制，给左右电机固定的PWM输出。</li>
+<li>打开驱动开关，观察电机是否正常转动，以及转动的方向。</li>
+<li>如果电机反转，可以改变电机的接线，或者在程序中修改PWM通道的顺序。</li>
+<li>如果电机正常转动，改为闭环控制，观察电机是否正常转动。</li>
+<li>如果电机发生疯转，很可能是编码器出现问题，在编码器部分会讲如何检查。</li>
+</ol>
+</li>
+<li><h4 id="调用周期"><a href="#调用周期" class="headerlink" title="调用周期"></a>调用周期</h4><p> 调用周期：电机每5ms输出一次即每5ms修改一次电机PWM的占空比</p>
+</li>
+<li><h4 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h4><ul>
+<li>电机不转：引脚配置错误； 设置的目标转速一直是0； 程序没跑通；</li>
+<li>电机的转向与控制输入的不一致或者疯转：编码器读取的脉冲值的正负号可能不对；电机PID算出来的值不正确；</li>
+</ul>
+</li>
+</ol>
+<h5 id="舵机-2" style="margin:20px 0 0;border-bottom: 2px solid rgb(239, 112, 96);"><a href="#舵机-2" class="headerlink" title="舵机"></a>
+    <span style="display: inline-block;background: rgb(239, 112, 96);color: rgb(255, 255, 255);padding: 3px 10px 1px;border-top-right-radius: 3px;border-top-left-radius: 3px;margin-right: 3px;">舵机</span><span style="display: inline-block;vertical-align: bottom;border-bottom: 36px solid #efebe9;border-right: 20px solid transparent;"> </span></h5>
+
+<ol>
+<li><h4 id="原理介绍-1"><a href="#原理介绍-1" class="headerlink" title="原理介绍"></a>原理介绍</h4><p> &ensp;&emsp;舵机的控制信号周期为20ms的脉宽调制信号（PWM），其中脉宽从0.5ms-2.5ms，相应的舵盘位置从0-180度，呈线型变化。也就是说，给舵机提供一定的脉宽，他的输出轴就会保持一定的对应角度，无论外接转矩怎么改变，知道给他提供另外一个脉冲信号，他才会改变输出角度到新的对应的位置上。舵机内部有一个基准电路，产生周期为20MS，宽度为1.5MS的脉冲信号，有一个比较器，将外加信号与基准信号相比较，判断出方向和大小，从而产生电机的转动信号。舵机是一种位置伺服驱动器，转动范围不能超过180度，适用于那些需要不断变化并可以保持的驱动器中，比如说机器人的关节、飞机的多面等。</p>
+<p> <img src="https://i.loli.net/2020/11/29/bThDuZOz7N8aH5U.png" alt="image-20201129172939427" style="zoom:80%;"></p>
+<p> &ensp;&emsp;舵机是由PWM波控制转角，只需一路PWM波即可，输出不同的占空比就可以控制不同的转角——但是，FTM模块已经被用完了，所以舵机这个PWM波只能用两个PIT定时器进行模拟了。</p>
+<p> <img src="https://i.loli.net/2020/11/29/yHArvhe3gTdGbBw.png" alt="image-20201129173043008" style="zoom:80%;"></p>
+<p> &ensp;&emsp;两个定时器PIT：其中一个只负责每隔20ms就把电平拉高——即负责每20ms就调用一次舵机输出的那个定时器另一个定时器则负责装载值，从而控制这个周期内高电平的持续时间，从而决定占空比，决定转角。</p>
+</li>
+<li><h4 id="选舵机中值"><a href="#选舵机中值" class="headerlink" title="选舵机中值"></a>选舵机中值</h4><p> 舵机中值：当舵机不打角时所对应输出的占空比。</p>
+<p> 作用：</p>
+<ul>
+<li><p>保证在直道上即<code>error=0</code>时车能走直；</p>
+</li>
+<li><p>相当于基准值，当舵机需要向左或向右打角时，只需在此基础上进行加减即可。</p>
+<p>&ensp;&emsp;从上面的图中可以看到，当占空比1.5ms时，舵机处于理论的中值状态。此时，舵机向两边所能打的角度是对称的。那么1.5ms对应的PIT定时时间，即LVDAL的计数值是多少呢？</p>
+<p><img src="https://i.loli.net/2020/11/29/CVempsTHjBrg78k.png" alt="image-20201129194338712"></p>
+<p>在底层库中，我们可以知道，溢出计数等于总线频率$\times$时间，而总线频率我们可以在 <code>K60_card.h</code>中找到如下定义：</p>
+<p><img src="https://i.loli.net/2020/11/29/zr5VcNpPl4f6kC1.png" alt="image-20201129194829682" style="zoom:80%;"></p>
+<p>对于我们的单片机型号，期望的总线频率是50MHz，也就是说 <code>g_bus_clock=50MHz</code> 所以可以计算出1.5ms对应的计数： </p>
+<p><code>LVDAL</code>=$1.5ms \times50MHz-1=74999$。</p>
+<p><img src="https://i.loli.net/2020/11/29/tSYy9cV85wEpLMC.png" alt="image-20201129195220604" style="zoom:80%;"></p>
+<p>&ensp;&emsp;上面的 <code>PIT-&gt;CHANNEL[1].LDVAL</code>就是对应的计数值，而 <code>angleset</code>传进来的参数。根据上面的式子，我们得到1.5ms时对应的 <code>angleset</code>为：$\frac{74999+1}{50}=1500$。</p>
+<p><img src="https://i.loli.net/2020/11/29/hSy2MeTPui71XpQ.png" alt="image-20201129195927483" style="zoom:80%;"></p>
+<p>&ensp;&emsp;在 <code>control.c</code>中，我们有变量 <code>pout0</code>，也就是中值变量。如果说你在安装舵机之前，用程序首先输出理论上的中值，再进行安装，那么如果不出现大的误差，安装好舵机后基本就在中间位置，只需微调一下即可。而如果你随意安装的舵机，那么就需要自己去试出来中间位置所对应的 <code>pout0</code>的值。</p>
+<p><strong>注意</strong>：刚拿到车时一定要调整好舵机中值。步骤如下：</p>
+</li>
+</ul>
+<ol>
+<li>先不要安装舵机，可以只跟主板接好线。</li>
+<li>在 <code>control.c</code>中使得 <code>pout0=1500</code>， 找到函数 <code>ServControl(float *err)</code>，修改<code>motor.SetServ((uint16)pout0);</code>为 <code>motor.SetServ((uint16)pout0);</code>，也就是理论上的舵机中值。</li>
+<li>运行程序，此时理论上舵机会打在中间。</li>
+<li>如果没有打在中间，我们可以把舵机那个白色的铁块拆下来重新安装，让铁块位于中间的位置。</li>
+<li>然后进行舵机的安装，左右尽量对称。</li>
+<li>安装完成后检查前轮是否向着正前方，如果偏了对舵机与轮胎的连接棒长度进行调整，使两个轮胎尽量向正前方。</li>
+<li>将车放在直道的中线上，轻轻推着车走，观察车子是否能够走在正中间。</li>
+<li>如果偏离中线比较大，再次进行调整。此时，可以对程序的中值 <code>pout0</code>进行微调，，直到让车沿着中间走。</li>
+<li>一切没有问题后，将<code>motor.SetServ((uint16)pout0);</code>改回<code>motor.SetServ((uint16)pout0);</code>。</li>
+</ol>
+</li>
+<li><h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ol>
+<li><p>对舵机一定要进行限幅，因为当舵机打角超过一定角度时，就会由于轮胎与底盘的接触而卡死，舵机会产生很大的阻力，从而产生很大的电流，非常容易烧掉板子或者损坏舵机。而且，当舵机打在最大角度时，你要轻轻转动前面的轮胎，观察其是否有阻力。如果阻力太大，转不了几圈就停了，那么要么修改车的结构，要么就增大限幅的程度。限幅在 <code>control.c</code>中的函数 <code>ServControl(float *err)</code>里面：</p>
+<p> <img src="https://i.loli.net/2020/11/29/X6gIx9Tyw8QkcSH.png" alt="image-20201129202024428" style="zoom:80%;"></p>
+<p> 如果要增大限幅，那么将170适当减小即可。</p>
+</li>
+<li><p>尽量避免让舵机处于抖动状态，尤其是拿离赛道时，由于图像混乱，容易导致舵机不停地抖动，这样容易磨损内部齿轮，造成损坏。</p>
+</li>
+<li><p>舵机坏了，不仅影响进度，还费钱，让人心态爆炸，所以要爱护舵机。</p>
+</li>
+</ol>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%99%BA%E8%83%BD%E8%BD%A6/" rel="tag"># 智能车</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/17/%E9%80%90%E9%A3%9E%20ov7725%E6%96%B0%E7%89%88%E7%A7%BB%E6%A4%8D/" rel="prev" title="逐飞ov7725新版移植">
+      <i class="fa fa-chevron-left"></i> 逐飞ov7725新版移植
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/17/%E5%9B%9B%E8%BD%AE%E7%BC%96%E7%A0%81%E5%99%A8%E9%99%80%E8%9E%BA%E4%BB%AA/" rel="next" title="编码器陀螺仪">
+      编码器陀螺仪 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#电机-2"><span class="nav-number">1.</span> <span class="nav-text">
+    电机 </span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原理介绍"><span class="nav-number"></span> <span class="nav-text">原理介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置和使用（FTM模块）"><span class="nav-number"></span> <span class="nav-text">配置和使用（FTM模块）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PID调节和输出控制"><span class="nav-number"></span> <span class="nav-text">PID调节和输出控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开环与闭环控制"><span class="nav-number"></span> <span class="nav-text">开环与闭环控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何调试"><span class="nav-number"></span> <span class="nav-text">如何调试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调用周期"><span class="nav-number"></span> <span class="nav-text">调用周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常见问题"><span class="nav-number"></span> <span class="nav-text">常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#舵机-2"><span class="nav-number">1.</span> <span class="nav-text">
+    舵机 </span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原理介绍-1"><span class="nav-number"></span> <span class="nav-text">原理介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选舵机中值"><span class="nav-number"></span> <span class="nav-text">选舵机中值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意事项"><span class="nav-number"></span> <span class="nav-text">注意事项</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ReedMark</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">41</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ReedMark</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.7.1
+  </div>
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes : 0,
+          toolbar  : 0,
+          statusbar: 0,
+          pagemode : 'thumbs',
+          view     : 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+  
+
+  
+
+</body>
+</html>
